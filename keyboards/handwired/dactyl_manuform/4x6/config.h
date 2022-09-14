@@ -34,4 +34,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // WS2812 RGB LED strip input and number of LEDs
 #define RGB_DI_PIN D3
-#define RGBLED_NUM 10
+#define RGBLED_NUM 20
+#define RGBLED_SPLIT {10, 10}
+
+// Set TRRS connection pin
+#define USE_SERIAL
+
+#ifdef SOFT_SERIAL_PIN
+    #undef SOFT_SERIAL_PIN
+    #define SOFT_SERIAL_PIN D2
+#else
+    #define SOFT_SERIAL_PIN D2
+#endif
