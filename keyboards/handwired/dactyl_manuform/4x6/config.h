@@ -46,3 +46,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #else
     #define SOFT_SERIAL_PIN D2
 #endif
+ 
+#define OLED_TIMEOUT 99999999999
