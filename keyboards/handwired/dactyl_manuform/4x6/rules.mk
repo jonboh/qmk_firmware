@@ -18,6 +18,8 @@ RGBLIGHT_ENABLE = yes        # Enable keyboard RGB underglow
 AUDIO_ENABLE = no           # Audio output
 SPLIT_KEYBOARD = yes
 LTO_ENABLE = yes            # Makes firmware smaller
+CAPS_WORD_ENABLE = yes		# caps word with LShift+RShift
+COMMAND_ENABLE = no 		# Disables LShift+RShift activating command
 
 # OLED
 OLED_ENABLE = no
