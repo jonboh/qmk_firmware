@@ -207,7 +207,7 @@ __attribute__((weak)) bool achordion_chord(uint16_t tap_hold_keycode,
 
 // By default, the timeout is 1000 ms for all keys.
 __attribute__((weak)) uint16_t achordion_timeout(uint16_t tap_hold_keycode) {
-  return 500;
+  return 250;
 }
 
 // By default, hold Shift and Ctrl mods eagerly.

@@ -10,9 +10,27 @@
 
 //layer_state_t layer_state_set_user(layer_state_t state) { return update_tri_layer_state(state, _LOWER, _UPPER, _ADJUST); }
 
+// Replaces a mod-tap key's hold function with its one-shot counterpart.
+static bool oneshot_mod_tap(uint16_t keycode, keyrecord_t* record) {
+  if (record->tap.count == 0) {  // Key is being held.
+    if (record->event.pressed) {
+      const uint8_t mods = (keycode >> 8) & 0x1f;
+      add_oneshot_mods(((mods & 0x10) == 0) ? mods : (mods << 4));
+    }
+    return false;  // Skip default handling.
+  }
+  return true;  // Continue default handling.
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_achordion(keycode, record)) {return false;}
-    switch (keycode) {
+   switch (keycode) {
+    case LSFT_T(KC_U):
+    case RSFT_T(KC_H):
+      return oneshot_mod_tap(keycode, record);
+  }
+   // Luna handling
+   switch (keycode) {
         case KC_LCTL:
         case KC_RCTL:
 #ifdef OCEAN_DREAM_ENABLE
@@ -49,6 +67,14 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
             return TAPPING_TERM + 50;
         case RGUI_T(KC_S): // right pinkie
             return TAPPING_TERM + 50;
+        case LALT_T(KC_O):
+            return TAPPING_TERM + 25;
+        case LALT_T(KC_N):
+            return TAPPING_TERM + 25;
+        case LCTL_T(KC_E):
+            return TAPPING_TERM + 10;
+        case RCTL_T(KC_T):
+            return TAPPING_TERM + 10;
         default:
             return TAPPING_TERM;
     }
