@@ -48,6 +48,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
  
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
-#define CAPS_WORD_IDLE_TIMEOUT 3000  // 3 seconds.
+#define CAPS_WORD_IDLE_TIMEOUT 2000  // 3 seconds.
                                      //
 #define OLED_TIMEOUT 99999999999
+// Configure the global tapping term (default: 200ms)
+#define TAPPING_TERM 150
+#define TAPPING_TERM_PER_KEY
+#define TAPPING_TERM_INCREMENT 5
+
+// Prevent normal rollover on alphas from accidentally triggering mods.
+#define IGNORE_MOD_TAP_INTERRUPT
+
+// Enable rapid switch from tap to hold, disables double tap hold auto-repeat.
+#define TAPPING_FORCE_HOLD
+#define PERMISIVE_HOLD // TODO: add explanation

@@ -20,6 +20,7 @@ SPLIT_KEYBOARD = yes
 LTO_ENABLE = yes            # Makes firmware smaller
 CAPS_WORD_ENABLE = yes		# caps word with LShift+RShift
 COMMAND_ENABLE = no 		# Disables LShift+RShift activating command
+DYNAMIC_TAPPING_TERM_ENABLE = yes
 
 # OLED
 OLED_ENABLE = no
@@ -27,6 +28,8 @@ OLED_DRIVER = SSD1306
 LUNA_ENABLE = yes
 OCEAN_DREAM_ENABLE = yes
 WPM_ENABLE = yes
+
+SRC += features/achordion.c
 
 ifeq ($(strip $(OLED_ENABLE)), yes)
     SRC += oled_setup.c

@@ -6,10 +6,12 @@
 #define _FN 3
 
 #include "oled_setup.h"
+#include "features/achordion.h"
 
 //layer_state_t layer_state_set_user(layer_state_t state) { return update_tri_layer_state(state, _LOWER, _UPPER, _ADJUST); }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (!process_achordion(keycode, record)) {return false;}
     switch (keycode) {
         case KC_LCTL:
         case KC_RCTL:
@@ -37,7 +39,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
+void matrix_scan_user(void) {
+    achordion_task();
+}
 
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LGUI_T(KC_A): // left pinkie
+            return TAPPING_TERM + 50;
+        case RGUI_T(KC_S): // right pinkie
+            return TAPPING_TERM + 50;
+        default:
+            return TAPPING_TERM;
+    }
+}
 bool caps_word_press_user(uint16_t keycode) {
     switch (keycode) {
         // Keycodes that continue Caps Word, with shift applied.
