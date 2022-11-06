@@ -10,7 +10,7 @@ BOOTLOADER = atmel-dfu
 BOOTMAGIC_ENABLE = no       # Enable Bootmagic Lite
 MOUSEKEY_ENABLE = yes       # Mouse keys
 EXTRAKEY_ENABLE = yes       # Audio control and System control
-CONSOLE_ENABLE = no         # Console for debug
+CONSOLE_ENABLE = yes         # Console for debug
 COMMAND_ENABLE = yes        # Commands for debug and configuration
 NKRO_ENABLE = no            # Enable N-Key Rollover
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
@@ -25,34 +25,6 @@ DYNAMIC_TAPPING_TERM_ENABLE = yes
 # OLED
 OLED_ENABLE = no
 OLED_DRIVER = SSD1306
-LUNA_ENABLE = yes
-OCEAN_DREAM_ENABLE = yes
-WPM_ENABLE = yes
 
 SRC += features/achordion.c
 
-ifeq ($(strip $(OLED_ENABLE)), yes)
-    SRC += oled_setup.c
-
-	ifdef OCEAN_DREAM_ENABLE
-		ifeq ($(strip $(OCEAN_DREAM_ENABLE)), yes)
-			SRC += ocean_dream.c
-			OPT_DEFS += -DOCEAN_DREAM_ENABLE
-    	endif
-	endif
-	ifndef OCEAN_DREAM_ENABLE
-		SRC += ocean_dream.c
-		OPT_DEFS += -DOCEAN_DREAM_ENABLE
-	endif
-
-	ifdef LUNA_ENABLE
-		ifeq ($(strip $(LUNA_ENABLE)), yes)
-			SRC += luna.c
-			OPT_DEFS += -DLUNA_ENABLE
-		endif
-	endif
-	ifndef LUNA_ENABLE
-		SRC += luna.c
-		OPT_DEFS += -DLUNA_ENABLE
-	endif
-endif
