@@ -1,5 +1,3 @@
-#include "keycode.h"
-#include "quantum_keycodes.h"
 #include QMK_KEYBOARD_H
 
 #define BASE 0
@@ -15,33 +13,33 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[BASE] = LAYOUT(
             KC_SCLN, KC_COMM, KC_DOT, KC_P, KC_Y,                                    KC_F, KC_G, KC_C, KC_R, KC_L,
             LGUI_T(KC_A), LALT_T(KC_O), LCTL_T(KC_E), LSFT_T(KC_U), KC_I,            KC_D, RSFT_T(KC_H), RCTL_T(KC_T), RALT_T(KC_N), RGUI_T(KC_S),
-            KC_Z, KC_Q, KC_J, KC_K, KC_X,                                           KC_B, KC_M, KC_W, KC_V, KC_Z,
-                    ____, MO(MOUS),                                                                ____, ____, 
-                                KC_BSPC, MO(SYMB),                                          KC_SPC,
-                                  MO(NUM),                                                  MO(NAV), 
-                           KC_DEL, KC_ESC,                                                   KC_ENT, KC_TAB),
+            LT(MEDI, KC_DEL), KC_Q, KC_J, KC_K, KC_X,                                           KC_B, KC_M, KC_W, KC_V, KC_Z,
+                    ____, ____,                                                                ____, ____, 
+                                MO(NUM), MO(SYMB),                                          MO(NAV),
+                                  KC_BSPC,                                                  KC_SPC, 
+                           MO(MOUS), KC_ESC,                                                KC_ENT, KC_TAB),
 	[NAV] = LAYOUT(
             ____, ____, ____, ____, ____,                                           ____, ____, ____, ____, ____, 
             KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
             ____, KC_HOME, KC_PGDN, KC_PGUP, KC_END,                                  ____, ____, ____, ____, ____,  
                     ____, ____,                                                                 ____, ____, 
-                                ____,____,                                             ____,
-                                    MO(FUNC),                                            KC_TRNS,
+                                MO(FUNC),____,                                             KC_TRNS,
+                                    ____,                                            ____,
                               ____, ____,                                            ____, ____),
 	[SYMB] = LAYOUT(KC_GRV, KC_LT, KC_GT, KC_DQUO, KC_QUOT,            KC_AMPR, KC_COLN, KC_LBRC, KC_RBRC, KC_PERC, 
             KC_UNDS, KC_MINS, KC_PLUS, KC_EQL, KC_HASH,             KC_PIPE, KC_DLR, KC_LPRN, KC_RPRN, KC_QUES,
             KC_CIRC, KC_SLSH, KC_ASTR, KC_BSLS, KC_AT,              KC_TILD, ____, KC_LCBR, KC_RCBR,KC_EXLM, 
                  ____, ____,                                                            ____,____,
                             ____, KC_TRNS,                                        ____,
-                                    MO(MEDI),                                      ____, 
+                                    ____,                                      ____, 
                             ____, ____,                                  ____, ____),
 	[NUM] = LAYOUT(
             ____, ____, ____, ____, ____,                           ____, KC_7, KC_8, KC_9, ____,
             KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,               ____, KC_4, KC_5, KC_6, ____,
             ____, ____, ____, ____, ____,                           KC_0, KC_1, KC_2, KC_3, ____,
                     ____, ____,                                                    ____, ____, 
-                                ____,MO(MEDI),                                   ____, 
-                                KC_TRNS,                                           MO(FUNC),
+                                KC_TRNS, ____,                                   MO(FUNC), 
+                                ____,                                           ____,
                                 ____, ____,                                  ____, ____),
 	[FUNC] = LAYOUT(
             ____, ____, ____, ____, ____,                                                   ____, ____, ____, ____, ____, 
@@ -49,24 +47,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_F1, ____, ____, ____, ____,                                                  ____, ____, ____, ____, KC_F12, 
                     ____, ____,                                                                         ____, ____, 
                                 ____,____,                                                       ____, 
-                                KC_TRNS,                                                         KC_TRNS,
+                                ____,                                                         ____,
                                 ____, ____,                                                      ____, ____),
 	[MEDI] = LAYOUT(
             ____, ____, ____, ____, ____,                                   ____, ____, ____, ____, ____, 
             ____, ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, ____,
             ____, DT_DOWN, DT_UP, ____, ____,                               ____, ____, ____, ____, ____, 
                     ____, ____,                                                    ____, ____, 
-                                KC_TRNS,KC_TRNS,                                     ____, 
+                                ____,____,                                     ____, 
                                 ____,                                              ____, 
-                                ____, ____,                                   ____, ____),
+                                KC_TRNS, ____,                                   ____, ____),
 	[MOUS] = LAYOUT(
             ____, ____, ____, ____, ____,                                    ____, ____, ____, ____, ____, 
-           ____, ____, ____, ____, ____,                                    ____, KC_MS_BTN1, KC_MS_BTN2, ____, ____, 
+           KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,                        ____, KC_MS_BTN1, KC_MS_BTN3, KC_MS_BTN2, ____, 
             ____, ____, ____, ____, ____,                                   KC_MS_WH_LEFT, KC_MS_WH_DOWN, KC_MS_WH_UP, KC_MS_WH_RIGHT, ____,
-                    ____, KC_TRNS,                                                         ____, ____, 
+                    ____, ____,                                                         ____, ____, 
                                 ____, ____,                                      ____,
                                 ____,                                          ____, 
-                          ____, ____,                                           ____, ____),
+                          ____, KC_TRNS,                                           ____, ____),
 };
 
 // Keyboard Logic
