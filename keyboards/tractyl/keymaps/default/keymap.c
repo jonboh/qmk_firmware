@@ -23,7 +23,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
             ____, ____, ____, ____, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,  
                     ____, ____,                                                                 ____, ____, 
-                                MO(FUNC),____,                                             KC_TRNS,
+                                MO(NUM),____,                                             KC_TRNS,
                                     ____,                                            ____,
                               ____, ____,                                            ____, ____),
 	[SYMB] = LAYOUT(KC_GRV, KC_LT, KC_GT, KC_DQUO, KC_QUOT,            KC_AMPR, KC_COLN, KC_LBRC, KC_RBRC, KC_PERC, 
@@ -38,7 +38,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,               ____, KC_4, KC_5, KC_6, ____,
             ____, ____, ____, ____, ____,                           KC_0, KC_1, KC_2, KC_3, ____,
                     ____, ____,                                                    ____, ____, 
-                                KC_TRNS, ____,                                   MO(FUNC), 
+                                KC_TRNS, ____,                                   MO(NAV), 
                                 ____,                                           ____,
                                 ____, ____,                                  ____, ____),
 	[FUNC] = LAYOUT(
@@ -73,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    update_tri_layer(3, 1, 4);
+    update_tri_layer(NUM, NAV, FUNC);
     if (!process_achordion(keycode, record)) {return false;}
     return true;
 }
