@@ -1,3 +1,4 @@
+#include "keycode.h"
 #include QMK_KEYBOARD_H
 
 #define BASE 0
@@ -24,23 +25,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             ____, ____, ____, ____, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,  
                     ____, ____,                                                                 ____, ____, 
                                 MO(NUM),____,                                             KC_TRNS,
-                                    ____,                                            ____,
-                              ____, ____,                                            ____, ____),
+                                    KC_BSPC,                                            ____,
+                              ____, KC_ESC,                                            ____, ____),
 	[SYMB] = LAYOUT(KC_GRV, KC_LT, KC_GT, KC_DQUO, KC_QUOT,            KC_AMPR, KC_COLN, KC_LBRC, KC_RBRC, KC_PERC, 
             KC_UNDS, KC_MINS, KC_PLUS, KC_EQL, KC_HASH,             KC_PIPE, KC_DLR, KC_LPRN, KC_RPRN, KC_QUES,
             KC_CIRC, KC_SLSH, KC_ASTR, KC_BSLS, KC_AT,              KC_TILD, ____, KC_LCBR, KC_RCBR,KC_EXLM, 
                  ____, ____,                                                            ____,____,
                             ____, KC_TRNS,                                        ____,
-                                    ____,                                      ____, 
-                            ____, ____,                                  ____, ____),
+                                    ____,                                      KC_SPC, 
+                            ____, ____,                                  KC_ENT, KC_TAB),
 	[NUM] = LAYOUT(
             ____, ____, ____, ____, ____,                           ____, KC_7, KC_8, KC_9, ____,
             KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,               ____, KC_4, KC_5, KC_6, ____,
             ____, ____, ____, ____, ____,                           KC_0, KC_1, KC_2, KC_3, ____,
                     ____, ____,                                                    ____, ____, 
                                 KC_TRNS, ____,                                   MO(NAV), 
-                                ____,                                           ____,
-                                ____, ____,                                  ____, ____),
+                                ____,                                           KC_SPC,
+                                ____, ____,                                  KC_ENT, KC_TAB),
 	[FUNC] = LAYOUT(
             ____, ____, ____, ____, ____,                                                   ____, ____, ____, ____, ____, 
             LGUI_T(KC_F2), LALT_T(KC_F3), LCTL_T(KC_F4), LSFT_T(KC_F5), KC_F6,              KC_F7, RSFT_T(KC_F8), RCTL_T(KC_F9), LALT_T(KC_F10), KC_F11,
@@ -52,11 +53,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[MEDI] = LAYOUT(
             ____, ____, ____, ____, ____,                                   ____, ____, ____, ____, ____, 
             ____, ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, ____,
-            ____, DT_DOWN, DT_UP, ____, ____,                               ____, ____, ____, ____, ____, 
+            KC_TRNS, DT_DOWN, DT_UP, ____, ____,                               ____, ____, ____, ____, ____, 
                     ____, ____,                                                    ____, ____, 
                                 ____,____,                                     ____, 
                                 ____,                                              ____, 
-                                KC_TRNS, ____,                                   ____, ____),
+                                ____, ____,                                   ____, ____),
 	[MOUS] = LAYOUT(
             ____, ____, ____, ____, ____,                                    ____, ____, ____, ____, ____, 
            KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,                        ____, KC_MS_BTN1, KC_MS_BTN3, KC_MS_BTN2, ____, 
@@ -64,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                     ____, ____,                                                         ____, ____, 
                                 ____, ____,                                      ____,
                                 ____,                                          ____, 
-                          ____, KC_TRNS,                                           ____, ____),
+                          KC_TRNS, ____,                                           ____, ____),
 };
 
 // Keyboard Logic
