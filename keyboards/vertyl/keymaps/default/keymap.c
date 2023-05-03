@@ -9,15 +9,24 @@
 #define MEDI 5
 #define MOUS 6
 
+enum unicode_names {
+    n_tilde,
+    N_tilde
+};
+
+const uint32_t unicode_map[] PROGMEM = {
+    [n_tilde] = 0x00F1,
+    [N_tilde] = 0x00D1
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[BASE] = LAYOUT(
             KC_SCLN, KC_COMM, KC_DOT, KC_P, KC_Y,                                    KC_F, KC_G, KC_C, KC_R, KC_L,
             LGUI_T(KC_A), LALT_T(KC_O), LCTL_T(KC_E), LSFT_T(KC_U), KC_I,            KC_D, RSFT_T(KC_H), RCTL_T(KC_T), RALT_T(KC_N), RGUI_T(KC_S),
-            LT(MEDI, KC_DEL), KC_Q, KC_J, KC_K, KC_X,                                KC_B, KC_M, KC_W, KC_V, KC_Z,
+            XP(n_tilde,N_tilde), KC_Q, KC_J, KC_K, KC_X,                                KC_B, KC_M, KC_W, KC_V, KC_Z,
                                            MO(SYMB), MO(MOUS),                                           KC_SPC, MO(NAV),
                                   MO(NUM), KC_BSPC,KC_ESC,                                                  KC_TAB,
-                                ____,                                                 KC_ENT, ____),
+                                LT(MEDI, KC_DEL),                                                 KC_ENT, ____),
 	[NAV] = LAYOUT(
             ____, ____, ____, ____, ____,                                           ____, ____, ____, ____, ____,
             KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
@@ -121,6 +130,7 @@ void caps_word_set_user(bool active) {
         // Do something when Caps Word deactivates.
     }
 }
+
 
 /* void keyboard_post_init_user(void) { */
 /*   // Customise these values to desired behaviour */

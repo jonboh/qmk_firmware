@@ -52,3 +52,5 @@
 #define QUICK_TAP_TERM 0
 #define PERMISIVE_HOLD // TODO: add explanation
 
+// Special Characters
+#define UNICODE_SELECTED_MODES UNICODE_MODE_LINUX
