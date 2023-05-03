@@ -45,9 +45,9 @@
 #define TAPPING_TERM_INCREMENT 5
 
 // Prevent normal rollover on alphas from accidentally triggering mods.
-#define IGNORE_MOD_TAP_INTERRUPT
+#define IGNORE_MOD_TAP_INTERRUPT // when the default behavior changes to make this the default remove this line
 
 // Enable rapid switch from tap to hold, disables double tap hold auto-repeat.
-#define TAPPING_FORCE_HOLD
+#define QUICK_TAP_TERM 0
 #define PERMISIVE_HOLD // TODO: add explanation
 
