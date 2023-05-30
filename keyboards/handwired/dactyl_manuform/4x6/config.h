@@ -18,42 +18,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-
-// row-driven
-#define MATRIX_ROW_PINS { F7, B1, B3, B2, B6 }
-#define MATRIX_COL_PINS { D4, C6, D7, E6, B4, B5 }
-
-/* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
-
 // WS2812 RGB LED strip input and number of LEDs
-#define RGB_DI_PIN D3
-#define RGBLED_NUM 20
-#define RGBLED_SPLIT {10, 10}
-
-// Set TRRS connection pin
-#define USE_SERIAL
-
-#ifdef SOFT_SERIAL_PIN
-    #undef SOFT_SERIAL_PIN
-    #define SOFT_SERIAL_PIN D2
-#else
-    #define SOFT_SERIAL_PIN D2
-#endif
- 
-#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
-#define CAPS_WORD_IDLE_TIMEOUT 1000  // 1 seconds.
-                                     //
-#define OLED_TIMEOUT 99999999999
-// Configure the global tapping term (default: 200ms)
-#define TAPPING_TERM 125
-#define TAPPING_TERM_PER_KEY
-#define TAPPING_TERM_INCREMENT 5
-
-// Prevent normal rollover on alphas from accidentally triggering mods.
-#define IGNORE_MOD_TAP_INTERRUPT
-
-// Enable rapid switch from tap to hold, disables double tap hold auto-repeat.
-#define TAPPING_FORCE_HOLD
-#define PERMISIVE_HOLD // TODO: add explanation
-
+#define RGBLED_NUM 12
