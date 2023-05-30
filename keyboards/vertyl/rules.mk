@@ -22,6 +22,7 @@ CAPS_WORD_ENABLE = yes		# caps word with LShift+RShift
 COMMAND_ENABLE = no 		# Disables LShift+RShift activating command
 DYNAMIC_TAPPING_TERM_ENABLE = yes
 UNICODEMAP_ENABLE = yes
+REPEAT_KEY_ENABLE = yes		# magic key
 
 # Trackball
 POINTING_DEVICE_ENABLE = yes
