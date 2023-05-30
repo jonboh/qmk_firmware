@@ -31,8 +31,6 @@ enum custom_keycodes {
   M_TMENT,
   M_THE,
   M_UPDIR,
-  M_INCLUDE,
-  M_DOCSTR,
 };
 
 // Home row mods for Magic Sturdy layer.
@@ -47,7 +45,7 @@ enum custom_keycodes {
 #define HOME_X LGUI_T(KC_X)
 #define HOME_SC RGUI_T(KC_SCLN)
 // Alternate Repeat is the "magic" key.
-#define MAGIC ALTREP
+#define MAGIC QK_ALT_REPEAT_KEY
 
 enum unicode_names {
     n_tilde,
@@ -62,8 +60,8 @@ const uint32_t unicode_map[] PROGMEM = {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[MSTURDY] = LAYOUT(
             KC_V, KC_M, KC_L, KC_C, KC_P,                                    KC_B, MAGIC, KC_U, KC_O, KC_Q,
-            /* HOME_S, HOME_T, HOME_R, HOME_D, KC_Y,            KC_F, HOME_N, HOME_E, HOME_A, HOME_I, */
-            KC_S, KC_T, KC_R, KC_D, KC_Y,                       KC_F, KC_N, KC_E, KC_A, KC_I,
+            HOME_S, HOME_T, HOME_R, HOME_D, KC_Y,            KC_F, HOME_N, HOME_E, HOME_A, HOME_I,
+            /* KC_S, KC_T, KC_R, KC_D, KC_Y,                       KC_F, KC_N, KC_E, KC_A, KC_I, */
             KC_X, KC_K, KC_J, KC_G, KC_W,                                KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
                                            MO(SYMB), MO(MOUS),                                            KC_ESC,
                       MO(NUM), KC_BSPC,KC_DEL,                                                  KC_ENT,KC_SPC,MO(NAV),
@@ -126,7 +124,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     update_tri_layer(NUM, NAV, FUNC);
     if (!process_achordion(keycode, record)) {return false;}
-    return true;
+
+  if (record->event.pressed) {
+    switch (keycode) {
+      // Macros invoked through the MAGIC key.
+      case M_ION:     SEND_STRING(/*i*/"on"); break;
+      case M_NION:    SEND_STRING(/*n*/"ion"); break;
+      case M_MENT:    SEND_STRING(/*m*/"ent"); break;
+      case M_QUEN:    SEND_STRING(/*q*/"uen"); break;
+      case M_TMENT:   SEND_STRING(/*t*/"ment"); break;
+      case M_THE:     SEND_STRING(/* */"the"); break;
+      case M_UPDIR:   SEND_STRING(/*.*/"./"); break;
+    }
+  }  return true;
 }
 void matrix_scan_user(void) {
     achordion_task();
@@ -225,23 +235,17 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
         return M_THE;
       case KC_DOT:  // . -> ./
         return M_UPDIR;
-      case KC_HASH:  // # -> include
-        return M_INCLUDE;
-      case KC_QUOT:
-        if ((mods & MOD_MASK_SHIFT) != 0) {
-          // " -> ""<cursor>""" (for Python doc strings)
-          return M_DOCSTR;
         }
         return KC_NO;
     }
-  } else if ((mods & MOD_MASK_CTRL)) {
-    switch (keycode) {
-      case HOME_A:  // Ctrl+A -> Ctrl+C
-        return C(KC_C);
-      case KC_C:  // Ctrl+C -> Ctrl+V
-        return C(KC_V);
-    }
-  }
+  /* } else if ((mods & MOD_MASK_CTRL)) { */
+  /*   switch (keycode) { */
+  /*     case HOME_A:  // Ctrl+A -> Ctrl+C */
+  /*       return C(KC_C); */
+  /*     case KC_C:  // Ctrl+C -> Ctrl+V */
+  /*       return C(KC_V); */
+  /*   } */
+  /* } */
   return KC_TRNS;
 }
 
