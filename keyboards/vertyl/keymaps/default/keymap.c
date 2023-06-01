@@ -12,25 +12,29 @@
 #define MOUS 7
 
 enum custom_keycodes {
-  UPDIR = SAFE_RANGE,
-  EXIT,
-  SCOPE,
-  SELWORD,
-  TMUXESC,
-  SRCHSEL,
-  USRNAME,
-  DASH,
-  ARROW,
-  THMBUP,
-  REPEAT,
-  ALTREP,
-  M_ION,
-  M_NION,
-  M_MENT,
-  M_QUEN,
-  M_TMENT,
-  M_THE,
-  M_UPDIR,
+    UPDIR = SAFE_RANGE,
+    EXIT,
+    SCOPE,
+    SELWORD,
+    TMUXESC,
+    SRCHSEL,
+    USRNAME,
+    DASH,
+    ARROW,
+    THMBUP,
+    REPEAT,
+    ALTREP,
+    M_ION,
+    M_NION,
+    M_MENT,
+    M_QUEN,
+    M_TMENT,
+    M_THE,
+    M_UPDIR,
+    M_EFORE,
+    M_SP_BUT,
+    M_HICH,
+    M_UST,
 };
 
 // Home row mods for Magic Sturdy layer.
@@ -125,18 +129,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     update_tri_layer(NUM, NAV, FUNC);
     if (!process_achordion(keycode, record)) {return false;}
 
-  if (record->event.pressed) {
-    switch (keycode) {
-      // Macros invoked through the MAGIC key.
-      case M_ION:     SEND_STRING(/*i*/"on"); break;
-      case M_NION:    SEND_STRING(/*n*/"ion"); break;
-      case M_MENT:    SEND_STRING(/*m*/"ent"); break;
-      case M_QUEN:    SEND_STRING(/*q*/"uen"); break;
-      case M_TMENT:   SEND_STRING(/*t*/"ment"); break;
-      case M_THE:     SEND_STRING(/* */"the"); break;
-      case M_UPDIR:   SEND_STRING(/*.*/"./"); break;
-    }
-  }  return true;
+    if (record->event.pressed) {
+
+        int rep_count = get_repeat_key_count();
+        if (rep_count < -1) {
+            send_char('n');
+            return false;
+        }
+
+        switch (keycode) {
+            // Macros invoked through the MAGIC key.
+            case M_ION:     SEND_STRING(/*i*/"on"); break;
+            case M_NION:    SEND_STRING(/*n*/"ion"); break;
+            case M_MENT:    SEND_STRING(/*m*/"ent"); break;
+            case M_QUEN:    SEND_STRING(/*q*/"uen"); break;
+            case M_TMENT:   SEND_STRING(/*t*/"ment"); break;
+            case M_THE:     SEND_STRING(/* */"the"); break;
+            case M_UPDIR:   SEND_STRING(/*.*/"./"); break;
+            case M_EFORE:   SEND_STRING(/*b*/"efore"); break;
+            case M_SP_BUT:   SEND_STRING(/*,*/" but"); break;
+            case M_HICH:   SEND_STRING(/*w*/"hich"); break;
+            case M_UST:   SEND_STRING(/*j*/"ust"); break;
+        }
+    }  return true;
 }
 void matrix_scan_user(void) {
     achordion_task();
@@ -191,62 +206,47 @@ void caps_word_set_user(bool active) {
 
 
 uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
-  if ((mods & ~MOD_MASK_SHIFT) == 0) {
-    switch (keycode) {
-      // Behavior for Magic Sturdy's "magic" key.
-      case HOME_A:  // A -> O
-        return KC_O;
-      case KC_C:  // C -> Y
-        return KC_Y;
-      case HOME_D:  // D -> Y
-        return KC_Y;
-      case HOME_E:  // E -> U
-        return KC_U;
-      case KC_G:  // G -> Y
-        return KC_Y;
-      case HOME_I:  // I -> ON
-        return M_ION;
-      case KC_L:  // L -> K
-        return KC_K;
-      case KC_M:  // M -> ENT
-        return M_MENT;
-      case HOME_N:  // N -> ION
-        return M_NION;
-      case KC_N:
-        return KC_N;
-      case KC_O:  // O -> A
-        return KC_A;
-      case KC_P:  // P -> Y
-        return KC_Y;
-      case KC_Q:  // Q -> UEN
-        return M_QUEN;
-      case HOME_R:  // R -> L
-        return KC_L;
-      case HOME_S:  // S -> K
-        return KC_K;
-      case HOME_T:  // T -> MENT
-        return M_TMENT;
-      case KC_U:  // U -> E
-        return KC_E;
-      case KC_Y:  // Y -> P
-        return KC_P;
+    if ((mods & ~MOD_MASK_SHIFT) == 0) {
+        switch (keycode) {
+            // Behavior for Magic Sturdy's "magic" key.
+            case KC_C:
+            case KC_P:
+            case HOME_D:
+            case KC_G: return KC_Y;
+            case KC_Y: return KC_P;
+            case HOME_R: return KC_L; // R -> L
+            case HOME_S: return KC_K; // S -> K
+            case KC_L:  return KC_K;
+            case HOME_E: return KC_U;
+            case HOME_A: return KC_O; // A -> O
+            case KC_O:  return KC_A;// O -> A
+            case KC_U:  return KC_E;// U -> E
 
-      case KC_SPC:  // spc -> THE
-        return M_THE;
-      case KC_DOT:  // . -> ./
-        return M_UPDIR;
+            case KC_1 ... KC_0: return KC_DOT;
+            case KC_SPC: return M_THE; // spc -> THE
+            case KC_DOT: return M_UPDIR; // . -> ./
+            case KC_COMM: return M_SP_BUT; // . -> ./
+            case HOME_I: return M_ION; // I -> ON
+            case KC_Q:  return M_QUEN;// Q -> UEN
+            case HOME_T: return M_TMENT; // T -> MENT
+            case KC_M:  return M_MENT;// M -> ENT
+            case HOME_N: return M_NION; // N -> ION
+            case KC_W: return M_HICH;
+            case KC_J: return M_UST;
+            case KC_B: return M_EFORE;
         }
         return KC_NO;
     }
-  /* } else if ((mods & MOD_MASK_CTRL)) { */
-  /*   switch (keycode) { */
-  /*     case HOME_A:  // Ctrl+A -> Ctrl+C */
-  /*       return C(KC_C); */
-  /*     case KC_C:  // Ctrl+C -> Ctrl+V */
-  /*       return C(KC_V); */
-  /*   } */
-  /* } */
-  return KC_TRNS;
+    else if ((mods & MOD_MASK_CTRL)) {
+        switch (keycode) {
+            /* case HOME_A:  // Ctrl+A -> Ctrl+C */
+            /*     return C(KC_C); */
+            case KC_C:  // Ctrl+C -> Ctrl+V
+                return C(KC_V);
+        }
+    }
+
+    return M_THE;
 }
 
 /* void keyboard_post_init_user(void) { */
