@@ -1,5 +1,6 @@
 #include "keycode.h"
 #include "keycodes.h"
+#include "quantum_keycodes.h"
 #include QMK_KEYBOARD_H
 
 #define MSTURDY 0
@@ -115,7 +116,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             ____, ____, ____, ____, ____,                                    ____, ____, ____, ____, ____,
            KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,                        ____, KC_MS_BTN1, KC_MS_BTN3, KC_MS_BTN2, ____,
             ____, ____, ____, ____, ____,                                   KC_MS_WH_LEFT, KC_MS_WH_DOWN, KC_MS_WH_UP, KC_MS_WH_RIGHT, ____,
-                                     ____, KC_TRNS,                        ____,
+                                    ____, KC_TRNS,                           TO(MSTURDY),
                                 ____,____,____,                        ____,____,____,
                               ____,                                          ____),
 };
@@ -124,6 +125,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #include "features/achordion.h"
 
+void pointing_device_init_user(void) {
+    set_auto_mouse_layer(MOUS); // only required if AUTO_MOUSE_DEFAULT_LAYER is not set to index of <mouse_layer>
+    set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     update_tri_layer(NUM, NAV, FUNC);
