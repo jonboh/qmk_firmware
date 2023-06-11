@@ -1,5 +1,7 @@
+#include <stdint.h>
 #include "keycode.h"
 #include "keycodes.h"
+#include "keymap_us.h"
 #include "quantum_keycodes.h"
 #include QMK_KEYBOARD_H
 
@@ -9,22 +11,10 @@
 #define SYMB 3
 #define NUM  4
 #define FUNC 5
-#define MEDI 6
-#define MOUS 7
+#define MOUS 6
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
-    EXIT,
-    SCOPE,
-    SELWORD,
-    TMUXESC,
-    SRCHSEL,
-    USRNAME,
-    DASH,
-    ARROW,
-    THMBUP,
-    REPEAT,
-    ALTREP,
     M_ION,
     M_NION,
     M_MENT,
@@ -36,6 +26,7 @@ enum custom_keycodes {
     M_SP_BUT,
     M_HICH,
     M_UST,
+    TRACK_SCROLL,
 };
 
 // Home row mods for Magic Sturdy layer.
@@ -66,18 +57,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[MSTURDY] = LAYOUT(
             KC_V, KC_M, KC_L, KC_C, KC_P,                                    KC_B, MAGIC, KC_U, KC_O, KC_Q,
             HOME_S, HOME_T, HOME_R, HOME_D, KC_Y,            KC_F, HOME_N, HOME_E, HOME_A, HOME_I,
-            /* KC_S, KC_T, KC_R, KC_D, KC_Y,                       KC_F, KC_N, KC_E, KC_A, KC_I, */
             KC_X, KC_K, KC_J, KC_G, KC_W,                                KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
                                            MO(SYMB), MO(MOUS),                                            KC_ESC,
                       MO(NUM), KC_BSPC,KC_DEL,                                                  KC_ENT,KC_SPC,MO(NAV),
-                                MO(MEDI),                                                  KC_TAB),
+                                ____,                                                  KC_TAB),
 	[DVORAK] = LAYOUT(
             KC_SCLN, KC_COMM, KC_DOT, KC_P, KC_Y,                                    KC_F, KC_G, KC_C, KC_R, KC_L,
             LGUI_T(KC_A), LALT_T(KC_O), LCTL_T(KC_E), LSFT_T(KC_U), KC_I,            KC_D, RSFT_T(KC_H), RCTL_T(KC_T), RALT_T(KC_N), RGUI_T(KC_S),
             XP(n_tilde,N_tilde), KC_Q, KC_J, KC_K, KC_X,                                KC_B, KC_M, KC_W, KC_V, KC_Z,
                                            MO(SYMB), MO(MOUS),                                            KC_ESC,
                       MO(NUM), KC_BSPC,KC_DEL,                                                  KC_ENT,KC_SPC,MO(NAV),
-                                MO(MEDI),                                                  KC_TAB),
+                                ____,                                                  KC_TAB),
 	[NAV] = LAYOUT(
             ____, ____, ____, ____, ____,                                           ____, ____, ____, ____, ____,
             KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
@@ -99,23 +89,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 ____, ____,____,                KC_ENT, KC_SPC, MO(NAV),
                                 ____,                                   KC_TAB),
 	[FUNC] = LAYOUT(
-            ____, ____, ____, ____, ____,                                                   ____, ____, ____, ____, ____,
+            TO(DVORAK), ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, TO(MSTURDY),
             LGUI_T(KC_F2), LALT_T(KC_F3), LCTL_T(KC_F4), LSFT_T(KC_F5), KC_F6,              KC_F7, RSFT_T(KC_F8), RCTL_T(KC_F9), LALT_T(KC_F10), KC_F11,
-            KC_F1, ____, ____, ____, ____,                                                  ____, ____, ____, ____, KC_F12,
+            KC_F1, ____, ____, ____, ____,                                                  ____, XP(n_tilde,N_tilde), ____, ____, KC_F12,
                                       ____,____,                                            ____,
                                 ____, ____,____,                                      ____, ____,____,
                                 ____,                                                       ____),
-	[MEDI] = LAYOUT(
-            TO(DVORAK), ____, ____, ____, ____,                                   ____, ____, ____, ____, TO(MSTURDY),
-            ____, ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, ____,
-            KC_TRNS, DT_DOWN, DT_UP, ____, ____,                               ____, ____, ____, ____, ____,
-                                     ____,____,                               ____,
-                                ____,____,____,                         ____,____,____,
-                                ____,                                     ____),
 	[MOUS] = LAYOUT(
             ____, ____, ____, ____, ____,                                    ____, ____, ____, ____, ____,
-           KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,                        ____, KC_MS_BTN1, KC_MS_BTN3, KC_MS_BTN2, ____,
-            ____, ____, ____, ____, ____,                                   KC_MS_WH_LEFT, KC_MS_WH_DOWN, KC_MS_WH_UP, KC_MS_WH_RIGHT, ____,
+           KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,                        ____, KC_MS_BTN1, KC_MS_BTN2, TRACK_SCROLL, ____,
+            ____, ____, ____, ____, ____,                                   ____, ____, ____, ____, ____,
                                     ____, KC_TRNS,                           TO(MSTURDY),
                                 ____,____,____,                        ____,____,____,
                               ____,                                          ____),
@@ -130,9 +113,65 @@ void pointing_device_init_user(void) {
     set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
 }
 
+bool set_scrolling = false;
+// Variables to store accumulated scroll values
+int64_t scroll_accumulated_h = 0;
+int64_t  scroll_accumulated_v = 0;
+#define TRACK_RESOLUTION  64
+
+
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    if (set_scrolling) {
+        // Calculate and accumulate scroll values based on mouse movement and divisors
+        scroll_accumulated_h += (int64_t)mouse_report.x * TRACK_RESOLUTION / TRACK_DIVISOR;
+        scroll_accumulated_v += (int64_t)mouse_report.y * TRACK_RESOLUTION / TRACK_DIVISOR;
+
+        // Assign integer parts of accumulated scroll values to the mouse report
+        mouse_report.h = (int8_t)scroll_accumulated_h / TRACK_RESOLUTION;
+        mouse_report.v = (int8_t)scroll_accumulated_v / TRACK_RESOLUTION;
+
+        // Update accumulated scroll values by subtracting the integer parts
+        scroll_accumulated_h -= (int64_t)mouse_report.h * TRACK_RESOLUTION;
+        scroll_accumulated_v -= (int64_t)mouse_report.v * TRACK_RESOLUTION;
+
+        // Clear the X and Y values of the mouse report
+        mouse_report.x = 0;
+        mouse_report.y = 0;
+    }
+    return mouse_report;
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+  // Use `static` variable to remember the previous status.
+  static bool adjust_on = false;
+
+  if (adjust_on != IS_LAYER_ON_STATE(state, MOUS)) {
+    adjust_on = !adjust_on;
+    if (!adjust_on) {// Just exited the ADJUST layer.
+      set_scrolling = false;
+    }
+  }
+
+  return state;
+}
+
+bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
+    switch(keycode) {
+        case TRACK_SCROLL:
+            return true;
+        default:
+            return false;
+    }
+    return false;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     update_tri_layer(NUM, NAV, FUNC);
     if (!process_achordion(keycode, record)) {return false;}
+
+    switch (keycode) {
+        case TRACK_SCROLL: set_scrolling = record->event.pressed; break;
+    }
 
     if (record->event.pressed) {
 
@@ -244,14 +283,48 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
     }
     else if ((mods & MOD_MASK_CTRL)) {
         switch (keycode) {
-            /* case HOME_A:  // Ctrl+A -> Ctrl+C */
-            /*     return C(KC_C); */
             case KC_C:  // Ctrl+C -> Ctrl+V
                 return C(KC_V);
         }
     }
 
     return M_THE;
+}
+
+// Combos
+enum combo_events {
+  SQUARE_BRACKET,
+  PARENTHESIS,
+  CURLY_BRACKETS,
+};
+
+const uint16_t PROGMEM combo_full_squarebracket[] = {KC_LBRC, KC_RBRC, COMBO_END};
+const uint16_t PROGMEM combo_full_parenthesis[] = {KC_LPRN, KC_RPRN, COMBO_END};
+const uint16_t PROGMEM combo_full_curlybracket[] = {KC_LCBR, KC_RCBR, COMBO_END};
+combo_t key_combos[] = {
+  [SQUARE_BRACKET] = COMBO_ACTION(combo_full_squarebracket),
+  [PARENTHESIS] = COMBO_ACTION(combo_full_parenthesis),
+  [CURLY_BRACKETS] = COMBO_ACTION(combo_full_curlybracket),
+};
+
+
+void process_combo_event(uint16_t combo_index, bool pressed) {
+    if (pressed) {
+        switch(combo_index) {
+            case SQUARE_BRACKET:
+                send_string("[]");
+                tap_code16(KC_LEFT);
+                break;
+            case PARENTHESIS:
+                send_string("()");
+                tap_code16(KC_LEFT);
+                break;
+            case CURLY_BRACKETS:
+                send_string("{}");
+                tap_code16(KC_LEFT);
+                break;
+        }
+    }
 }
 
 /* void keyboard_post_init_user(void) { */
