@@ -124,7 +124,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     if (set_scrolling) {
         // Calculate and accumulate scroll values based on mouse movement and divisors
         scroll_accumulated_h += (int64_t)mouse_report.x * TRACK_RESOLUTION / TRACK_DIVISOR;
-        scroll_accumulated_v += (int64_t)mouse_report.y * TRACK_RESOLUTION / TRACK_DIVISOR;
+        scroll_accumulated_v += -(int64_t)mouse_report.y * TRACK_RESOLUTION / TRACK_DIVISOR;
 
         // Assign integer parts of accumulated scroll values to the mouse report
         mouse_report.h = (int8_t)scroll_accumulated_h / TRACK_RESOLUTION;
