@@ -1,22 +1,26 @@
-/*
-Copyright 2012 Jun Wako <wakojun@gmail.com>
-Copyright 2015 Jack Humbert
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #pragma once
 
-// WS2812 RGB LED strip input and number of LEDs
-#define RGBLED_NUM 12
+#define MASTER_RIGHT
+
+#ifdef SOFT_SERIAL_PIN
+    #undef SOFT_SERIAL_PIN
+    #define SOFT_SERIAL_PIN D0
+#else
+    #define SOFT_SERIAL_PIN D0
+#endif
+
+#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
+#define CAPS_WORD_IDLE_TIMEOUT 1000  // 1 seconds.
+                                     //
+// Configure the global tapping term (default: 200ms)
+#define TAPPING_TERM 225
+#define TAPPING_TERM_PER_KEY
+#define TAPPING_TERM_INCREMENT 5
+
+// Enable rapid switch from tap to hold, disables double tap hold auto-repeat.
+#define QUICK_TAP_TERM 0
+#define PERMISIVE_HOLD // TODO: add explanation
+
+// Special Characters
+#define UNICODE_SELECTED_MODES UNICODE_MODE_LINUX
+
