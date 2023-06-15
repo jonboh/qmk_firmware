@@ -1,8 +1,3 @@
-#include <stdint.h>
-#include "keycode.h"
-#include "keycodes.h"
-#include "keymap_us.h"
-#include "quantum_keycodes.h"
 #include QMK_KEYBOARD_H
 
 #define MSTURDY 0
@@ -97,8 +92,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 ____,                                                       ____),
 	[MOUS] = LAYOUT(
             ____, ____, ____, ____, ____,                                    ____, ____, ____, ____, ____,
-           KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,                        ____, KC_MS_BTN1, KC_MS_BTN2, TRACK_SCROLL, ____,
-            ____, ____, ____, ____, ____,                                   ____, ____, ____, ____, ____,
+           KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,                        ____, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+            ____, ____, ____, ____, ____,                                   ____, KC_MS_BTN1, KC_MS_BTN2, TRACK_SCROLL, ____,
                                     ____, KC_TRNS,                           TO(MSTURDY),
                                 ____,____,____,                        ____,____,____,
                               ____,                                          ____),
@@ -123,16 +118,16 @@ int64_t  scroll_accumulated_v = 0;
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     if (set_scrolling) {
         // Calculate and accumulate scroll values based on mouse movement and divisors
-        scroll_accumulated_h += (int64_t)mouse_report.x * TRACK_RESOLUTION / TRACK_DIVISOR;
-        scroll_accumulated_v += -(int64_t)mouse_report.y * TRACK_RESOLUTION / TRACK_DIVISOR;
+        scroll_accumulated_h += mouse_report.x * TRACK_RESOLUTION / TRACK_DIVISOR;
+        scroll_accumulated_v += -mouse_report.y * TRACK_RESOLUTION / TRACK_DIVISOR;
 
         // Assign integer parts of accumulated scroll values to the mouse report
-        mouse_report.h = (int8_t)scroll_accumulated_h / TRACK_RESOLUTION;
-        mouse_report.v = (int8_t)scroll_accumulated_v / TRACK_RESOLUTION;
+        mouse_report.h = scroll_accumulated_h / TRACK_RESOLUTION;
+        mouse_report.v = scroll_accumulated_v / TRACK_RESOLUTION;
 
         // Update accumulated scroll values by subtracting the integer parts
-        scroll_accumulated_h -= (int64_t)mouse_report.h * TRACK_RESOLUTION;
-        scroll_accumulated_v -= (int64_t)mouse_report.v * TRACK_RESOLUTION;
+        scroll_accumulated_h -= mouse_report.h * TRACK_RESOLUTION;
+        scroll_accumulated_v -= mouse_report.v * TRACK_RESOLUTION;
 
         // Clear the X and Y values of the mouse report
         mouse_report.x = 0;
@@ -297,15 +292,18 @@ enum combo_events {
   SQUARE_BRACKET,
   PARENTHESIS,
   CURLY_BRACKETS,
+  SCROLL,
 };
 
 const uint16_t PROGMEM combo_full_squarebracket[] = {KC_LBRC, KC_RBRC, COMBO_END};
 const uint16_t PROGMEM combo_full_parenthesis[] = {KC_LPRN, KC_RPRN, COMBO_END};
 const uint16_t PROGMEM combo_full_curlybracket[] = {KC_LCBR, KC_RCBR, COMBO_END};
+const uint16_t PROGMEM combo_scroll[] = {KC_MS_BTN1, KC_MS_BTN2, COMBO_END};
 combo_t key_combos[] = {
   [SQUARE_BRACKET] = COMBO_ACTION(combo_full_squarebracket),
   [PARENTHESIS] = COMBO_ACTION(combo_full_parenthesis),
   [CURLY_BRACKETS] = COMBO_ACTION(combo_full_curlybracket),
+  [SCROLL] = COMBO_ACTION(combo_scroll),
 };
 
 
@@ -323,6 +321,9 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             case CURLY_BRACKETS:
                 send_string("{}");
                 tap_code16(KC_LEFT);
+                break;
+            case SCROLL:
+                tap_code16(TRACK_SCROLL);
                 break;
         }
     }

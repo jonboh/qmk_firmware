@@ -3,10 +3,6 @@
 
 #pragma once
 
-/*
- * Feature disable options
- *  These options are also useful to firmware size reduction.
- */
 #define MASTER_RIGHT
 
 #define MATRIX_ROWS 10
@@ -34,6 +30,7 @@
 #define PMW33XX_LIFTOFF_DISTANCE 0x03
 // Mouse Wheel Keys
 #define TRACK_DIVISOR 8
+/* #define MOUSE_EXTENDED_REPORT */
 // Auto activation
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define AUTO_MOUSE_TIME 250
