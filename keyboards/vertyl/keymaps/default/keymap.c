@@ -92,8 +92,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 ____,                                                       ____),
 	[MOUS] = LAYOUT(
             ____, ____, ____, ____, ____,                                    ____, ____, ____, ____, ____,
-           KC_LGUI, TRACK_SCROLL, KC_MS_BTN2, KC_MS_BTN1, ____,                        ____, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-            ____, ____, ____, ____, ____,                                   ____, KC_MS_BTN1, KC_MS_BTN2, TRACK_SCROLL, ____,
+           KC_MS_BTN3, TRACK_SCROLL, KC_MS_BTN2, KC_MS_BTN1, ____,                        ____, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+            ____, ____, ____, ____, ____,                                   ____, KC_MS_BTN1, KC_MS_BTN2, TRACK_SCROLL, KC_MS_BTN3,
                                     ____, KC_TRNS,                           TO(MSTURDY),
                                 ____,____,____,                        ____,____,____,
                               ____,                                          ____),
