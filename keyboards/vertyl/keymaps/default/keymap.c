@@ -85,14 +85,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 ____,                                   KC_TAB),
 	[FUNC] = LAYOUT(
             TO(DVORAK), ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, TO(MSTURDY),
-            LGUI_T(KC_F2), LALT_T(KC_F3), LCTL_T(KC_F4), LSFT_T(KC_F5), KC_F6,              KC_F7, RSFT_T(KC_F8), RCTL_T(KC_F9), LALT_T(KC_F10), KC_F11,
+            LGUI_T(KC_F2), LALT_T(KC_F3), LCTL_T(KC_F4), LSFT_T(KC_F5), KC_F6,              KC_F7, RSFT_T(KC_F8), RCTL_T(KC_F9), LALT_T(KC_F10), RGUI_T(KC_F11),
             KC_F1, ____, ____, ____, ____,                                                  ____, XP(n_tilde,N_tilde), ____, ____, KC_F12,
                                       ____,____,                                            ____,
                                 ____, ____,____,                                      ____, ____,____,
                                 ____,                                                       ____),
 	[MOUS] = LAYOUT(
             ____, ____, ____, ____, ____,                                    ____, ____, ____, ____, ____,
-           KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,                        ____, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+           KC_LGUI, TRACK_SCROLL, KC_MS_BTN2, KC_MS_BTN1, ____,                        ____, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
             ____, ____, ____, ____, ____,                                   ____, KC_MS_BTN1, KC_MS_BTN2, TRACK_SCROLL, ____,
                                     ____, KC_TRNS,                           TO(MSTURDY),
                                 ____,____,____,                        ____,____,____,
@@ -199,13 +199,13 @@ void matrix_scan_user(void) {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case LGUI_T(KC_A): // left pinkie
-            return TAPPING_TERM + 50;
+            return TAPPING_TERM + 75;
         case RGUI_T(KC_S): // right pinkie
-            return TAPPING_TERM + 50;
+            return TAPPING_TERM + 75;
         case LALT_T(KC_O):
-            return TAPPING_TERM + 25;
+            return TAPPING_TERM + 35;
         case LALT_T(KC_N):
-            return TAPPING_TERM + 25;
+            return TAPPING_TERM + 35;
         case LCTL_T(KC_E):
             return TAPPING_TERM + 10;
         case RCTL_T(KC_T):
