@@ -1,7 +1,9 @@
+#include "action.h"
+#include "quantum.h"
 #include QMK_KEYBOARD_H
 
 #define MSTURDY 0
-#define DVORAK 1
+#define QWERTY 1
 #define NAV  2
 #define SYMB 3
 #define NUM  4
@@ -56,10 +58,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                            MO(SYMB), MO(MOUS),                                            KC_ESC,
                       MO(NUM), KC_BSPC,KC_DEL,                                                  KC_ENT,KC_SPC,MO(NAV),
                                 ____,                                                  KC_TAB),
-	[DVORAK] = LAYOUT(
-            KC_SCLN, KC_COMM, KC_DOT, KC_P, KC_Y,                                    KC_F, KC_G, KC_C, KC_R, KC_L,
-            LGUI_T(KC_A), LALT_T(KC_O), LCTL_T(KC_E), LSFT_T(KC_U), KC_I,            KC_D, RSFT_T(KC_H), RCTL_T(KC_T), RALT_T(KC_N), RGUI_T(KC_S),
-            XP(n_tilde,N_tilde), KC_Q, KC_J, KC_K, KC_X,                                KC_B, KC_M, KC_W, KC_V, KC_Z,
+	[QWERTY] = LAYOUT(
+            KC_Q, KC_W, KC_E, KC_R, KC_T,                                    KC_Y, KC_U, KC_I, KC_O, KC_P,
+            LGUI_T(KC_A), LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), KC_G,            KC_H, RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN),
+            KC_Z, KC_X, KC_C, KC_V, KC_B,                                KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH,
                                            MO(SYMB), MO(MOUS),                                            KC_ESC,
                       MO(NUM), KC_BSPC,KC_DEL,                                                  KC_ENT,KC_SPC,MO(NAV),
                                 ____,                                                  KC_TAB),
