@@ -33,10 +33,11 @@
 /* #define MOUSE_EXTENDED_REPORT */
 // Auto activation
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
-#define AUTO_MOUSE_TIME 500
+#define AUTO_MOUSE_TIME 1000
+#define AUTO_MOUSE_DELAY 0
 
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
-#define CAPS_WORD_IDLE_TIMEOUT 1000  // 1 seconds.
+#define CAPS_WORD_IDLE_TIMEOUT 2000  // 2 seconds.
                                      //
 // Configure the global tapping term (default: 200ms)
 #define TAPPING_TERM 150

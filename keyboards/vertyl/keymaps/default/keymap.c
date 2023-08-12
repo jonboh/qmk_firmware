@@ -1,5 +1,3 @@
-#include "action.h"
-#include "quantum.h"
 #include QMK_KEYBOARD_H
 
 #define MSTURDY 0
@@ -23,7 +21,9 @@ enum custom_keycodes {
     M_SP_BUT,
     M_HICH,
     M_UST,
-    TRACK_SCROLL,
+    MOUSE_TRACK_SCROLL,
+    SET_MSTURDY,
+    SET_QWERTY,
 };
 
 // Home row mods for Magic Sturdy layer.
@@ -55,14 +55,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
             KC_V, KC_M, KC_L, KC_C, KC_P,                                    KC_B, MAGIC, KC_U, KC_O, KC_Q,
             HOME_S, HOME_T, HOME_R, HOME_D, KC_Y,            KC_F, HOME_N, HOME_E, HOME_A, HOME_I,
             KC_X, KC_K, KC_J, KC_G, KC_W,                                KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
-                                           MO(SYMB), MO(MOUS),                                            KC_ESC,
+                                           MO(SYMB), ____,                                            KC_ESC,
                       MO(NUM), KC_BSPC,KC_DEL,                                                  KC_ENT,KC_SPC,MO(NAV),
                                 ____,                                                  KC_TAB),
 	[QWERTY] = LAYOUT(
             KC_Q, KC_W, KC_E, KC_R, KC_T,                                    KC_Y, KC_U, KC_I, KC_O, KC_P,
             LGUI_T(KC_A), LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), KC_G,            KC_H, RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN),
             KC_Z, KC_X, KC_C, KC_V, KC_B,                                KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH,
-                                           MO(SYMB), MO(MOUS),                                            KC_ESC,
+                                           MO(SYMB), ____,                                            KC_ESC,
                       MO(NUM), KC_BSPC,KC_DEL,                                                  KC_ENT,KC_SPC,MO(NAV),
                                 ____,                                                  KC_TAB),
 	[NAV] = LAYOUT(
@@ -86,19 +86,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 ____, ____,____,                KC_ENT, KC_SPC, MO(NAV),
                                 ____,                                   KC_TAB),
 	[FUNC] = LAYOUT(
-            TO(DVORAK), ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, TO(MSTURDY),
+            SET_QWERTY, ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, SET_MSTURDY,
             LGUI_T(KC_F2), LALT_T(KC_F3), LCTL_T(KC_F4), LSFT_T(KC_F5), KC_F6,              KC_F7, RSFT_T(KC_F8), RCTL_T(KC_F9), LALT_T(KC_F10), RGUI_T(KC_F11),
             KC_F1, ____, ____, ____, ____,                                                  ____, XP(n_tilde,N_tilde), ____, ____, KC_F12,
                                       ____,____,                                            ____,
                                 ____, ____,____,                                      ____, ____,____,
                                 ____,                                                       ____),
 	[MOUS] = LAYOUT(
-            ____, ____, ____, ____, ____,                                    ____, ____, ____, ____, ____,
-           KC_MS_BTN3, TRACK_SCROLL, KC_MS_BTN2, KC_MS_BTN1, ____,                        ____, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-            ____, ____, ____, ____, ____,                                   ____, KC_MS_BTN1, KC_MS_BTN2, TRACK_SCROLL, KC_MS_BTN3,
-                                    ____, KC_TRNS,                           TO(MSTURDY),
-                                ____,____,____,                        ____,____,____,
-                              ____,                                          ____),
+            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                                    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+            KC_MS_BTN3, MOUSE_TRACK_SCROLL, KC_MS_BTN2, KC_MS_BTN1, KC_TRNS,                                   KC_TRNS, KC_MS_BTN1, KC_MS_BTN2, MOUSE_TRACK_SCROLL, KC_MS_BTN3,
+                                    KC_TRNS, ____,                           KC_TRNS,
+                                KC_TRNS,KC_TRNS,KC_TRNS,                        KC_TRNS,KC_TRNS,KC_TRNS,
+                              KC_TRNS,                                          KC_TRNS),
 };
 
 // Keyboard Logic
@@ -113,7 +113,7 @@ void pointing_device_init_user(void) {
 bool set_scrolling = false;
 // Variables to store accumulated scroll values
 int64_t scroll_accumulated_h = 0;
-int64_t  scroll_accumulated_v = 0;
+int64_t scroll_accumulated_v = 0;
 #define TRACK_RESOLUTION  64
 
 
@@ -135,26 +135,16 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
         mouse_report.x = 0;
         mouse_report.y = 0;
     }
+    if (IS_LAYER_ON(NUM) || IS_LAYER_ON(SYMB) || IS_LAYER_ON(NAV) || IS_LAYER_ON(FUNC)) {
+        layer_off(MOUS);
+    }
     return mouse_report;
 }
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-  // Use `static` variable to remember the previous status.
-  static bool adjust_on = false;
-
-  if (adjust_on != IS_LAYER_ON_STATE(state, MOUS)) {
-    adjust_on = !adjust_on;
-    if (!adjust_on) {// Just exited the ADJUST layer.
-      set_scrolling = false;
-    }
-  }
-
-  return state;
-}
 
 bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
     switch(keycode) {
-        case TRACK_SCROLL:
+        case MOUSE_TRACK_SCROLL:
             return true;
         default:
             return false;
@@ -166,9 +156,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     update_tri_layer(NUM, NAV, FUNC);
     if (!process_achordion(keycode, record)) {return false;}
 
-    switch (keycode) {
-        case TRACK_SCROLL: set_scrolling = record->event.pressed; break;
-    }
 
     if (record->event.pressed) {
 
@@ -192,7 +179,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case M_HICH:   SEND_STRING(/*w*/"hich"); break;
             case M_UST:   SEND_STRING(/*j*/"ust"); break;
         }
-    }  return true;
+    }
+    switch (keycode) {
+        case MOUSE_TRACK_SCROLL: set_scrolling = record->event.pressed; break;
+        case SET_MSTURDY: layer_move(MSTURDY); break;
+        case SET_QWERTY: layer_move(QWERTY); break;
+    }
+    return true;
 }
 void matrix_scan_user(void) {
     achordion_task();
