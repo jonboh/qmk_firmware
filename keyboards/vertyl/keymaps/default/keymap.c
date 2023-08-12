@@ -292,18 +292,15 @@ enum combo_events {
   SQUARE_BRACKET,
   PARENTHESIS,
   CURLY_BRACKETS,
-  SCROLL,
 };
 
 const uint16_t PROGMEM combo_full_squarebracket[] = {KC_LBRC, KC_RBRC, COMBO_END};
 const uint16_t PROGMEM combo_full_parenthesis[] = {KC_LPRN, KC_RPRN, COMBO_END};
 const uint16_t PROGMEM combo_full_curlybracket[] = {KC_LCBR, KC_RCBR, COMBO_END};
-const uint16_t PROGMEM combo_scroll[] = {KC_MS_BTN1, KC_MS_BTN2, COMBO_END};
 combo_t key_combos[] = {
   [SQUARE_BRACKET] = COMBO_ACTION(combo_full_squarebracket),
   [PARENTHESIS] = COMBO_ACTION(combo_full_parenthesis),
   [CURLY_BRACKETS] = COMBO_ACTION(combo_full_curlybracket),
-  [SCROLL] = COMBO_ACTION(combo_scroll),
 };
 
 
@@ -321,9 +318,6 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             case CURLY_BRACKETS:
                 send_string("{}");
                 tap_code16(KC_LEFT);
-                break;
-            case SCROLL:
-                tap_code16(TRACK_SCROLL);
                 break;
         }
     }
