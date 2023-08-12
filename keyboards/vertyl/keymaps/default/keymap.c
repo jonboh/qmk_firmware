@@ -10,6 +10,7 @@
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
+//#ifdef REPEAT_KEY_ENABLE
     M_ION,
     M_NION,
     M_MENT,
@@ -21,6 +22,7 @@ enum custom_keycodes {
     M_SP_BUT,
     M_HICH,
     M_UST,
+//#endif
     MOUSE_TRACK_SCROLL,
     SET_MSTURDY,
     SET_QWERTY,
@@ -93,12 +95,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 ____, ____,____,                                      ____, ____,____,
                                 ____,                                                       ____),
 	[MOUS] = LAYOUT(
-            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                                    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-            KC_MS_BTN3, MOUSE_TRACK_SCROLL, KC_MS_BTN2, KC_MS_BTN1, KC_TRNS,                                   KC_TRNS, KC_MS_BTN1, KC_MS_BTN2, MOUSE_TRACK_SCROLL, KC_MS_BTN3,
-                                    KC_TRNS, ____,                           KC_TRNS,
-                                KC_TRNS,KC_TRNS,KC_TRNS,                        KC_TRNS,KC_TRNS,KC_TRNS,
-                              KC_TRNS,                                          KC_TRNS),
+            ____, ____, ____, ____, ____,                                       ____, ____, ____, ____, ____,
+            ____, ____, ____, ____, ____,                                       ____, ____, ____, ____, ____,
+            KC_MS_BTN3, MOUSE_TRACK_SCROLL, KC_MS_BTN2, KC_MS_BTN1, ____,   ____, KC_MS_BTN1, KC_MS_BTN2, MOUSE_TRACK_SCROLL, KC_MS_BTN3,
+                                    ____, ____,                           ____,
+                                ____,____,____,                        ____,____,____,
+                              ____,                                          ____),
 };
 
 // Keyboard Logic
@@ -153,12 +155,15 @@ bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    dprintf("Layer MSTURDY %b\n", IS_LAYER_ON(MSTURDY));
+    dprintf("Layer MOUS %b\n", IS_LAYER_ON(MOUS));
     update_tri_layer(NUM, NAV, FUNC);
     if (!process_achordion(keycode, record)) {return false;}
 
 
     if (record->event.pressed) {
 
+//#ifdef REPEAT_KEY_ENABLE
         int rep_count = get_repeat_key_count();
         if (rep_count < -1) {
             send_char('n');
@@ -179,6 +184,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case M_HICH:   SEND_STRING(/*w*/"hich"); break;
             case M_UST:   SEND_STRING(/*j*/"ust"); break;
         }
+//#endif
     }
     switch (keycode) {
         case MOUSE_TRACK_SCROLL: set_scrolling = record->event.pressed; break;
@@ -209,6 +215,8 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
             return TAPPING_TERM;
     }
 }
+
+//#ifdef CAPS_WORD_ENABLE
 bool caps_word_press_user(uint16_t keycode) {
     switch (keycode) {
         // Keycodes that continue Caps Word, with shift applied.
@@ -237,8 +245,9 @@ void caps_word_set_user(bool active) {
         // Do something when Caps Word deactivates.
     }
 }
+//#endif
 
-
+//#ifdef REPEAT_KEY_ENABLE
 uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
     if ((mods & ~MOD_MASK_SHIFT) == 0) {
         switch (keycode) {
@@ -281,8 +290,9 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 
     return M_THE;
 }
+//#endif
 
-// Combos
+//#ifdef COMBO_ENABLE
 enum combo_events {
   SQUARE_BRACKET,
   PARENTHESIS,
@@ -317,6 +327,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         }
     }
 }
+//#endif /* ifdef COMBO_ENABLE */
 
 /* void keyboard_post_init_user(void) { */
 /*   // Customise these values to desired behaviour */
