@@ -227,17 +227,17 @@ void matrix_scan_user(void) {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case LGUI_T(KC_A): // left pinkie
-            return TAPPING_TERM + 75;
-        case RGUI_T(KC_S): // right pinkie
-            return TAPPING_TERM + 75;
-        case LALT_T(KC_O):
+        case HOME_S: // left pinkie
+            return TAPPING_TERM + 50;
+        case HOME_I: // right pinkie
+            return TAPPING_TERM + 50;
+        case HOME_T:
             return TAPPING_TERM + 35;
-        case LALT_T(KC_N):
+        case HOME_A:
             return TAPPING_TERM + 35;
-        case LCTL_T(KC_E):
+        case HOME_R:
             return TAPPING_TERM + 10;
-        case RCTL_T(KC_T):
+        case HOME_E:
             return TAPPING_TERM + 10;
         default:
             return TAPPING_TERM;

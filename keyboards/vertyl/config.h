@@ -26,7 +26,7 @@
 #define CAPS_WORD_IDLE_TIMEOUT 2000  // 2 seconds.
                                      //
 // Configure the global tapping term (default: 200ms)
-#define TAPPING_TERM 150
+#define TAPPING_TERM 100
 #define TAPPING_TERM_PER_KEY
 #define TAPPING_TERM_INCREMENT 5
 
