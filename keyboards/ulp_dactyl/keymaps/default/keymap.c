@@ -27,6 +27,8 @@ enum custom_keycodes {
     M_SP_BUT,
     M_HICH,
     M_UST,
+    M_QUOT,
+    M_DQUO,
 //#endif
     MOUSE_TRACK_SCROLL,
     SET_MSTURDY,
@@ -118,23 +120,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                        ____,  ____, KC_DEL,                                            KC_ESC,____, KC_TRNS,
                         MO(SYMB), KC_BSPC,                                                   KC_SPC,
                         KC_TAB,                                                           KC_ENT),
-// 	// [SYMB_MODR] = LAYOUT(
-//  //                KC_GRV, KC_LT, KC_GT, KC_DQUO, KC_QUOT,                 KC_AMPR, KC_COLN, KC_LBRC, KC_RBRC, KC_PERC,
-// 	//             KC_UNDS, KC_MINS, KC_PLUS, KC_EQL, KC_HASH,             KC_PIPE, ____, KC_RCTL, KC_RALT, KC_RGUI,
-// 	//             KC_CIRC, KC_SLSH, KC_ASTR, KC_BSLS, KC_AT,              KC_TILD, ____, KC_LCBR, KC_RCBR,KC_EXLM,
-//  //                        ____, ____,                                             ____, KC_TRNS,
-//  //                        KC_TRNS, KC_BSPC,                                                   KC_ESC,KC_SPC,
-//  //                        KC_TAB,    KC_DEL,                                                       KC_ENT),
-// 	/* [SYMB_MODL] = LAYOUT(KC_GRV, KC_LT, KC_GT, KC_DQUO, KC_QUOT,            KC_AMPR, KC_COLN, KC_LBRC, KC_RBRC, KC_PERC, */
-// 	/*             KC_LGUI, KC_LALT, KC_LCTL, ____, KC_HASH,             KC_PIPE, KC_DLR, KC_LPRN, KC_RPRN, KC_QUES, */
-// 	/*             KC_CIRC, KC_SLSH, KC_ASTR, KC_BSLS, KC_AT,              KC_TILD, ____, KC_LCBR, KC_RCBR,KC_EXLM, */
-// 	/*                         KC_TRNS, ____,                                             ____, ____, */
-// 	/*                         KC_TRNS, KC_BSPC,                                                   KC_ESC,KC_SPC, */
-// 	/*                         KC_TAB,    KC_DEL,                                                       KC_ENT), */
-// //
-// //
-// //
-//
 };
 
 
@@ -227,9 +212,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case M_THE:     SEND_STRING(/* */"the"); break;
             case M_UPDIR:   SEND_STRING(/*.*/"./"); break;
             case M_EFORE:   SEND_STRING(/*b*/"efore"); break;
-            case M_SP_BUT:   SEND_STRING(/*,*/" but"); break;
-            case M_HICH:   SEND_STRING(/*w*/"hich"); break;
-            case M_UST:   SEND_STRING(/*j*/"ust"); break;
+            case M_SP_BUT:  SEND_STRING(/*,*/" but"); break;
+            case M_HICH:    SEND_STRING(/*w*/"hich"); break;
+            case M_UST:     SEND_STRING(/*j*/"ust"); break;
+            case M_QUOT:
+                tap_code16(KC_QUOT);
+                tap_code16(KC_LEFT);
+                break;
+            case M_DQUO:
+                tap_code16(KC_DQUO);
+                tap_code16(KC_LEFT);
+                break;
         }
 //#endif
     }
@@ -325,6 +318,8 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
             case KC_W: return M_HICH;
             case KC_J: return M_UST;
             case KC_B: return M_EFORE;
+            case KC_QUOT: return M_QUOT;
+            case KC_DQUO: return M_DQUO;
         }
         return KC_NO;
     }
@@ -375,7 +370,6 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
                 tap_code16(KC_LEFT);
                 break;
             case LESSTHAN_GREATERTHAN:
-                print("ltgt");
                 send_string("<>");
                 tap_code16(KC_LEFT);
                 break;
