@@ -7,6 +7,6 @@
 # dfu-programmer atmega32u4 flash vertyl_default.hex
 # dfu-programmer atmega32u4 reset
 qmk compile -kb ulp_dactyl -km default -j 8 -e CONVERT_TO=promicro_rp2040
-sleep 2
+sleep 10
 cp ulp_dactyl_default_promicro_rp2040.uf2 /run/media/jonboh/RPI-RP2/
 
