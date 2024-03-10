@@ -1,0 +1,29 @@
+{
+    "manufacturer": "Jon Bosque",
+    "keyboard_name": "optyl",
+    "maintainer": "jonboh",
+    "url": "",
+    "usb": {
+        "device_version": "1.0.0",
+        "pid": "0x0000",
+        "vid": "0xFEED"
+    },
+    "matrix_pins": {
+        "cols": ["C6"],
+        "rows": ["F4"]
+    },
+    "diode_direction": "COL2ROW",
+    "split": {
+        "soft_serial_pin": "D0"
+    },
+    "bootloader": "atmel-dfu",
+    "processor": "atmega32u4",
+    "layouts": {
+        "LAYOUT": {
+            "layout": [
+                {"matrix": [0, 0], "x": 0, "y": 0},
+
+            ]
+        }
+    }
+}
