@@ -1,10 +1,8 @@
-// #include "../keymap_support.c"
 #include "keycodes.h"
 #include "quantum_keycodes.h"
 #include QMK_KEYBOARD_H
 #include <stdbool.h>
 #include <stdint.h>
-// #include "svalboard.h"
 #include "../features/achordion.h"
 
 enum custom_keycodes {
@@ -49,21 +47,21 @@ const uint32_t unicode_map[] PROGMEM = {
 #define LAYER_COLOR(name, color) rgblight_segment_t const (name)[] = RGBLIGHT_LAYER_SEGMENTS({0, 2, color})
 
 LAYER_COLOR(layer0_colors, HSV_GREEN); // NORMAL
-LAYER_COLOR(layer1_colors, HSV_GREEN); // NORMAL_HOLD
-LAYER_COLOR(layer2_colors, HSV_ORANGE); // FUNC
-LAYER_COLOR(layer3_colors, HSV_ORANGE); // FUNC_HOLD
-LAYER_COLOR(layer4_colors, HSV_AZURE); // NAS
-LAYER_COLOR(layer5_colors, HSV_AZURE); // would be NAS hold
-LAYER_COLOR(layer6_colors, HSV_RED); // maybe 10kp
-LAYER_COLOR(layer7_colors, HSV_RED);
-LAYER_COLOR(layer8_colors, HSV_PINK);
-LAYER_COLOR(layer9_colors, HSV_PURPLE);
-LAYER_COLOR(layer10_colors, HSV_CORAL);
-LAYER_COLOR(layer11_colors, HSV_SPRINGGREEN);
-LAYER_COLOR(layer12_colors, HSV_TEAL);
-LAYER_COLOR(layer13_colors, HSV_TURQUOISE);
-LAYER_COLOR(layer14_colors, HSV_YELLOW);
-LAYER_COLOR(layer15_colors, HSV_MAGENTA); // MBO
+LAYER_COLOR(layer1_colors, HSV_ORANGE); // NORMAL_HOLD
+LAYER_COLOR(layer2_colors, HSV_AZURE); // FUNC
+LAYER_COLOR(layer3_colors, HSV_RED); // FUNC_HOLD
+LAYER_COLOR(layer4_colors, HSV_PINK); // NAS
+LAYER_COLOR(layer5_colors, HSV_PURPLE); // would be NAS hold
+LAYER_COLOR(layer6_colors, HSV_CORAL); // maybe 10kp
+LAYER_COLOR(layer7_colors, HSV_SPRINGGREEN);
+LAYER_COLOR(layer8_colors, HSV_TEAL);
+LAYER_COLOR(layer9_colors, HSV_TURQUOISE);
+LAYER_COLOR(layer10_colors, HSV_MAGENTA);
+LAYER_COLOR(layer11_colors, HSV_GREEN);
+LAYER_COLOR(layer12_colors, HSV_ORANGE);
+LAYER_COLOR(layer13_colors, HSV_AZURE);
+LAYER_COLOR(layer14_colors, HSV_RED);
+LAYER_COLOR(layer15_colors, HSV_PINK); // MBO
 #undef LAYER_COLOR
 
 const rgblight_segment_t*  const __attribute((weak))sval_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
@@ -94,6 +92,17 @@ void keyboard_post_init_user(void) {
   //debug_keyboard=true;
   //debug_mouse=true;
   rgblight_layers = sval_rgb_layers;
+  pointing_device_set_cpi_on_side(true, 125);
+  pointing_device_set_cpi_on_side(false, 1000);
+}
+
+
+report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
+    left_report.h = left_report.x;
+    left_report.v = -left_report.y;
+    left_report.x = 0;
+    left_report.y = 0;
+    return pointing_device_combine_reports(left_report, right_report);
 }
 
 enum layer {
@@ -101,30 +110,26 @@ enum layer {
     NAV,
     NUM,
     SYMB,
-    MOUSE
-    // NORMAL_HOLD,
-    // FUNC,
-    // FUNC_HOLD,
-    // NAS,
-    // MBO = MH_AUTO_BUTTONS_LAYER,
+    FUNC,
+    MOUSE,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [NORMAL] = LAYOUT(
-        /*Center           North           East            South           West*/
-        /*R1*/ HOME_N,     MAGIC,          XXXXXXX,        KC_H,           KC_F, XXXXXXX,
-        /*R2*/ HOME_E,     KC_U,           XXXXXXX,        KC_COMMA,       KC_B, XXXXXXX,
-        /*R3*/ HOME_A,     KC_O,           XXXXXXX,        KC_DOT,         XXXXXXX, XXXXXXX,
-        /*R4*/ HOME_I,     KC_Q,           XXXXXXX,        KC_COLON,       XXXXXXX, XXXXXXX,
+        /*Center           North              East            South           West*/
+        /*R1*/ HOME_N,     KC_H,              XXXXXXX,        MAGIC,          KC_F, XXXXXXX,
+        /*R2*/ HOME_E,     KC_COMMA,          XXXXXXX,        KC_U,           KC_B, XXXXXXX,
+        /*R3*/ HOME_A,     KC_DOT,            XXXXXXX,        KC_O,           KC_Z, XXXXXXX,
+        /*R4*/ HOME_I,     KC_SCLN,           XXXXXXX,        KC_Q,          XXXXXXX, XXXXXXX,
 
-        /*L1*/ HOME_D,     KC_C,           KC_Y,           KC_G,           XXXXXXX, XXXXXXX,
-        /*L2*/ HOME_R,     KC_L,           KC_W,           KC_J,           XXXXXXX, XXXXXXX,
-        /*L3*/ HOME_T,     KC_M,           KC_P,           KC_K,           XXXXXXX, XXXXXXX,
-        /*L4*/ HOME_S,     KC_V,           XXXXXXX,        KC_X,           XXXXXXX, XXXXXXX,
+        /*L1*/ HOME_D,     KC_G,              KC_Y,           KC_C,           XXXXXXX, XXXXXXX,
+        /*L2*/ HOME_R,     KC_J,              KC_W,           KC_L,           XXXXXXX, XXXXXXX,
+        /*L3*/ HOME_T,     KC_K,              KC_P,           KC_M,           XXXXXXX, XXXXXXX,
+        /*L4*/ HOME_S,     KC_X,              XXXXXXX,        KC_V,           XXXXXXX, XXXXXXX,
 
         /*     Down        Pad             Up              Nail           Knuckle    DoubleDown*/
         /*RT*/ MO(NAV),    KC_SPACE,       KC_ESC,         KC_ENTER,      KC_LALT,   XXXXXXX,
-        /*LT*/ MO(NUM),    KC_BSPC,        MO(SYMB),       XXXXXXX,       KC_TAB,    XXXXXXX
+        /*LT*/ MO(SYMB),    KC_BSPC,        MO(NUM),       KC_DEL,       KC_TAB,    XXXXXXX
         ),
     [NAV] = LAYOUT(
         /*Center           North          East           South          West*/
@@ -140,28 +145,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         /*     Down        Pad            Up             Nail           Knuckle    DoubleDown*/
         /*RT*/ XXXXXXX,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX,
-        /*LT*/ XXXXXXX,   XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX
+        /*LT*/ MO(FUNC),   XXXXXXX,       MO(MOUSE),       XXXXXXX,       XXXXXXX,   XXXXXXX
         ),
     [SYMB] = LAYOUT(
         /*Center           North           East            South           West*/
         /*R1*/ KC_DLR,     KC_COLN,        XXXXXXX,        KC_EQL,         KC_UNDS, XXXXXXX,
-        /*R2*/ KC_MINS,    KC_BSLS,        XXXXXXX,        KC_QUES,        KC_TILD, XXXXXXX,
-        /*R3*/ KC_PLUS,    KC_SLSH,        XXXXXXX,        KC_EXLM,        XXXXXXX, XXXXXXX,
+        /*R2*/ KC_MINS,    KC_QUES,        XXXXXXX,        KC_BSLS,        KC_TILD, XXXXXXX,
+        /*R3*/ KC_PLUS,    KC_EXLM,        XXXXXXX,        KC_SLSH,        XXXXXXX, XXXXXXX,
         /*R4*/ KC_PERC,    XXXXXXX,        CW_TOGG,        XXXXXXX,        XXXXXXX, XXXXXXX,
 
-        /*L1*/ KC_PIPE,     KC_DQUO,       KC_AT,          XXXXXXX,        XXXXXXX, XXXXXXX,
-        /*L2*/ KC_RPRN,     KC_RBRC,       KC_HASH,        XXXXXXX,        XXXXXXX, XXXXXXX,
-        /*L3*/ KC_LPRN,     KC_LBRC,       XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
+        /*L1*/ KC_PIPE,     KC_DQUO,       KC_AT,          KC_QUOT,        XXXXXXX, XXXXXXX,
+        /*L2*/ KC_RPRN,     KC_RBRC,       KC_HASH,        KC_RCBR,        XXXXXXX, XXXXXXX,
+        /*L3*/ KC_LPRN,     KC_LBRC,       XXXXXXX,        KC_LCBR,        XXXXXXX, XXXXXXX,
         /*L4*/ KC_GRV,      KC_CIRC,       XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ XXXXXXX,         KC_SPACE,       XXXXXXX,       KC_BSPC,        KC_LALT,     XXXXXXX,
-        /*LT*/ KC_LSFT,         KC_ENTER,       XXXXXXX,          KC_TAB,         KC_LCTL,     KC_CAPS
+        /*RT*/ MO(FUNC),         XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
+        /*LT*/ XXXXXXX,         XXXXXXX,       XXXXXXX,          XXXXXXX,        XXXXXXX,     TO(MOUSE)
         ),
     [NUM] = LAYOUT(
         /*Center           North           East            South           West*/
-        /*R1*/ KC_4,       KC_7,           XXXXXXX,        KC_1,           KC_F, XXXXXXX,
-        /*R2*/ KC_5,       KC_8,           XXXXXXX,        KC_2,           KC_0, XXXXXXX,
+        /*R1*/ KC_4,       KC_7,           XXXXXXX,        KC_1,           KC_0, XXXXXXX,
+        /*R2*/ KC_5,       KC_8,           XXXXXXX,        KC_2,           XXXXXXX, XXXXXXX,
         /*R3*/ KC_6,       KC_9,           XXXXXXX,        KC_3,           XXXXXXX, XXXXXXX,
         /*R4*/ XXXXXXX,    XXXXXXX,        XXXXXXX,        KC_COLON,       XXXXXXX, XXXXXXX,
 
@@ -171,8 +176,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*L4*/ KC_LGUI,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ XXXXXXX,         KC_SPACE,       XXXXXXX,       KC_BSPC,        KC_LALT,     XXXXXXX,
-        /*LT*/ KC_LSFT,         KC_ENTER,       XXXXXXX,          KC_TAB,         KC_LCTL,     KC_CAPS
+        /*RT*/ MO(MOUSE),        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
+        /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
+        ),
+    [FUNC] = LAYOUT(
+        /*Center                    North           East            South           West*/
+        /*R1*/ RSFT_T(KC_F7),       KC_MPLY,        XXXXXXX,        KC_MPRV,        KC_F6,   XXXXXXX,
+        /*R2*/ RCTL_T(KC_F8),       KC_MSTP,        XXXXXXX,        KC_MNXT,        XXXXXXX, XXXXXXX,
+        /*R3*/ RALT_T(KC_F9),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
+        /*R4*/ RGUI_T(KC_F10),      XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
+
+        /*L1*/ LSFT_T(KC_F4),       KC_MUTE,        XXXXXXX,        KC_VOLU,        XXXXXXX, XXXXXXX,
+        /*L2*/ LCTL_T(KC_F3),       XXXXXXX,        XXXXXXX,        KC_VOLD,        XXXXXXX, XXXXXXX,
+        /*L3*/ LALT_T(KC_F2),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
+        /*L4*/ LGUI_T(KC_F1),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
+
+        /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
+        /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
+        /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
         ),
     [MOUSE] = LAYOUT(
         /*Center           North           East            South           West*/
@@ -182,14 +203,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*R3*/ HOME_A,     KC_O,           XXXXXXX,        KC_DOT,         XXXXXXX, XXXXXXX,
         /*R4*/ HOME_I,     KC_Q,           XXXXXXX,        KC_COLON,       XXXXXXX, XXXXXXX,
 
-        /*L1*/ HOME_D,     KC_C,           KC_Y,           KC_G,           KC_W, XXXXXXX,
-        /*L2*/ HOME_R,     KC_L,           KC_P,           KC_J,           XXXXXXX, XXXXXXX,
-        /*L3*/ HOME_T,     KC_M,           XXXXXXX,        KC_K,           XXXXXXX, XXXXXXX,
-        /*L4*/ HOME_S,     KC_V,           XXXXXXX,        KC_X,           XXXXXXX, XXXXXXX,
+        /*L1*/ KC_MS_BTN1,     KC_C,           KC_Y,           KC_G,           KC_W, XXXXXXX,
+        /*L2*/ KC_MS_BTN2,     KC_L,           KC_P,           KC_J,           XXXXXXX, XXXXXXX,
+        /*L3*/ KC_MS_BTN3,     KC_M,           XXXXXXX,        KC_K,           XXXXXXX, XXXXXXX,
+        /*L4*/ XXXXXXX,     KC_V,           XXXXXXX,        KC_X,           XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ XXXXXXX,         KC_SPACE,       XXXXXXX,       KC_BSPC,        KC_LALT,     XXXXXXX,
-        /*LT*/ KC_LSFT,         KC_ENTER,       XXXXXXX,          KC_TAB,         KC_LCTL,     KC_CAPS
+        /*RT*/ XXXXXXX,        XXXXXXX,       TO(NORMAL),       XXXXXXX,        XXXXXXX,     XXXXXXX,
+        /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
         )
 };
 
@@ -207,9 +228,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONSOLE_ENABLE
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
 #endif
-    // update_tri_layer(NUM, NAV, FUNC); TODO: reinstate
-    // update_tri_layer(SYMB, MOUSL, SYMB_MODL);
-    // update_tri_layer(SYMB, MOUSR, SYMB_MODR);
     if (!process_achordion(keycode, record)) {return false;}
 
 
@@ -244,11 +262,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 break;
         }
     }
-    // switch (keycode) {
-    //     case MOUSE_TRACK_SCROLL: set_scrolling = record->event.pressed; break;
-    //     case SET_MSTURDY: layer_move(MSTURDY); break;
-    //     case SET_QWERTY: layer_move(QWERTY); break;
-    // }
     return true;
 }
 
@@ -387,3 +400,5 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         }
     }
 }
+
+
