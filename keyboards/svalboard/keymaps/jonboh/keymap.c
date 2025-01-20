@@ -120,7 +120,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*R1*/ HOME_N,     KC_H,              XXXXXXX,        MAGIC,          KC_F, XXXXXXX,
         /*R2*/ HOME_E,     KC_COMMA,          XXXXXXX,        KC_U,           KC_B, XXXXXXX,
         /*R3*/ HOME_A,     KC_DOT,            XXXXXXX,        KC_O,           KC_Z, XXXXXXX,
-        /*R4*/ HOME_I,     KC_SCLN,           XXXXXXX,        KC_Q,          XXXXXXX, XXXXXXX,
+        /*R4*/ HOME_I,     KC_SCLN,           UP(n_tilde,N_tilde),        KC_Q,          XXXXXXX, XXXXXXX,
 
         /*L1*/ HOME_D,     KC_G,              KC_Y,           KC_C,           XXXXXXX, XXXXXXX,
         /*L2*/ HOME_R,     KC_J,              KC_W,           KC_L,           XXXXXXX, XXXXXXX,
@@ -144,24 +144,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*L4*/ KC_LGUI,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX, XXXXXXX,
 
         /*     Down        Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ XXXXXXX,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX,
+        /*RT*/ XXXXXXX,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   TO(MOUSE),
         /*LT*/ MO(FUNC),   XXXXXXX,       MO(MOUSE),       XXXXXXX,       XXXXXXX,   XXXXXXX
         ),
     [SYMB] = LAYOUT(
         /*Center           North           East            South           West*/
-        /*R1*/ KC_DLR,     KC_COLN,        XXXXXXX,        KC_EQL,         KC_UNDS, XXXXXXX,
+        /*R1*/ KC_DLR,     KC_EQL,        XXXXXXX,        KC_COLN,         KC_UNDS, XXXXXXX,
         /*R2*/ KC_MINS,    KC_QUES,        XXXXXXX,        KC_BSLS,        KC_TILD, XXXXXXX,
-        /*R3*/ KC_PLUS,    KC_EXLM,        XXXXXXX,        KC_SLSH,        XXXXXXX, XXXXXXX,
+        /*R3*/ KC_PLUS,    KC_EXLM,        XXXXXXX,        KC_SLSH,        KC_ASTR, XXXXXXX,
         /*R4*/ KC_PERC,    XXXXXXX,        CW_TOGG,        XXXXXXX,        XXXXXXX, XXXXXXX,
 
-        /*L1*/ KC_PIPE,     KC_DQUO,       KC_AT,          KC_QUOT,        XXXXXXX, XXXXXXX,
-        /*L2*/ KC_RPRN,     KC_RBRC,       KC_HASH,        KC_RCBR,        XXXXXXX, XXXXXXX,
-        /*L3*/ KC_LPRN,     KC_LBRC,       XXXXXXX,        KC_LCBR,        XXXXXXX, XXXXXXX,
+        /*L1*/ KC_PIPE,     KC_DQUO,       KC_AMPR,          KC_QUOT,        XXXXXXX, XXXXXXX,
+        /*L2*/ KC_RPRN,     KC_RBRC,       KC_AT,        KC_RCBR,        XXXXXXX, XXXXXXX,
+        /*L3*/ KC_LPRN,     KC_LBRC,       KC_HASH,        KC_LCBR,        XXXXXXX, XXXXXXX,
         /*L4*/ KC_GRV,      KC_CIRC,       XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
         /*RT*/ MO(FUNC),         XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
-        /*LT*/ XXXXXXX,         XXXXXXX,       XXXXXXX,          XXXXXXX,        XXXXXXX,     TO(MOUSE)
+        /*LT*/ XXXXXXX,         XXXXXXX,       XXXXXXX,          XXXXXXX,        XXXXXXX,     XXXXXXX
         ),
     [NUM] = LAYOUT(
         /*Center           North           East            South           West*/
@@ -184,12 +184,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*R1*/ RSFT_T(KC_F7),       KC_MPLY,        XXXXXXX,        KC_MPRV,        KC_F6,   XXXXXXX,
         /*R2*/ RCTL_T(KC_F8),       KC_MSTP,        XXXXXXX,        KC_MNXT,        XXXXXXX, XXXXXXX,
         /*R3*/ RALT_T(KC_F9),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
-        /*R4*/ RGUI_T(KC_F10),      XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
+        /*R4*/ RGUI_T(KC_F10),      XXXXXXX,        XXXXXXX,        KC_F12,         XXXXXXX, XXXXXXX,
 
-        /*L1*/ LSFT_T(KC_F4),       KC_MUTE,        XXXXXXX,        KC_VOLU,        XXXXXXX, XXXXXXX,
+        /*L1*/ LSFT_T(KC_F4),       KC_MUTE,        KC_F5,          KC_VOLU,        XXXXXXX, XXXXXXX,
         /*L2*/ LCTL_T(KC_F3),       XXXXXXX,        XXXXXXX,        KC_VOLD,        XXXXXXX, XXXXXXX,
         /*L3*/ LALT_T(KC_F2),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
-        /*L4*/ LGUI_T(KC_F1),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
+        /*L4*/ LGUI_T(KC_F1),       XXXXXXX,        XXXXXXX,        KC_F11,         XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
         /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
@@ -198,15 +198,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MOUSE] = LAYOUT(
         /*Center           North           East            South           West*/
 
-        /*R1*/ HOME_N,     MAGIC,          KC_QUOTE,       KC_H,           KC_F, XXXXXXX,
-        /*R2*/ HOME_E,     KC_U,           KC_COLON,       KC_COMMA,       KC_B, XXXXXXX,
-        /*R3*/ HOME_A,     KC_O,           XXXXXXX,        KC_DOT,         XXXXXXX, XXXXXXX,
-        /*R4*/ HOME_I,     KC_Q,           XXXXXXX,        KC_COLON,       XXXXXXX, XXXXXXX,
+        /*R1*/ XXXXXXX,     XXXXXXX,       XXXXXXX,        KC_H,           KC_F, XXXXXXX,
+        /*R2*/ XXXXXXX,     XXXXXXX,       XXXXXXX,        KC_COMMA,       KC_B, XXXXXXX,
+        /*R3*/ XXXXXXX,     XXXXXXX,       XXXXXXX,        KC_DOT,         XXXXXXX, XXXXXXX,
+        /*R4*/ XXXXXXX,     XXXXXXX,       XXXXXXX,        KC_COLON,       XXXXXXX, XXXXXXX,
 
-        /*L1*/ KC_MS_BTN1,     KC_C,           KC_Y,           KC_G,           KC_W, XXXXXXX,
-        /*L2*/ KC_MS_BTN2,     KC_L,           KC_P,           KC_J,           XXXXXXX, XXXXXXX,
-        /*L3*/ KC_MS_BTN3,     KC_M,           XXXXXXX,        KC_K,           XXXXXXX, XXXXXXX,
-        /*L4*/ XXXXXXX,     KC_V,           XXXXXXX,        KC_X,           XXXXXXX, XXXXXXX,
+        /*L1*/ KC_LSFT,     XXXXXXX,       XXXXXXX,        KC_MS_BTN1,           KC_W, XXXXXXX,
+        /*L2*/ KC_LCTL,     XXXXXXX,       XXXXXXX,        KC_MS_BTN2,           XXXXXXX, XXXXXXX,
+        /*L3*/ KC_LALT,     XXXXXXX,       XXXXXXX,        KC_MS_BTN3,           XXXXXXX, XXXXXXX,
+        /*L4*/ KC_LGUI,     XXXXXXX,       XXXXXXX,        XXXXXXX,           XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
         /*RT*/ XXXXXXX,        XXXXXXX,       TO(NORMAL),       XXXXXXX,        XXXXXXX,     XXXXXXX,
@@ -318,7 +318,6 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
         switch (keycode) {
             // Behavior for Magic Sturdy's "magic" key.
             case KC_C:
-            case KC_P:
             case HOME_D:
             case KC_G: return KC_Y;
             case KC_Y: return KC_P;
@@ -330,6 +329,10 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
             case HOME_A: return KC_O; // A -> O
             case KC_O:  return KC_A;// O -> A
             case KC_U:  return KC_E;// U -> E
+
+            // due to inward - press on adjecent fingers
+            case KC_P: return KC_R;
+            case KC_Z: return KC_E;
 
             case KC_1 ... KC_0: return KC_DOT;
             case KC_SPC: return M_THE; // spc -> THE
@@ -357,7 +360,6 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
 
     return M_THE;
 }
-//#endif
 
 enum combo_events {
   SQUARE_BRACKET,
