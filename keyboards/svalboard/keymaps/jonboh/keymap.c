@@ -123,8 +123,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*R4*/ HOME_I,     KC_SCLN,           UP(n_tilde,N_tilde),        KC_Q,          XXXXXXX, XXXXXXX,
 
         /*L1*/ HOME_D,     KC_G,              KC_Y,           KC_C,           XXXXXXX, XXXXXXX,
-        /*L2*/ HOME_R,     KC_J,              KC_W,           KC_L,           XXXXXXX, XXXXXXX,
-        /*L3*/ HOME_T,     KC_K,              KC_P,           KC_M,           XXXXXXX, XXXXXXX,
+        /*L2*/ HOME_R,     KC_J,              KC_P,           KC_L,           XXXXXXX, XXXXXXX,
+        /*L3*/ HOME_T,     KC_K,              KC_W,           KC_M,           XXXXXXX, XXXXXXX,
         /*L4*/ HOME_S,     KC_X,              XXXXXXX,        KC_V,           XXXXXXX, XXXXXXX,
 
         /*     Down        Pad             Up              Nail           Knuckle    DoubleDown*/
@@ -331,7 +331,6 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
             case KC_U:  return KC_E;// U -> E
 
             // due to inward - press on adjecent fingers
-            case KC_P: return KC_R;
             case KC_Z: return KC_E;
 
             case KC_1 ... KC_0: return KC_DOT;
