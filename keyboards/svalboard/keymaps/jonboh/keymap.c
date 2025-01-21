@@ -133,8 +133,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         ),
     [NAV] = LAYOUT(
         /*Center           North          East           South          West*/
-        /*R1*/ KC_DOWN,    XXXXXXX,       XXXXXXX,       KC_LEFT,       KC_LEFT, XXXXXXX,
-        /*R2*/ KC_UP,      XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX, XXXXXXX,
+        /*R1*/ KC_DOWN,    KC_HOME,       XXXXXXX,       KC_PGDN,       KC_LEFT, XXXXXXX,
+        /*R2*/ KC_UP,      KC_END,        XXXXXXX,       KC_PGUP,       XXXXXXX, XXXXXXX,
         /*R3*/ KC_RIGHT,   XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX, XXXXXXX,
         /*R4*/ XXXXXXX,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX, XXXXXXX,
 
