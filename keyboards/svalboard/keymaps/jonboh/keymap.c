@@ -330,7 +330,8 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
             case KC_O:  return KC_A;// O -> A
             case KC_U:  return KC_E;// U -> E
 
-            // due to inward - press on adjecent fingers
+            // due to inward - press on adjecent or same finger
+            case KC_P: return KC_R;
             case KC_Z: return KC_E;
 
             case KC_1 ... KC_0: return KC_DOT;
