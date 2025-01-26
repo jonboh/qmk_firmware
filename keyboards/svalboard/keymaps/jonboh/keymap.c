@@ -111,7 +111,6 @@ enum layer {
     NUM,
     SYMB,
     FUNC,
-    MOUSE,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -138,14 +137,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*R3*/ KC_RIGHT,   XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX, XXXXXXX,
         /*R4*/ XXXXXXX,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX, XXXXXXX,
 
-        /*L1*/ KC_LSFT,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX, XXXXXXX,
-        /*L2*/ KC_LCTL,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX, XXXXXXX,
-        /*L3*/ KC_LALT,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX, XXXXXXX,
+        /*L1*/ KC_LSFT,    XXXXXXX,       XXXXXXX,       KC_MS_BTN1,    XXXXXXX, XXXXXXX,
+        /*L2*/ KC_LCTL,    XXXXXXX,       XXXXXXX,       KC_MS_BTN2,    XXXXXXX, XXXXXXX,
+        /*L3*/ KC_LALT,    XXXXXXX,       XXXXXXX,       KC_MS_BTN3,    XXXXXXX, XXXXXXX,
         /*L4*/ KC_LGUI,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX, XXXXXXX,
 
         /*     Down        Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ XXXXXXX,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   TO(MOUSE),
-        /*LT*/ MO(FUNC),   XXXXXXX,       MO(MOUSE),       XXXXXXX,       XXXXXXX,   XXXXXXX
+        /*RT*/ XXXXXXX,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX,
+        /*LT*/ MO(FUNC),   XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX
         ),
     [SYMB] = LAYOUT(
         /*Center           North           East            South           West*/
@@ -160,8 +159,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*L4*/ KC_GRV,      KC_CIRC,       XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ MO(FUNC),         XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
-        /*LT*/ XXXXXXX,         XXXXXXX,       XXXXXXX,          XXXXXXX,        XXXXXXX,     XXXXXXX
+        /*RT*/ MO(FUNC),        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
+        /*LT*/ XXXXXXX,         XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
         ),
     [NUM] = LAYOUT(
         /*Center           North           East            South           West*/
@@ -176,13 +175,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*L4*/ KC_LGUI,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ MO(MOUSE),        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
+        /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
         /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
         ),
     [FUNC] = LAYOUT(
         /*Center                    North           East            South           West*/
-        /*R1*/ RSFT_T(KC_F7),       KC_MPLY,        XXXXXXX,        KC_MPRV,        KC_F6,   XXXXXXX,
-        /*R2*/ RCTL_T(KC_F8),       KC_MSTP,        XXXXXXX,        KC_MNXT,        XXXXXXX, XXXXXXX,
+        /*R1*/ RSFT_T(KC_F7),       KC_MPRV,        XXXXXXX,        KC_MPLY,        KC_F6,   XXXXXXX,
+        /*R2*/ RCTL_T(KC_F8),       KC_MNXT,        XXXXXXX,        KC_MSTP,        XXXXXXX, XXXXXXX,
         /*R3*/ RALT_T(KC_F9),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
         /*R4*/ RGUI_T(KC_F10),      XXXXXXX,        XXXXXXX,        KC_F12,         XXXXXXX, XXXXXXX,
 
@@ -195,23 +194,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
         /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
         ),
-    [MOUSE] = LAYOUT(
-        /*Center           North           East            South           West*/
-
-        /*R1*/ XXXXXXX,     XXXXXXX,       XXXXXXX,        KC_H,           KC_F, XXXXXXX,
-        /*R2*/ XXXXXXX,     XXXXXXX,       XXXXXXX,        KC_COMMA,       KC_B, XXXXXXX,
-        /*R3*/ XXXXXXX,     XXXXXXX,       XXXXXXX,        KC_DOT,         XXXXXXX, XXXXXXX,
-        /*R4*/ XXXXXXX,     XXXXXXX,       XXXXXXX,        KC_COLON,       XXXXXXX, XXXXXXX,
-
-        /*L1*/ KC_LSFT,     XXXXXXX,       XXXXXXX,        KC_MS_BTN1,           KC_W, XXXXXXX,
-        /*L2*/ KC_LCTL,     XXXXXXX,       XXXXXXX,        KC_MS_BTN2,           XXXXXXX, XXXXXXX,
-        /*L3*/ KC_LALT,     XXXXXXX,       XXXXXXX,        KC_MS_BTN3,           XXXXXXX, XXXXXXX,
-        /*L4*/ KC_LGUI,     XXXXXXX,       XXXXXXX,        XXXXXXX,           XXXXXXX, XXXXXXX,
-
-        /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ XXXXXXX,        XXXXXXX,       TO(NORMAL),       XXXXXXX,        XXXXXXX,     XXXXXXX,
-        /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
-        )
 };
 
 bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
