@@ -6,19 +6,10 @@
 #include "../features/achordion.h"
 
 enum custom_keycodes {
-    M_ION = SAFE_RANGE,
-    M_NION,
-    M_MENT,
-    M_QUEN,
-    M_TMENT,
-    M_THE,
-    M_UPDIR,
-    M_EFORE,
-    M_SP_BUT,
-    M_HICH,
-    M_UST,
-    M_QUOT,
-    M_DQUO,
+    // MAGIG Repeat keys
+    MAGIC = SAFE_RANGE,
+    MAGIC_LEFT,
+    MAGIC_RIGHT
 };
 // Home row mods for Magic Sturdy layer.
 #define HOME_S LGUI_T(KC_S)
@@ -31,8 +22,6 @@ enum custom_keycodes {
 #define HOME_I RGUI_T(KC_I)
 #define HOME_X LGUI_T(KC_X)
 #define HOME_SC RGUI_T(KC_SCLN)
-// Alternate Repeat is the "magic" key.
-#define MAGIC QK_ALT_REPEAT_KEY
 
 enum unicode_names {
     n_tilde,
@@ -116,12 +105,12 @@ enum layer {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [NORMAL] = LAYOUT(
         /*Center           North              East            South           West*/
-        /*R1*/ HOME_N,     KC_H,              XXXXXXX,        MAGIC,          KC_F, XXXXXXX,
+        /*R1*/ HOME_N,     KC_H,              MAGIC_RIGHT,        MAGIC,          KC_F, XXXXXXX,
         /*R2*/ HOME_E,     KC_COMMA,          XXXXXXX,        KC_U,           KC_B, XXXXXXX,
         /*R3*/ HOME_A,     KC_DOT,            XXXXXXX,        KC_O,           KC_Z, XXXXXXX,
         /*R4*/ HOME_I,     KC_SCLN,           UP(n_tilde,N_tilde),        KC_Q,          XXXXXXX, XXXXXXX,
 
-        /*L1*/ HOME_D,     KC_G,              KC_Y,           KC_C,           XXXXXXX, XXXXXXX,
+        /*L1*/ HOME_D,     KC_G,              KC_Y,           KC_C,           MAGIC_LEFT, XXXXXXX,
         /*L2*/ HOME_R,     KC_J,              KC_P,           KC_L,           XXXXXXX, XXXXXXX,
         /*L3*/ HOME_T,     KC_K,              KC_W,           KC_M,           XXXXXXX, XXXXXXX,
         /*L4*/ HOME_S,     KC_X,              XXXXXXX,        KC_V,           XXXXXXX, XXXXXXX,
@@ -206,6 +195,95 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
     return achordion_opposite_hands(tap_hold_record, other_record);
 }
 
+uint16_t process_magic_msturdy(uint16_t last_keycode, uint8_t mods) {
+    if ((mods & ~MOD_MASK_SHIFT) == 0) {
+        // execute only if SHIFT or no other modifier is active
+        switch (last_keycode) {
+            // Behavior for Magic Sturdy's "magic" key.
+            case KC_C:
+            case HOME_D:
+            case KC_G: return KC_Y;
+            case KC_Y: return KC_P;
+            case HOME_R: return KC_L; // R -> L
+            case HOME_S: return KC_K; // S -> K
+            case KC_K: return KC_S; // K -> S
+            case KC_L:  return KC_K;
+            case HOME_E: return KC_U;
+            case HOME_A: return KC_O; // A -> O
+            case KC_O:  return KC_A;// O -> A
+            case KC_U:  return KC_E;// U -> E
+
+            // due to inward - press on adjecent or same finger
+            case KC_P: return KC_R;
+            case KC_W: return KC_R;
+            case KC_Z: return KC_E;
+
+            case KC_1 ... KC_0: return KC_DOT;
+            case KC_SPC: SEND_STRING(/* */"the"); break; // spc -> THE
+            case KC_DOT: SEND_STRING(/*.*/"./"); break; // . -> ./
+            case KC_COMM: SEND_STRING(/*,*/" but"); break;
+            case HOME_I: SEND_STRING(/*i*/"on"); break; // I -> ON
+            case KC_Q:  SEND_STRING(/*q*/"uen"); break; // Q -> UEN
+            case HOME_T: SEND_STRING(/*t*/"ment"); break; // T -> MENT
+            case KC_M:  SEND_STRING(/*m*/"ent"); break; // M -> ENT
+            case HOME_N: SEND_STRING(/*n*/"ion"); break; // N -> ION
+            case KC_J: SEND_STRING(/*j*/"ust"); break;
+            case KC_B: SEND_STRING(/*b*/"efore"); break;
+            case KC_QUOT:
+                tap_code16(KC_QUOT);
+                tap_code16(KC_LEFT);
+                break;
+            case KC_DQUO:
+                tap_code16(KC_DQUO);
+                tap_code16(KC_LEFT);
+                break;
+        }
+        return KC_NO;
+    }
+    return KC_NO;
+}
+uint16_t process_magic_left(uint16_t last_keycode, uint8_t mods) {
+    if ((mods & ~MOD_MASK_SHIFT) == 0) {
+        // execute only if SHIFT or no other modifier is active
+        switch (last_keycode) {
+            case KC_F: return KC_N;
+            case KC_B:
+                set_last_keycode(KC_E);
+                return KC_E;
+            case KC_Z: return KC_A;
+        }
+        return KC_NO;
+    }
+    return KC_NO;
+}
+
+uint16_t process_magic_right(uint16_t last_keycode, uint8_t mods) {
+    if ((mods & ~MOD_MASK_SHIFT) == 0) {
+        // execute only if SHIFT or no other modifier is active
+        switch (last_keycode) {
+            case KC_Y: return KC_D; break;
+            case KC_P: return KC_Y; break; // pr better placed on magic to avoid awkard pre
+            case KC_W: return KC_T; break;
+        }
+        return KC_NO;
+    }
+    return KC_NO;
+
+}
+
+
+bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
+                            uint8_t* remembered_mods) {
+    switch (keycode) {
+        case MAGIC:
+        case MAGIC_LEFT:
+        case MAGIC_RIGHT:
+            return false;  // Ignore ALTREP keys.
+    }
+
+    return true;  // Other keys can be repeated.
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONSOLE_ENABLE
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
@@ -222,26 +300,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
 
         switch (keycode) {
-            // Macros invoked through the MAGIC key.
-            case M_ION:     SEND_STRING(/*i*/"on"); break;
-            case M_NION:    SEND_STRING(/*n*/"ion"); break;
-            case M_MENT:    SEND_STRING(/*m*/"ent"); break;
-            case M_QUEN:    SEND_STRING(/*q*/"uen"); break;
-            case M_TMENT:   SEND_STRING(/*t*/"ment"); break;
-            case M_THE:     SEND_STRING(/* */"the"); break;
-            case M_UPDIR:   SEND_STRING(/*.*/"./"); break;
-            case M_EFORE:   SEND_STRING(/*b*/"efore"); break;
-            case M_SP_BUT:  SEND_STRING(/*,*/" but"); break;
-            case M_HICH:    SEND_STRING(/*w*/"hich"); break;
-            case M_UST:     SEND_STRING(/*j*/"ust"); break;
-            case M_QUOT:
-                tap_code16(KC_QUOT);
-                tap_code16(KC_LEFT);
-                break;
-            case M_DQUO:
-                tap_code16(KC_DQUO);
-                tap_code16(KC_LEFT);
-                break;
+            case MAGIC: tap_code16(process_magic_msturdy(get_last_keycode(), get_last_mods())); break;
+            case MAGIC_LEFT: tap_code16(process_magic_left(get_last_keycode(), get_last_mods())); break;
+            case MAGIC_RIGHT: tap_code16(process_magic_right(get_last_keycode(), get_last_mods())); break;
         }
     }
     return true;
@@ -293,54 +354,6 @@ void caps_word_set_user(bool active) {
     } else {
         // Do something when Caps Word deactivates.
     }
-}
-
-uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
-    if ((mods & ~MOD_MASK_SHIFT) == 0) {
-        switch (keycode) {
-            // Behavior for Magic Sturdy's "magic" key.
-            case KC_C:
-            case HOME_D:
-            case KC_G: return KC_Y;
-            case KC_Y: return KC_P;
-            case HOME_R: return KC_L; // R -> L
-            case HOME_S: return KC_K; // S -> K
-            case KC_K: return KC_S; // K -> S
-            case KC_L:  return KC_K;
-            case HOME_E: return KC_U;
-            case HOME_A: return KC_O; // A -> O
-            case KC_O:  return KC_A;// O -> A
-            case KC_U:  return KC_E;// U -> E
-
-            // due to inward - press on adjecent or same finger
-            case KC_P: return KC_R;
-            case KC_Z: return KC_E;
-
-            case KC_1 ... KC_0: return KC_DOT;
-            case KC_SPC: return M_THE; // spc -> THE
-            case KC_DOT: return M_UPDIR; // . -> ./
-            case KC_COMM: return M_SP_BUT; // . -> ./
-            case HOME_I: return M_ION; // I -> ON
-            case KC_Q:  return M_QUEN;// Q -> UEN
-            case HOME_T: return M_TMENT; // T -> MENT
-            case KC_M:  return M_MENT;// M -> ENT
-            case HOME_N: return M_NION; // N -> ION
-            case KC_W: return M_HICH;
-            case KC_J: return M_UST;
-            case KC_B: return M_EFORE;
-            case KC_QUOT: return M_QUOT;
-            case KC_DQUO: return M_DQUO;
-        }
-        return KC_NO;
-    }
-    else if ((mods & MOD_MASK_CTRL)) {
-        switch (keycode) {
-            case KC_C:  // Ctrl+C -> Ctrl+V
-                return C(KC_V);
-        }
-    }
-
-    return M_THE;
 }
 
 enum combo_events {
