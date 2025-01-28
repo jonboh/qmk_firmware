@@ -116,8 +116,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*L4*/ HOME_S,     KC_X,              XXXXXXX,        KC_V,           XXXXXXX, XXXXXXX,
 
         /*     Down        Pad             Up              Nail           Knuckle    DoubleDown*/
-        /*RT*/ MO(NAV),    KC_SPACE,       KC_ESC,         KC_ENTER,      KC_LALT,   XXXXXXX,
-        /*LT*/ MO(SYMB),    KC_BSPC,        MO(NUM),       KC_DEL,       KC_TAB,    XXXXXXX
+        /*RT*/ MO(NAV),    KC_SPACE,       KC_ESC,         KC_ENTER,      KC_LALT,   TO(NAV),
+        /*LT*/ MO(SYMB),   MO(NUM),        KC_BSPC,        KC_DEL,        KC_TAB,    XXXXXXX
         ),
     [NAV] = LAYOUT(
         /*Center           North          East           South          West*/
@@ -152,32 +152,48 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*LT*/ XXXXXXX,         XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
         ),
     [NUM] = LAYOUT(
-        /*Center           North           East            South           West*/
-        /*R1*/ KC_4,       KC_7,           XXXXXXX,        KC_1,           KC_0, XXXXXXX,
-        /*R2*/ KC_5,       KC_8,           XXXXXXX,        KC_2,           XXXXXXX, XXXXXXX,
-        /*R3*/ KC_6,       KC_9,           XXXXXXX,        KC_3,           XXXXXXX, XXXXXXX,
-        /*R4*/ XXXXXXX,    XXXXXXX,        XXXXXXX,        KC_COLON,       XXXXXXX, XXXXXXX,
+        /*Center                North           East            South           West*/
+        /*R1*/ RSFT_T(KC_6),    XXXXXXX,        XXXXXXX,       XXXXXXX,         KC_5, XXXXXXX,
+        /*R2*/ RCTL_T(KC_7),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*R3*/ RALT_T(KC_8),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*R4*/ RGUI_T(KC_9),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
 
-        /*L1*/ KC_LSFT,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
-        /*L2*/ KC_LCTL,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
-        /*L3*/ KC_LALT,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
-        /*L4*/ KC_LGUI,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
+        /*L1*/ RSFT_T(KC_1),    XXXXXXX,        KC_0,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*L2*/ RCTL_T(KC_2),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*L3*/ RALT_T(KC_3),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*L4*/ RGUI_T(KC_4),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
         /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
         /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
         ),
+    // [NUM] = LAYOUT(
+    //     /*Center           North           East            South           West*/
+    //     /*R1*/ KC_4,       KC_7,           XXXXXXX,        KC_1,           KC_0, XXXXXXX,
+    //     /*R2*/ KC_5,       KC_8,           XXXXXXX,        KC_2,           XXXXXXX, XXXXXXX,
+    //     /*R3*/ KC_6,       KC_9,           XXXXXXX,        KC_3,           XXXXXXX, XXXXXXX,
+    //     /*R4*/ XXXXXXX,    XXXXXXX,        XXXXXXX,        KC_COLON,       XXXXXXX, XXXXXXX,
+    //
+    //     /*L1*/ KC_LSFT,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
+    //     /*L2*/ KC_LCTL,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
+    //     /*L3*/ KC_LALT,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
+    //     /*L4*/ KC_LGUI,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
+    //
+    //     /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
+    //     /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
+    //     /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
+    //     ),
     [FUNC] = LAYOUT(
         /*Center                    North           East            South           West*/
-        /*R1*/ RSFT_T(KC_F7),       KC_MPRV,        XXXXXXX,        KC_MPLY,        KC_F6,   XXXXXXX,
-        /*R2*/ RCTL_T(KC_F8),       KC_MNXT,        XXXXXXX,        KC_MSTP,        XXXXXXX, XXXXXXX,
-        /*R3*/ RALT_T(KC_F9),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
-        /*R4*/ RGUI_T(KC_F10),      XXXXXXX,        XXXXXXX,        KC_F12,         XXXXXXX, XXXXXXX,
+        /*R1*/ RSFT_T(KC_F6),       KC_MPRV,        XXXXXXX,        KC_MPLY,        KC_F5,   XXXXXXX,
+        /*R2*/ RCTL_T(KC_F7),       KC_MNXT,        XXXXXXX,        KC_MSTP,        XXXXXXX, XXXXXXX,
+        /*R3*/ RALT_T(KC_F8),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
+        /*R4*/ RGUI_T(KC_F9),      XXXXXXX,        XXXXXXX,        KC_F12,         XXXXXXX, XXXXXXX,
 
-        /*L1*/ LSFT_T(KC_F4),       KC_MUTE,        KC_F5,          KC_VOLU,        XXXXXXX, XXXXXXX,
-        /*L2*/ LCTL_T(KC_F3),       XXXXXXX,        XXXXXXX,        KC_VOLD,        XXXXXXX, XXXXXXX,
-        /*L3*/ LALT_T(KC_F2),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
-        /*L4*/ LGUI_T(KC_F1),       XXXXXXX,        XXXXXXX,        KC_F11,         XXXXXXX, XXXXXXX,
+        /*L1*/ LSFT_T(KC_F1),       KC_MUTE,        KC_F10,          KC_VOLU,        XXXXXXX, XXXXXXX,
+        /*L2*/ LCTL_T(KC_F2),       XXXXXXX,        XXXXXXX,        KC_VOLD,        XXXXXXX, XXXXXXX,
+        /*L3*/ LALT_T(KC_F3),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
+        /*L4*/ LGUI_T(KC_F4),       XXXXXXX,        XXXXXXX,        KC_F11,         XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
         /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
