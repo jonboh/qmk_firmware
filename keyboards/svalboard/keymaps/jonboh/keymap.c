@@ -9,7 +9,8 @@ enum custom_keycodes {
     // MAGIG Repeat keys
     MAGIC = SAFE_RANGE,
     MAGIC_LEFT,
-    MAGIC_RIGHT
+    MAGIC_RIGHT,
+    MS_SNIPE
 };
 // Home row mods for Magic Sturdy layer.
 #define HOME_S LGUI_T(KC_S)
@@ -72,7 +73,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   return state;
 }
 
-
+#define MS_NORMAL_CPI 1700
 
 void keyboard_post_init_user(void) {
   // Customise these values if you need to debug the matrix
@@ -82,7 +83,7 @@ void keyboard_post_init_user(void) {
   //debug_mouse=true;
   rgblight_layers = sval_rgb_layers;
   pointing_device_set_cpi_on_side(true, 125);
-  pointing_device_set_cpi_on_side(false, 1000);
+  pointing_device_set_cpi_on_side(false, MS_NORMAL_CPI);
 }
 
 
@@ -133,7 +134,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         /*     Down        Pad            Up             Nail           Knuckle    DoubleDown*/
         /*RT*/ XXXXXXX,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX,
-        /*LT*/ MO(FUNC),   XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX
+        /*LT*/ MO(FUNC),   MS_SNIPE,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX
         ),
     [SYMB] = LAYOUT(
         /*Center           North           East            South           West*/
@@ -167,22 +168,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
         /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
         ),
-    // [NUM] = LAYOUT(
-    //     /*Center           North           East            South           West*/
-    //     /*R1*/ KC_4,       KC_7,           XXXXXXX,        KC_1,           KC_0, XXXXXXX,
-    //     /*R2*/ KC_5,       KC_8,           XXXXXXX,        KC_2,           XXXXXXX, XXXXXXX,
-    //     /*R3*/ KC_6,       KC_9,           XXXXXXX,        KC_3,           XXXXXXX, XXXXXXX,
-    //     /*R4*/ XXXXXXX,    XXXXXXX,        XXXXXXX,        KC_COLON,       XXXXXXX, XXXXXXX,
-    //
-    //     /*L1*/ KC_LSFT,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
-    //     /*L2*/ KC_LCTL,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
-    //     /*L3*/ KC_LALT,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
-    //     /*L4*/ KC_LGUI,    XXXXXXX,       XXXXXXX,       XXXXXXX,          XXXXXXX, XXXXXXX,
-    //
-    //     /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-    //     /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
-    //     /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
-    //     ),
     [FUNC] = LAYOUT(
         /*Center                    North           East            South           West*/
         /*R1*/ RSFT_T(KC_F6),       KC_MPRV,        XXXXXXX,        KC_MPLY,        KC_F5,   XXXXXXX,
@@ -320,6 +305,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case MAGIC_LEFT: tap_code16(process_magic_left(get_last_keycode(), get_last_mods())); break;
             case MAGIC_RIGHT: tap_code16(process_magic_right(get_last_keycode(), get_last_mods())); break;
         }
+    }
+    switch (keycode) {
+        case MS_SNIPE:
+            if (record->event.pressed) {
+              pointing_device_set_cpi_on_side(false, 1000);
+            } else {
+              pointing_device_set_cpi_on_side(false, MS_NORMAL_CPI);
+            }
+            break;
+        default:
+            break;
     }
     return true;
 }
