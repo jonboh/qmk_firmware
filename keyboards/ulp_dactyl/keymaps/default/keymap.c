@@ -61,48 +61,37 @@ const uint32_t unicode_map[] PROGMEM = {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[MSTURDY] = LAYOUT(
-            KC_V, KC_M, KC_L, KC_C, KC_P,                                    KC_B, MAGIC, KC_U, KC_O, KC_Q,
-            HOME_S, HOME_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, HOME_A, HOME_I,
             KC_X, KC_K, KC_J, KC_G, KC_W,                                KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
+            HOME_S, HOME_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, HOME_A, HOME_I,
+            KC_V, KC_M, KC_L, KC_C, KC_P,                                    KC_B, MAGIC, KC_U, KC_O, KC_Q,
             MO(MOUSL),          MO(NUM),  KC_DEL,                        KC_ESC, MO(NAV),               MO(MOUSR),
                                 MO(SYMB), KC_BSPC,                              KC_SPC,
                                 KC_TAB,                                         KC_ENT),
-// 	[QWERTY] = LAYOUT(
-// 	            KC_Q, KC_W, KC_E, KC_R, KC_T,                                    KC_Y, KC_U, KC_I, KC_O, KC_P,
-// 	            LGUI_T(KC_A), LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), KC_G,            KC_H, RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN),
-// 	            KC_Z, KC_X, KC_C, KC_V, KC_B,                                KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH,
-//                         MO(MOUSL), MO(NUM),                                             MO(NAV), MO(MOUSR),
-//                         MO(SYMB), KC_BSPC,                                                   KC_ESC,KC_SPC,
-//                         KC_TAB,    KC_DEL,                                                       KC_ENT),
 	[NAV] = LAYOUT(
-	            ____, ____, ____, ____, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
+	            ____, ____, ____, ____, ____,                                           ____, KC_HOME, KC_END,____, ____,
 	            KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
-	            ____, ____, ____, ____, ____,                                           ____, ____, ____, ____, ____,
+	            ____, ____, ____, ____, ____,                                           ____, KC_PGDN, KC_PGUP, ____, ____,
                         ____, MO(NUM),KC_DEL,                                             KC_ESC,KC_TRNS, ____,
                         ____, KC_BSPC,                                                   KC_SPC,
                         KC_TAB,                                                           KC_ENT),
-// // New symbol layout:
-// // ^[]"@    ~:\/
-// // `()|&    _$-+%
-// //  {}'#    *=?!
 	[SYMB] = LAYOUT(
-              KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, KC_COLN,KC_BSLS, KC_SLSH, CW_TOGG,
+              KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
 	            KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_AMPR,             KC_UNDS, KC_DLR, KC_MINS, KC_PLUS, KC_PERC,
-	            ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,             KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
+	            ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,             KC_TILD, KC_COLN,KC_BSLS, KC_SLSH, CW_TOGG,
               MO(MOUSL),            ____,    KC_DEL,                   KC_ESC, ____,                    MO(MOUSR),
                                 KC_TRNS, KC_BSPC,                              KC_SPC,
                                 KC_TAB,                                        KC_ENT),
 	[NUM] = LAYOUT(
-	            ____, ____, ____, ____, ____,                           ____, KC_7, KC_8, KC_9, ____,
-	            KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, ____,               ____, KC_4, KC_5, KC_6, ____,
-	            ____, ____, ____, ____, ____,                           KC_0, KC_1, KC_2, KC_3, ____,
+	            ____, ____, ____, ____, ____,                          ____, ____, ____, ____, ____,
+	            LGUI_T(KC_4), LALT_T(KC_3), LCTL_T(KC_2), LSFT_T(KC_1), KC_0,              KC_5, RSFT_T(KC_6), RCTL_T(KC_7), LALT_T(KC_8), RGUI_T(KC_9),
+	            ____, ____, ____, ____, ____,                          ____, ____, ____, ____, ____,
               ____,             KC_TRNS,KC_DEL,                       KC_ESC,MO(NAV),       ____,
                         ____, KC_BSPC,                                      KC_SPC,
                                 KC_TAB,                                      KC_ENT),
 	[FUNC] = LAYOUT(
-	            SET_QWERTY, ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, SET_MSTURDY,
-	            LGUI_T(KC_F1), LALT_T(KC_F2), LCTL_T(KC_F3), LSFT_T(KC_F4), KC_F5,              KC_F6, RSFT_T(KC_F7), RCTL_T(KC_F8), LALT_T(KC_F9), RGUI_T(KC_F10),
-	            ____, ____, ____, KC_F11,____,                                                  ____, KC_F12, XP(n_tilde,N_tilde), ____, ____,
+	            ____, ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, ____,
+	            LGUI_T(KC_F4), LALT_T(KC_F3), LCTL_T(KC_F2), LSFT_T(KC_F1), KC_F10,              KC_F5, RSFT_T(KC_F6), RCTL_T(KC_F7), LALT_T(KC_F8), RGUI_T(KC_F9),
+	            KC_F11, ____, ____, KC_F11,____,                                                  ____, ____, UP(n_tilde,N_tilde), ____, KC_F12,
                         ____, KC_TRNS,KC_DEL,                                            KC_ESC, KC_TRNS, ____,
                         ____, KC_BSPC,                                                   KC_SPC,
                         KC_TAB,                                                           KC_ENT),
