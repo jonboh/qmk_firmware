@@ -10,7 +10,6 @@ enum custom_keycodes {
     MAGIC = SAFE_RANGE,
     MAGIC_LEFT,
     MAGIC_RIGHT,
-    MS_SNIPE
 };
 // Home row mods for Magic Sturdy layer.
 #define HOME_S LGUI_T(KC_S)
@@ -23,6 +22,14 @@ enum custom_keycodes {
 #define HOME_I RGUI_T(KC_I)
 #define HOME_X LGUI_T(KC_X)
 #define HOME_SC RGUI_T(KC_SCLN)
+
+enum layer {
+    NORMAL,
+    NAV,
+    NUM,
+    SYMB,
+    FUNC,
+};
 
 enum unicode_names {
     n_tilde,
@@ -61,19 +68,37 @@ const rgblight_segment_t*  const __attribute((weak))sval_rgb_layers[] = RGBLIGHT
     layer12_colors, layer13_colors, layer14_colors, layer15_colors
 );
 
+#define MS_NORMAL_CPI 1500
+#define MS_SNIPE_CPI 750
+
 layer_state_t default_layer_state_set_user(layer_state_t state) {
-  rgblight_set_layer_state(0, layer_state_cmp(state, 0));
-  return state;
+    switch (get_highest_layer(state)) {
+    case NAV:
+        pointing_device_set_cpi_on_side(false, MS_SNIPE_CPI);
+        break;
+    default:
+        pointing_device_set_cpi_on_side(false, MS_NORMAL_CPI);
+        break;
+    }
+    rgblight_set_layer_state(0, layer_state_cmp(state, 0));
+    return state;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-  for (int i = 0; i < RGBLIGHT_LAYERS; ++i) {
-      rgblight_set_layer_state(i, layer_state_cmp(state, i));
-  }
+    switch (get_highest_layer(state)) {
+    case NAV:
+        pointing_device_set_cpi_on_side(false, MS_SNIPE_CPI);
+        break;
+    default:
+        pointing_device_set_cpi_on_side(false, MS_NORMAL_CPI);
+        break;
+    }
+      for (int i = 0; i < RGBLIGHT_LAYERS; ++i) {
+          rgblight_set_layer_state(i, layer_state_cmp(state, i));
+      }
   return state;
 }
 
-#define MS_NORMAL_CPI 1700
 
 void keyboard_post_init_user(void) {
   // Customise these values if you need to debug the matrix
@@ -95,13 +120,6 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, re
     return pointing_device_combine_reports(left_report, right_report);
 }
 
-enum layer {
-    NORMAL,
-    NAV,
-    NUM,
-    SYMB,
-    FUNC,
-};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [NORMAL] = LAYOUT(
@@ -109,16 +127,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*R1*/ HOME_N,     KC_H,              MAGIC_RIGHT,        MAGIC,          KC_F, XXXXXXX,
         /*R2*/ HOME_E,     KC_COMMA,          XXXXXXX,        KC_U,           KC_B, XXXXXXX,
         /*R3*/ HOME_A,     KC_DOT,            XXXXXXX,        KC_O,           KC_Z, XXXXXXX,
-        /*R4*/ HOME_I,     KC_SCLN,           UP(n_tilde,N_tilde),        KC_Q,          XXXXXXX, XXXXXXX,
+        /*R4*/ HOME_I,     XXXXXXX,           UP(n_tilde,N_tilde),        KC_Q,          KC_SCLN, XXXXXXX,
 
         /*L1*/ HOME_D,     KC_G,              KC_Y,           KC_C,           MAGIC_LEFT, XXXXXXX,
         /*L2*/ HOME_R,     KC_J,              KC_P,           KC_L,           XXXXXXX, XXXXXXX,
         /*L3*/ HOME_T,     KC_K,              KC_W,           KC_M,           XXXXXXX, XXXXXXX,
-        /*L4*/ HOME_S,     KC_X,              XXXXXXX,        KC_V,           XXXXXXX, XXXXXXX,
+        /*L4*/ HOME_S,     XXXXXXX,              KC_X,        KC_V,           XXXXXXX, XXXXXXX,
 
         /*     Down        Pad             Up              Nail           Knuckle    DoubleDown*/
         /*RT*/ MO(NAV),    KC_SPACE,       KC_ESC,         KC_ENTER,      KC_LALT,   TO(NAV),
-        /*LT*/ MO(SYMB),   MO(NUM),        KC_BSPC,        KC_DEL,        KC_TAB,    XXXXXXX
+        /*LT*/ MO(NUM),   MO(SYMB),        KC_BSPC,        KC_DEL,        KC_TAB,    XXXXXXX
         ),
     [NAV] = LAYOUT(
         /*Center           North          East           South          West*/
@@ -134,7 +152,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         /*     Down        Pad            Up             Nail           Knuckle    DoubleDown*/
         /*RT*/ XXXXXXX,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX,
-        /*LT*/ MO(FUNC),   MS_SNIPE,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX
+        /*LT*/ MO(FUNC),   XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX
         ),
     [SYMB] = LAYOUT(
         /*Center           North           East            South           West*/
@@ -149,36 +167,36 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*L4*/ KC_GRV,      KC_CIRC,       XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ MO(FUNC),        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
+        /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
         /*LT*/ XXXXXXX,         XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
         ),
     [NUM] = LAYOUT(
         /*Center                North           East            South           West*/
-        /*R1*/ RSFT_T(KC_6),    XXXXXXX,        XXXXXXX,       XXXXXXX,         KC_5, XXXXXXX,
-        /*R2*/ RCTL_T(KC_7),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
-        /*R3*/ RALT_T(KC_8),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
-        /*R4*/ RGUI_T(KC_9),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*R1*/ RSFT_T(KC_1),    XXXXXXX,        XXXXXXX,       XXXXXXX,         KC_0, XXXXXXX,
+        /*R2*/ RCTL_T(KC_2),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*R3*/ RALT_T(KC_3),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*R4*/ RGUI_T(KC_4),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
 
-        /*L1*/ RSFT_T(KC_1),    XXXXXXX,        KC_0,       XXXXXXX,         XXXXXXX, XXXXXXX,
-        /*L2*/ RCTL_T(KC_2),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
-        /*L3*/ RALT_T(KC_3),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
-        /*L4*/ RGUI_T(KC_4),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*L1*/ RSFT_T(KC_6),    XXXXXXX,        KC_5,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*L2*/ RCTL_T(KC_7),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*L3*/ RALT_T(KC_8),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
+        /*L4*/ RGUI_T(KC_9),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
+        /*RT*/ MO(FUNC),        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
         /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
         ),
     [FUNC] = LAYOUT(
         /*Center                    North           East            South           West*/
-        /*R1*/ RSFT_T(KC_F6),       KC_MPRV,        XXXXXXX,        KC_MPLY,        KC_F5,   XXXXXXX,
-        /*R2*/ RCTL_T(KC_F7),       KC_MNXT,        XXXXXXX,        KC_MSTP,        XXXXXXX, XXXXXXX,
-        /*R3*/ RALT_T(KC_F8),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
-        /*R4*/ RGUI_T(KC_F9),      XXXXXXX,        XXXXXXX,        KC_F12,         XXXXXXX, XXXXXXX,
+        /*R1*/ RSFT_T(KC_F1),       KC_MPRV,        XXXXXXX,        KC_MPLY,        KC_F10,   XXXXXXX,
+        /*R2*/ RCTL_T(KC_F2),       KC_MNXT,        XXXXXXX,        KC_MSTP,        XXXXXXX, XXXXXXX,
+        /*R3*/ RALT_T(KC_F3),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
+        /*R4*/ RGUI_T(KC_F4),      XXXXXXX,        XXXXXXX,        KC_F12,         XXXXXXX, XXXXXXX,
 
-        /*L1*/ LSFT_T(KC_F1),       KC_MUTE,        KC_F10,          KC_VOLU,        XXXXXXX, XXXXXXX,
-        /*L2*/ LCTL_T(KC_F2),       XXXXXXX,        XXXXXXX,        KC_VOLD,        XXXXXXX, XXXXXXX,
-        /*L3*/ LALT_T(KC_F3),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
-        /*L4*/ LGUI_T(KC_F4),       XXXXXXX,        XXXXXXX,        KC_F11,         XXXXXXX, XXXXXXX,
+        /*L1*/ LSFT_T(KC_F6),       KC_MUTE,        KC_F5,          KC_VOLU,        XXXXXXX, XXXXXXX,
+        /*L2*/ LCTL_T(KC_F7),       XXXXXXX,        XXXXXXX,        KC_VOLD,        XXXXXXX, XXXXXXX,
+        /*L3*/ LALT_T(KC_F8),       XXXXXXX,        XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
+        /*L4*/ LGUI_T(KC_F9),       XXXXXXX,        XXXXXXX,        KC_F11,         XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
         /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
@@ -263,7 +281,7 @@ uint16_t process_magic_right(uint16_t last_keycode, uint8_t mods) {
         // execute only if SHIFT or no other modifier is active
         switch (last_keycode) {
             case KC_Y: return KC_D; break;
-            case KC_P: return KC_Y; break; // pr better placed on magic to avoid awkard pre
+            case KC_P: return KC_L; break; // pr better placed on magic to avoid awkard pre
             case KC_W: return KC_T; break;
         }
         return KC_NO;
@@ -305,17 +323,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case MAGIC_LEFT: tap_code16(process_magic_left(get_last_keycode(), get_last_mods())); break;
             case MAGIC_RIGHT: tap_code16(process_magic_right(get_last_keycode(), get_last_mods())); break;
         }
-    }
-    switch (keycode) {
-        case MS_SNIPE:
-            if (record->event.pressed) {
-              pointing_device_set_cpi_on_side(false, 1000);
-            } else {
-              pointing_device_set_cpi_on_side(false, MS_NORMAL_CPI);
-            }
-            break;
-        default:
-            break;
     }
     return true;
 }
