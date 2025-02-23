@@ -16,12 +16,31 @@ enum custom_keycodes {
 #define HOME_T LALT_T(KC_T)
 #define HOME_R LCTL_T(KC_R)
 #define HOME_D LSFT_T(KC_D)
+
 #define HOME_N RSFT_T(KC_N)
 #define HOME_E RCTL_T(KC_E)
 #define HOME_A RALT_T(KC_A)
 #define HOME_I RGUI_T(KC_I)
-#define HOME_X LGUI_T(KC_X)
-#define HOME_SC RGUI_T(KC_SCLN)
+
+#define HOME_1 RSFT_T(KC_1)
+#define HOME_2 RCTL_T(KC_2)
+#define HOME_3 RALT_T(KC_3)
+#define HOME_4 RGUI_T(KC_4)
+
+#define HOME_6 RSFT_T(KC_6)
+#define HOME_7 RCTL_T(KC_7)
+#define HOME_8 RALT_T(KC_8)
+#define HOME_9 RGUI_T(KC_9)
+
+#define HOME_F1 RSFT_T(KC_F1)
+#define HOME_F2 RCTL_T(KC_F2)
+#define HOME_F3 RALT_T(KC_F3)
+#define HOME_F4 RGUI_T(KC_F4)
+
+#define HOME_F6 LSFT_T(KC_F6)
+#define HOME_F7 LCTL_T(KC_F7)
+#define HOME_F8 LALT_T(KC_F8)
+#define HOME_F9 LGUI_T(KC_F9)
 
 enum layer {
     NORMAL,
@@ -151,8 +170,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*L4*/ KC_LGUI,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX, XXXXXXX,
 
         /*     Down        Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ XXXXXXX,    XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX,
-        /*LT*/ MO(FUNC),   XXXXXXX,       XXXXXXX,       XXXXXXX,       XXXXXXX,   XXXXXXX
+        /*RT*/ XXXXXXX,    KC_SPACE,      KC_ESC,       KC_ENTER,        XXXXXXX,     XXXXXXX,
+        /*LT*/ MO(FUNC),   XXXXXXX,       KC_BSPC,       KC_DEL,       XXXXXXX,   XXXXXXX
         ),
     [SYMB] = LAYOUT(
         /*Center           North           East            South           West*/
@@ -167,8 +186,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*L4*/ KC_GRV,      KC_CIRC,       XXXXXXX,        XXXXXXX,        XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
-        /*LT*/ XXXXXXX,         XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
+        /*RT*/ XXXXXXX,        KC_SPACE,       KC_ESC,       KC_ENTER,        XXXXXXX,     XXXXXXX,
+        /*LT*/ XXXXXXX,        XXXXXXX,       KC_BSPC,       KC_DEL,        XXXXXXX,     XXXXXXX
         ),
     [NUM] = LAYOUT(
         /*Center                North           East            South           West*/
@@ -183,8 +202,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /*L4*/ RGUI_T(KC_9),    XXXXXXX,        XXXXXXX,       XXXXXXX,         XXXXXXX, XXXXXXX,
 
         /*     Down            Pad            Up             Nail           Knuckle    DoubleDown*/
-        /*RT*/ MO(FUNC),        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX,
-        /*LT*/ XXXXXXX,        XXXXXXX,       XXXXXXX,       XXXXXXX,        XXXXXXX,     XXXXXXX
+        /*RT*/ MO(FUNC),       KC_SPACE,      KC_ESC,       KC_ENTER,        XXXXXXX,     XXXXXXX,
+        /*LT*/ XXXXXXX,        KC_LGUI,   KC_BSPC,       KC_DEL,       XXXXXXX,   XXXXXXX
         ),
     [FUNC] = LAYOUT(
         /*Center                    North           East            South           West*/
@@ -236,6 +255,9 @@ uint16_t process_magic_msturdy(uint16_t last_keycode, uint8_t mods) {
             case KC_P: return KC_R;
             case KC_W: return KC_R;
             case KC_Z: return KC_E;
+
+
+            case KC_X: return KC_P;
 
             case KC_1 ... KC_0: return KC_DOT;
             case KC_SPC: SEND_STRING(/* */"the"); break; // spc -> THE
@@ -330,16 +352,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case HOME_S: // left pinkie
-            return TAPPING_TERM + 50;
         case HOME_I: // right pinkie
+        case HOME_4:
+        case HOME_F4:
+        case HOME_9:
+        case HOME_F9:
             return TAPPING_TERM + 50;
         case HOME_T:
-            return TAPPING_TERM + 35;
         case HOME_A:
+        case HOME_3:
+        case HOME_F3:
+        case HOME_8:
+        case HOME_F8:
             return TAPPING_TERM + 35;
         case HOME_R:
-            return TAPPING_TERM + 10;
         case HOME_E:
+        case HOME_2:
+        case HOME_F2:
+        case HOME_7:
+        case HOME_F7:
             return TAPPING_TERM + 10;
         default:
             return TAPPING_TERM;
