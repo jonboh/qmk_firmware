@@ -40,12 +40,32 @@ enum custom_keycodes {
 #define HOME_T LALT_T(KC_T)
 #define HOME_R LCTL_T(KC_R)
 #define HOME_D LSFT_T(KC_D)
+
 #define HOME_N RSFT_T(KC_N)
 #define HOME_E RCTL_T(KC_E)
 #define HOME_A RALT_T(KC_A)
 #define HOME_I RGUI_T(KC_I)
-#define HOME_X LGUI_T(KC_X)
-#define HOME_SC RGUI_T(KC_SCLN)
+
+#define HOME_1 RSFT_T(KC_1)
+#define HOME_2 RCTL_T(KC_2)
+#define HOME_3 RALT_T(KC_3)
+#define HOME_4 RGUI_T(KC_4)
+
+#define HOME_6 RSFT_T(KC_6)
+#define HOME_7 RCTL_T(KC_7)
+#define HOME_8 RALT_T(KC_8)
+#define HOME_9 RGUI_T(KC_9)
+
+#define HOME_F1 RSFT_T(KC_F1)
+#define HOME_F2 RCTL_T(KC_F2)
+#define HOME_F3 RALT_T(KC_F3)
+#define HOME_F4 RGUI_T(KC_F4)
+
+#define HOME_F6 LSFT_T(KC_F6)
+#define HOME_F7 LCTL_T(KC_F7)
+#define HOME_F8 LALT_T(KC_F8)
+#define HOME_F9 LGUI_T(KC_F9)
+
 // Alternate Repeat is the "magic" key.
 #define MAGIC QK_ALT_REPEAT_KEY
 
@@ -59,11 +79,40 @@ const uint32_t unicode_map[] PROGMEM = {
     [N_tilde] = 0x00D1  // Ñ
 };
 
+#define MS_NORMAL_CPI 1000
+#define MS_SNIPE_CPI 600
+
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+    case MOUSL:
+    case MOUSR:
+        pointing_device_set_cpi(MS_SNIPE_CPI);
+        break;
+    default:
+        pointing_device_set_cpi(MS_NORMAL_CPI);
+        break;
+    }
+    return state;
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+    case MOUSL:
+    case MOUSR:
+        pointing_device_set_cpi(MS_SNIPE_CPI);
+        break;
+    default:
+        pointing_device_set_cpi(MS_NORMAL_CPI);
+        break;
+    }
+  return state;
+}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[MSTURDY] = LAYOUT(
-            KC_X, KC_K, KC_J, KC_G, KC_W,                                KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
-            HOME_S, HOME_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, HOME_A, HOME_I,
             KC_V, KC_M, KC_L, KC_C, KC_P,                                    KC_B, MAGIC, KC_U, KC_O, KC_Q,
+            HOME_S, HOME_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, HOME_A, HOME_I,
+            KC_X, KC_K, KC_J, KC_G, KC_W,                                KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
             MO(MOUSL),          MO(NUM),  KC_DEL,                        KC_ESC, MO(NAV),               MO(MOUSR),
                                 MO(SYMB), KC_BSPC,                              KC_SPC,
                                 KC_TAB,                                         KC_ENT),
@@ -75,22 +124,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                         ____, KC_BSPC,                                                   KC_SPC,
                         KC_TAB,                                                           KC_ENT),
 	[SYMB] = LAYOUT(
-              KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
+	            KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, KC_COLN,KC_BSLS, KC_SLSH, CW_TOGG,
 	            KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_AMPR,             KC_UNDS, KC_DLR, KC_MINS, KC_PLUS, KC_PERC,
-	            ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,             KC_TILD, KC_COLN,KC_BSLS, KC_SLSH, CW_TOGG,
+              ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,            KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
               MO(MOUSL),            ____,    KC_DEL,                   KC_ESC, ____,                    MO(MOUSR),
                                 KC_TRNS, KC_BSPC,                              KC_SPC,
                                 KC_TAB,                                        KC_ENT),
 	[NUM] = LAYOUT(
 	            ____, ____, ____, ____, ____,                          ____, ____, ____, ____, ____,
-	            LGUI_T(KC_4), LALT_T(KC_3), LCTL_T(KC_2), LSFT_T(KC_1), KC_0,              KC_5, RSFT_T(KC_6), RCTL_T(KC_7), LALT_T(KC_8), RGUI_T(KC_9),
+	            HOME_9, HOME_8, HOME_7, HOME_6, KC_5,              KC_0, HOME_1, HOME_2, HOME_3, HOME_4,
 	            ____, ____, ____, ____, ____,                          ____, ____, ____, ____, ____,
               ____,             KC_TRNS,KC_DEL,                       KC_ESC,MO(NAV),       ____,
                         ____, KC_BSPC,                                      KC_SPC,
                                 KC_TAB,                                      KC_ENT),
 	[FUNC] = LAYOUT(
 	            ____, ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, ____,
-	            LGUI_T(KC_F4), LALT_T(KC_F3), LCTL_T(KC_F2), LSFT_T(KC_F1), KC_F10,              KC_F5, RSFT_T(KC_F6), RCTL_T(KC_F7), LALT_T(KC_F8), RGUI_T(KC_F9),
+	            HOME_F9, HOME_F8, HOME_F7, HOME_F6, KC_F5,              KC_F10, HOME_F1, HOME_F2, HOME_F3, HOME_F4,
 	            KC_F11, ____, ____, KC_F11,____,                                                  ____, ____, UP(n_tilde,N_tilde), ____, KC_F12,
                         ____, KC_TRNS,KC_DEL,                                            KC_ESC, KC_TRNS, ____,
                         ____, KC_BSPC,                                                   KC_SPC,
@@ -158,7 +207,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
         // int64_t y = mouse_report.y;
         // mouse_report.x = 3*(x + 0.3*y);
         // mouse_report.y = 1.5*y;
-        mouse_report.x = 1.5 * mouse_report.x;
+        // mouse_report.x = 1.5 * mouse_report.x;
 
     }
     return mouse_report;
@@ -232,16 +281,25 @@ void matrix_scan_user(void) {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case HOME_S: // left pinkie
-            return TAPPING_TERM + 50;
         case HOME_I: // right pinkie
+        case HOME_4:
+        case HOME_F4:
+        case HOME_9:
+        case HOME_F9:
             return TAPPING_TERM + 50;
         case HOME_T:
-            return TAPPING_TERM + 35;
         case HOME_A:
+        case HOME_3:
+        case HOME_F3:
+        case HOME_8:
+        case HOME_F8:
             return TAPPING_TERM + 35;
         case HOME_R:
-            return TAPPING_TERM + 10;
         case HOME_E:
+        case HOME_2:
+        case HOME_F2:
+        case HOME_7:
+        case HOME_F7:
             return TAPPING_TERM + 10;
         default:
             return TAPPING_TERM;
