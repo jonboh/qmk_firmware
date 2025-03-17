@@ -1,4 +1,5 @@
 #include "print.h"
+#include <string.h>
 #include "keycodes.h"
 #include QMK_KEYBOARD_H
 
@@ -117,9 +118,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 MO(SYMB), KC_BSPC,                              KC_SPC,
                                 KC_TAB,                                         KC_ENT),
 	[NAV] = LAYOUT(
-	            ____, ____, ____, ____, ____,                                           ____, KC_HOME, KC_END,____, ____,
+	            ____, ____, ____, ____, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
 	            KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
-	            ____, ____, ____, ____, ____,                                           ____, KC_PGDN, KC_PGUP, ____, ____,
+	            ____, ____, ____, ____, ____,                                           ____,  ____,____,____, ____,
                         ____, MO(NUM),KC_DEL,                                             KC_ESC,KC_TRNS, ____,
                         ____, KC_BSPC,                                                   KC_SPC,
                         KC_TAB,                                                           KC_ENT),
@@ -140,7 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[FUNC] = LAYOUT(
 	            ____, ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, ____,
 	            HOME_F9, HOME_F8, HOME_F7, HOME_F6, KC_F5,              KC_F10, HOME_F1, HOME_F2, HOME_F3, HOME_F4,
-	            KC_F11, ____, ____, KC_F11,____,                                                  ____, ____, UP(n_tilde,N_tilde), ____, KC_F12,
+	            ____, ____, ____, KC_F11,____,                                                  ____, KC_F12, UP(n_tilde,N_tilde), ____, ____,
                         ____, KC_TRNS,KC_DEL,                                            KC_ESC, KC_TRNS, ____,
                         ____, KC_BSPC,                                                   KC_SPC,
                         KC_TAB,                                                           KC_ENT),
@@ -164,6 +165,66 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Keyboard Logic
 
 #include "features/achordion.h"
+
+
+// Effects based on previously typed keys: https://getreuer.info/posts/keyboards/triggers/index.html#based-on-previously-typed-keys
+#define RECENT_KEYS_TIMEOUT_MS 2000  // Timeout in milliseconds.
+#define RECENT_SIZE 8    // Number of keys in `recent` buffer.
+
+static uint16_t recent[RECENT_SIZE] = {KC_NO};
+static uint16_t deadline = 0;
+
+static void clear_recent_keys(void) {
+  memset(recent, 0, sizeof(recent));  // Set all zeros (KC_NO).
+}
+
+// Handles one event. Returns true if the key was appended to `recent`.
+static bool update_recent_keys(uint16_t keycode, keyrecord_t* record) {
+  if (!record->event.pressed) { return false; }
+
+  if (((get_mods() | get_oneshot_mods()) & ~MOD_MASK_SHIFT) != 0) {
+    clear_recent_keys();  // Avoid interfering with hotkeys.
+    return false;
+  }
+
+  // Handle tap-hold keys.
+  switch (keycode) {
+    case QK_MOD_TAP ... QK_MOD_TAP_MAX:
+    case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
+      if (record->tap.count == 0) { return false; }
+      keycode &= 0xff;  // Get tapping keycode.
+  }
+
+  switch (keycode) {
+    case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
+    case KC_AT:
+      break;
+
+    case KC_LSFT:  // These keys don't type anything on their own.
+    case KC_RSFT:
+    case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX:
+      return false;
+
+    default:  // Avoid acting otherwise, particularly on navigation keys.
+      clear_recent_keys();
+      return false;
+  }
+
+  // Slide the buffer left by one element.
+  memmove(recent, recent + 1, (RECENT_SIZE - 1) * sizeof(*recent));
+
+  recent[RECENT_SIZE - 1] = keycode;
+  deadline = record->event.time + RECENT_KEYS_TIMEOUT_MS;
+  return true;
+}
+
+void housekeeping_task_user(void) {
+  if (recent[RECENT_SIZE - 1] && timer_expired(timer_read(), deadline)) {
+    clear_recent_keys();  // Timed out; clear the buffer.
+  }
+}
+
+
 
 /* void pointing_device_init_user(void) { */
 /*     set_auto_mouse_layer(MOUS); // only required if AUTO_MOUSE_DEFAULT_LAYER is not set to index of <mouse_layer> */
@@ -229,11 +290,61 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
 #endif
     update_tri_layer(NUM, NAV, FUNC);
+      if (update_recent_keys(keycode, record)) {
+        // Expand "@me" to my email address.
+        if (recent[RECENT_SIZE - 3] == KC_AT &&
+            recent[RECENT_SIZE - 2] == KC_M &&
+            recent[RECENT_SIZE - 1] == KC_E) {
+          SEND_STRING(SS_TAP(X_BSPC) SS_TAP(X_BSPC) "jon.bosque.hernando@gmail.com");
+          return false;
+        }
+        if (recent[RECENT_SIZE - 4] == KC_AT &&
+            recent[RECENT_SIZE - 3] == KC_J &&
+            recent[RECENT_SIZE - 2] == KC_O &&
+            recent[RECENT_SIZE - 1] == KC_B
+            ) {
+          SEND_STRING(SS_TAP(X_BSPC) SS_TAP(X_BSPC) SS_TAP(X_BSPC) "jon.bosque@optimitive.com");
+          return false;
+        }
+      }
+
     // update_tri_layer(SYMB, MOUSL, SYMB_MODL);
     // update_tri_layer(SYMB, MOUSR, SYMB_MODR);
     if (!process_achordion(keycode, record)) {return false;}
 
 
+    // Shift+Backspace= Delete, see https://getreuer.info/posts/keyboards/macros3/index.html#shift-backspace-delete
+    switch (keycode) {
+        case KC_BSPC: {
+          static uint16_t registered_key = KC_NO;
+          if (record->event.pressed) {  // On key press.
+            const uint8_t mods = get_mods();
+#ifndef NO_ACTION_ONESHOT
+            uint8_t shift_mods = (mods | get_oneshot_mods()) & MOD_MASK_SHIFT;
+#else
+            uint8_t shift_mods = mods & MOD_MASK_SHIFT;
+#endif  // NO_ACTION_ONESHOT
+            if (shift_mods) {  // At least one shift key is held.
+              registered_key = KC_DEL;
+              // If one shift is held, clear it from the mods. But if both
+              // shifts are held, leave as is to send Shift + Del.
+              if (shift_mods != MOD_MASK_SHIFT) {
+#ifndef NO_ACTION_ONESHOT
+                del_oneshot_mods(MOD_MASK_SHIFT);
+#endif  // NO_ACTION_ONESHOT
+                unregister_mods(MOD_MASK_SHIFT);
+              }
+            } else {
+              registered_key = KC_BSPC;
+            }
+
+            register_code(registered_key);
+            set_mods(mods);
+          } else {  // On key release.
+            unregister_code(registered_key);
+          }
+        } return false;
+    }
     if (record->event.pressed) {
 
 //#ifdef REPEAT_KEY_ENABLE
