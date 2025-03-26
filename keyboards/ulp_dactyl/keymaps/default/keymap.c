@@ -30,6 +30,7 @@ enum custom_keycodes {
     M_UST,
     M_QUOT,
     M_DQUO,
+    M_PIPE_AMPR,
 //#endif
     MOUSE_TRACK_SCROLL,
     SET_MSTURDY,
@@ -41,11 +42,16 @@ enum custom_keycodes {
 #define HOME_T LALT_T(KC_T)
 #define HOME_R LCTL_T(KC_R)
 #define HOME_D LSFT_T(KC_D)
+#define HOME_J LGUI_T(KC_J)
+#define HOME_G LALT_T(KC_G)
 
 #define HOME_N RSFT_T(KC_N)
 #define HOME_E RCTL_T(KC_E)
 #define HOME_A RALT_T(KC_A)
 #define HOME_I RGUI_T(KC_I)
+#define HOME_H RALT_T(KC_H)
+#define HOME_EQL RALT_T(KC_EQL)
+#define HOME_COMM RGUI_T(KC_COMM)
 
 #define HOME_1 RSFT_T(KC_1)
 #define HOME_2 RCTL_T(KC_2)
@@ -66,6 +72,10 @@ enum custom_keycodes {
 #define HOME_F7 LCTL_T(KC_F7)
 #define HOME_F8 LALT_T(KC_F8)
 #define HOME_F9 LGUI_T(KC_F9)
+
+#define HOME_F11 LALT_T(KC_F11)
+#define HOME_F12 RALT_T(KC_F12)
+
 
 // Alternate Repeat is the "magic" key.
 #define MAGIC QK_ALT_REPEAT_KEY
@@ -111,37 +121,37 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[MSTURDY] = LAYOUT(
-            KC_V, KC_M, KC_L, KC_C, KC_P,                                    KC_B, MAGIC, KC_U, KC_O, KC_Q,
+            KC_V,     KC_M, KC_L, KC_C, KC_P,                                    KC_B, MAGIC, KC_U, KC_O, KC_Q,
             HOME_S, HOME_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, HOME_A, HOME_I,
-            KC_X, KC_K, KC_J, KC_G, KC_W,                                KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
+            KC_X,     KC_K, HOME_J, HOME_G, KC_W,                           KC_Z, HOME_H, HOME_COMM, KC_DOT, KC_SCLN,
             MO(MOUSL),          MO(NUM),  KC_DEL,                        KC_ESC, MO(NAV),               MO(MOUSR),
                                 MO(SYMB), KC_BSPC,                              KC_SPC,
                                 KC_TAB,                                         KC_ENT),
 	[NAV] = LAYOUT(
 	            ____, ____, ____, ____, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
 	            KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
-	            ____, ____, ____, ____, ____,                                           ____,  ____,____,____, ____,
+	            ____,       ____, KC_LGUI, KC_LALT, ____,                                           ____,  ____,____,____, ____,
                         ____, MO(NUM),KC_DEL,                                             KC_ESC,KC_TRNS, ____,
                         ____, KC_BSPC,                                                   KC_SPC,
                         KC_TAB,                                                           KC_ENT),
 	[SYMB] = LAYOUT(
-	            KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, KC_COLN,KC_BSLS, KC_SLSH, CW_TOGG,
-	            KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_AMPR,             KC_UNDS, KC_DLR, KC_MINS, KC_PLUS, KC_PERC,
+	            KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, MAGIC, KC_PERC, KC_AMPR, CW_TOGG,
+	            KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_UNDS,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, UP(n_tilde,N_tilde),
               ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,            KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
               MO(MOUSL),            ____,    KC_DEL,                   KC_ESC, ____,                    MO(MOUSR),
                                 KC_TRNS, KC_BSPC,                              KC_SPC,
                                 KC_TAB,                                        KC_ENT),
 	[NUM] = LAYOUT(
-	            ____, ____, ____, ____, ____,                          ____, ____, ____, ____, ____,
+	            ____, ____, ____, ____, ____,                          ____, MAGIC, KC_MINS, KC_PLUS, KC_PERC,
 	            HOME_9, HOME_8, HOME_7, HOME_6, KC_5,              KC_0, HOME_1, HOME_2, HOME_3, HOME_4,
-	            ____, ____, ____, ____, ____,                          ____, ____, ____, ____, ____,
+	            ____, ____, KC_LGUI, KC_LALT, ____,                          KC_ASTR, HOME_EQL, HOME_COMM, KC_DOT, KC_SCLN,
               ____,             KC_TRNS,KC_DEL,                       KC_ESC,MO(NAV),       ____,
                         ____, KC_BSPC,                                      KC_SPC,
                                 KC_TAB,                                      KC_ENT),
 	[FUNC] = LAYOUT(
 	            ____, ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, ____,
 	            HOME_F9, HOME_F8, HOME_F7, HOME_F6, KC_F5,              KC_F10, HOME_F1, HOME_F2, HOME_F3, HOME_F4,
-	            ____, ____, ____, KC_F11,____,                                                  ____, KC_F12, UP(n_tilde,N_tilde), ____, ____,
+	            ____, ____, KC_LGUI, HOME_F11,____,                                                  ____, HOME_F12, KC_RGUI, ____, ____,
                         ____, KC_TRNS,KC_DEL,                                            KC_ESC, KC_TRNS, ____,
                         ____, KC_BSPC,                                                   KC_SPC,
                         KC_TAB,                                                           KC_ENT),
@@ -367,6 +377,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case M_SP_BUT:  SEND_STRING(/*,*/" but"); break;
             case M_HICH:    SEND_STRING(/*w*/"hich"); break;
             case M_UST:     SEND_STRING(/*j*/"ust"); break;
+            case M_PIPE_AMPR:
+                tap_code16(KC_BSPC);
+                tap_code16(KC_AMPR);
+                return false;
             case M_QUOT:
                 tap_code16(KC_QUOT);
                 tap_code16(KC_LEFT);
@@ -405,6 +419,14 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case HOME_8:
         case HOME_F8:
             return TAPPING_TERM + 35;
+        case HOME_J:
+        case HOME_G:
+        case HOME_H:
+        case HOME_COMM:
+        case HOME_EQL:
+        case HOME_F11:
+        case HOME_F12:
+            return TAPPING_TERM + 20;
         case HOME_R:
         case HOME_E:
         case HOME_2:
@@ -479,8 +501,11 @@ uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
             case KC_W: return M_HICH;
             case KC_J: return M_UST;
             case KC_B: return M_EFORE;
+            case KC_PIPE: return M_PIPE_AMPR;
             case KC_QUOT: return M_QUOT;
             case KC_DQUO: return M_DQUO;
+            case KC_MINS: return KC_EQL;
+            case KC_PLUS: return KC_EQL;
         }
         return KC_NO;
     }
@@ -500,17 +525,20 @@ enum combo_events {
   SQUARE_BRACKET,
   PARENTHESIS,
   CURLY_BRACKETS,
+  AMPERSAND,
   LESSTHAN_GREATERTHAN,
 };
 
 const uint16_t PROGMEM combo_full_squarebracket[] = {KC_LBRC, KC_RBRC, COMBO_END};
 const uint16_t PROGMEM combo_full_parenthesis[] = {KC_LPRN, KC_RPRN, COMBO_END};
 const uint16_t PROGMEM combo_full_curlybracket[] = {KC_LCBR, KC_RCBR, COMBO_END};
+const uint16_t PROGMEM combo_full_ampersand[] = {KC_RPRN, KC_PIPE, COMBO_END};
 const uint16_t PROGMEM combo_full_lessthangreaterthan[] = {KC_LT, KC_GT, COMBO_END};
 combo_t key_combos[] = {
   [SQUARE_BRACKET] = COMBO_ACTION(combo_full_squarebracket),
   [PARENTHESIS] = COMBO_ACTION(combo_full_parenthesis),
   [CURLY_BRACKETS] = COMBO_ACTION(combo_full_curlybracket),
+  [AMPERSAND] = COMBO_ACTION(combo_full_ampersand),
   [LESSTHAN_GREATERTHAN] = COMBO_ACTION(combo_full_lessthangreaterthan),
 };
 
@@ -529,6 +557,9 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             case CURLY_BRACKETS:
                 send_string("{}");
                 tap_code16(KC_LEFT);
+                break;
+            case AMPERSAND:
+                send_string("&");
                 break;
             case LESSTHAN_GREATERTHAN:
                 send_string("<>");
