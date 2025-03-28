@@ -16,69 +16,43 @@
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
-//#ifdef REPEAT_KEY_ENABLE
-    M_ION,
-    M_NION,
-    M_MENT,
-    M_QUEN,
-    M_TMENT,
-    M_THE,
-    M_UPDIR,
-    M_EFORE,
-    M_SP_BUT,
-    M_HICH,
-    M_UST,
-    M_QUOT,
-    M_DQUO,
-    M_PIPE_AMPR,
-//#endif
     MOUSE_TRACK_SCROLL,
     SET_MSTURDY,
     SET_QWERTY,
+    M_MAGIC,
 };
 
 // Home row mods for Magic Sturdy layer.
-#define HOME_S LGUI_T(KC_S)
-#define HOME_T LALT_T(KC_T)
 #define HOME_R LCTL_T(KC_R)
 #define HOME_D LSFT_T(KC_D)
-#define HOME_J LGUI_T(KC_J)
-#define HOME_G LALT_T(KC_G)
+#define HOME_L LGUI_T(KC_L)
+#define HOME_C LALT_T(KC_C)
 
 #define HOME_N RSFT_T(KC_N)
 #define HOME_E RCTL_T(KC_E)
-#define HOME_A RALT_T(KC_A)
-#define HOME_I RGUI_T(KC_I)
-#define HOME_H RALT_T(KC_H)
-#define HOME_EQL RALT_T(KC_EQL)
-#define HOME_COMM RGUI_T(KC_COMM)
+#define HOME_MAGIC RALT_T(M_MAGIC)
+#define HOME_U RGUI_T(KC_U)
+#define HOME_MINS RGUI_T(KC_MINS)
 
 #define HOME_1 RSFT_T(KC_1)
 #define HOME_2 RCTL_T(KC_2)
-#define HOME_3 RALT_T(KC_3)
-#define HOME_4 RGUI_T(KC_4)
 
 #define HOME_6 RSFT_T(KC_6)
 #define HOME_7 RCTL_T(KC_7)
-#define HOME_8 RALT_T(KC_8)
-#define HOME_9 RGUI_T(KC_9)
 
 #define HOME_F1 RSFT_T(KC_F1)
 #define HOME_F2 RCTL_T(KC_F2)
-#define HOME_F3 RALT_T(KC_F3)
-#define HOME_F4 RGUI_T(KC_F4)
 
 #define HOME_F6 LSFT_T(KC_F6)
 #define HOME_F7 LCTL_T(KC_F7)
-#define HOME_F8 LALT_T(KC_F8)
-#define HOME_F9 LGUI_T(KC_F9)
 
 #define HOME_F11 LALT_T(KC_F11)
 #define HOME_F12 RALT_T(KC_F12)
+#define HOME_MPLY RALT_T(KC_MPLY)
+#define HOME_MSTP RGUI_T(KC_MSTP)
+#define HOME_VOLD LGUI_T(KC_VOLD)
+#define HOME_VOLU LALT_T(KC_VOLU)
 
-
-// Alternate Repeat is the "magic" key.
-#define MAGIC QK_ALT_REPEAT_KEY
 
 enum unicode_names {
     n_tilde,
@@ -121,37 +95,37 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[MSTURDY] = LAYOUT(
-            KC_V,     KC_M, KC_L, KC_C, KC_P,                                    KC_B, MAGIC, KC_U, KC_O, KC_Q,
-            HOME_S, HOME_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, HOME_A, HOME_I,
-            KC_X,     KC_K, HOME_J, HOME_G, KC_W,                           KC_Z, HOME_H, HOME_COMM, KC_DOT, KC_SCLN,
+            KC_V, KC_M, HOME_L, HOME_C, KC_P,                           KC_B, HOME_MAGIC, HOME_U, KC_O, KC_Q,
+            KC_S, KC_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, KC_A, KC_I,
+            KC_X, KC_K, KC_J,   KC_G,   KC_W,                           KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
             MO(MOUSL),          MO(NUM),  KC_DEL,                        KC_ESC, MO(NAV),               MO(MOUSR),
                                 MO(SYMB), KC_BSPC,                              KC_SPC,
                                 KC_TAB,                                         KC_ENT),
 	[NAV] = LAYOUT(
-	            ____, ____, ____, ____, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
-	            KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
+	            ____, ____, KC_LGUI, KC_LALT, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
+	            ____, ____, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
 	            ____,       ____, KC_LGUI, KC_LALT, ____,                                           ____,  ____,____,____, ____,
                         ____, MO(NUM),KC_DEL,                                             KC_ESC,KC_TRNS, ____,
                         ____, KC_BSPC,                                                   KC_SPC,
                         KC_TAB,                                                           KC_ENT),
 	[SYMB] = LAYOUT(
-	            KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, MAGIC, KC_PERC, KC_AMPR, CW_TOGG,
-	            KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_UNDS,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, UP(n_tilde,N_tilde),
+	            KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, M_MAGIC, KC_PERC, KC_AMPR, CW_TOGG,
+	            KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_UNDS,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
               ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,            KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
               MO(MOUSL),            ____,    KC_DEL,                   KC_ESC, ____,                    MO(MOUSR),
                                 KC_TRNS, KC_BSPC,                              KC_SPC,
                                 KC_TAB,                                        KC_ENT),
 	[NUM] = LAYOUT(
-	            ____, ____, ____, ____, ____,                          ____, MAGIC, KC_MINS, KC_PLUS, KC_PERC,
-	            HOME_9, HOME_8, HOME_7, HOME_6, KC_5,              KC_0, HOME_1, HOME_2, HOME_3, HOME_4,
-	            ____, ____, KC_LGUI, KC_LALT, ____,                          KC_ASTR, HOME_EQL, HOME_COMM, KC_DOT, KC_SCLN,
+	            ____, ____, KC_LGUI, KC_LALT, ____,                          ____, HOME_MAGIC, HOME_MINS, KC_PLUS, KC_PERC,
+	            KC_9, KC_8, HOME_7, HOME_6, KC_5,              KC_0, HOME_1, HOME_2, KC_3, KC_4,
+	            ____, ____,  ____, ____, ____,                          KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
               ____,             KC_TRNS,KC_DEL,                       KC_ESC,MO(NAV),       ____,
                         ____, KC_BSPC,                                      KC_SPC,
                                 KC_TAB,                                      KC_ENT),
 	[FUNC] = LAYOUT(
-	            ____, ____, KC_VOLD, KC_VOLU, KC_MUTE,                          KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, ____,
-	            HOME_F9, HOME_F8, HOME_F7, HOME_F6, KC_F5,              KC_F10, HOME_F1, HOME_F2, HOME_F3, HOME_F4,
-	            ____, ____, KC_LGUI, HOME_F11,____,                                                  ____, HOME_F12, KC_RGUI, ____, ____,
+	            ____, ____, HOME_VOLD, HOME_VOLU, KC_MUTE,                  KC_MPRV, HOME_MPLY, HOME_MSTP, KC_MNXT, ____,
+	            KC_F9, KC_F8, HOME_F7, HOME_F6, KC_F5,              KC_F10, HOME_F1, HOME_F2, KC_F3, KC_F4,
+	            ____, ____, ____, KC_F11,____,                     ____, KC_F12, UP(n_tilde,N_tilde), ____, ____,
                         ____, KC_TRNS,KC_DEL,                                            KC_ESC, KC_TRNS, ____,
                         ____, KC_BSPC,                                                   KC_SPC,
                         KC_TAB,                                                           KC_ENT),
@@ -208,6 +182,7 @@ static bool update_recent_keys(uint16_t keycode, keyrecord_t* record) {
   switch (keycode) {
     case KC_A ... KC_SLASH:  // These keys type letters, digits, symbols.
     case KC_AT:
+    case KC_DQUO:
       break;
 
     case KC_LSFT:  // These keys don't type anything on their own.
@@ -295,33 +270,119 @@ bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
     return false;
 }
 
+void handle_magic_key(void) {
+    // if ((mods & ~MOD_MASK_SHIFT) == 0) {
+    //     switch (keycode) {
+    //         // Behavior for Magic Sturdy's "magic" key.
+    //         case KC_C:
+    //         case KC_P:
+    //         case HOME_D:
+    //         case KC_G: return KC_Y;
+    //         case KC_Y: return KC_P;
+    //         case HOME_R: return KC_L; // R -> L
+    //         case HOME_S: return KC_K; // S -> K
+    //         case KC_K: return KC_S; // K -> S
+    //         case KC_L:  return KC_K;
+    //         case HOME_E: return KC_U;
+    //         case KC_A: return KC_O; // A -> O
+    //         case KC_O:  return KC_A;// O -> A
+    //         case HOME_U:  return KC_E;// U -> E
+    //
+    //         case KC_1 ... KC_0: return KC_DOT;
+    //         case KC_SPC: return M_THE; // spc -> THE
+    //         case KC_DOT: return M_UPDIR; // . -> ./
+    //         case KC_COMM: return M_SP_BUT; // . -> ./
+    //         case KC_I: return M_ION; // I -> ON
+    //         case KC_Q:  return M_QUEN;// Q -> UEN
+    //         case HOME_T: return M_TMENT; // T -> MENT
+    //         case KC_M:  return M_MENT;// M -> ENT
+    //         case HOME_N: return M_NION; // N -> ION
+    //         case KC_W: return M_HICH;
+    //         case KC_J: return M_UST;
+    //         case KC_B: return M_EFORE;
+    //         case KC_PIPE: return M_PIPE_AMPR;
+    //         case KC_QUOT: return M_QUOT;
+    //         case KC_DQUO: return M_DQUO;
+    //         case KC_MINS: return KC_EQL;
+    //         case KC_PLUS: return KC_EQL;
+    //     }
+    //     return KC_NO;
+    // }
+    // else if ((mods & MOD_MASK_CTRL)) {
+    //     switch (keycode) {
+    //         case KC_C:  // Ctrl+C -> Ctrl+V
+    //             return C(KC_V);
+    //     }
+    // }
+    switch (recent[RECENT_SIZE - 1]) {
+        case KC_C:
+        case KC_P:
+        case KC_D:
+        case KC_G: SEND_STRING("y"); break;
+        case KC_Y: SEND_STRING("p"); break;
+        case KC_R: SEND_STRING("l"); break;
+        case KC_S: SEND_STRING("k"); break;
+        case KC_K: SEND_STRING("s"); break;
+        case KC_L: SEND_STRING("l"); break;
+        case KC_E: SEND_STRING("u"); break;
+        case KC_A: SEND_STRING("o"); break;
+        case KC_O: SEND_STRING("a"); break;
+        case KC_U: SEND_STRING("e"); break;
+        case KC_I: SEND_STRING("on"); break;
+        case KC_N: SEND_STRING("ion"); break;
+        case KC_Q: SEND_STRING("uen"); break;
+        case KC_M: SEND_STRING("ent"); break;
+        case KC_T: SEND_STRING("ment"); break;
+        case KC_B: SEND_STRING("efore"); break;
+        case KC_W: SEND_STRING("hich"); break;
+        case KC_J: SEND_STRING("ust"); break;
+        case KC_SPC: SEND_STRING("the"); break;
+        case KC_DOT: SEND_STRING("./"); break;
+        case KC_COMM: SEND_STRING(" but"); break;
+        case KC_QUOT: SEND_STRING("'"); tap_code16(KC_LEFT); break;
+        case KC_DQUO: tap_code16(KC_DQUO); tap_code16(KC_LEFT); break;
+    }
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONSOLE_ENABLE
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
 #endif
+    if (!process_achordion(keycode, record)) { return false; }
+
     update_tri_layer(NUM, NAV, FUNC);
-      if (update_recent_keys(keycode, record)) {
-        // Expand "@me" to my email address.
-        if (recent[RECENT_SIZE - 3] == KC_AT &&
-            recent[RECENT_SIZE - 2] == KC_M &&
-            recent[RECENT_SIZE - 1] == KC_E) {
-          SEND_STRING(SS_TAP(X_BSPC) SS_TAP(X_BSPC) "jon.bosque.hernando@gmail.com");
-          return false;
-        }
-        if (recent[RECENT_SIZE - 4] == KC_AT &&
-            recent[RECENT_SIZE - 3] == KC_J &&
-            recent[RECENT_SIZE - 2] == KC_O &&
-            recent[RECENT_SIZE - 1] == KC_B
-            ) {
-          SEND_STRING(SS_TAP(X_BSPC) SS_TAP(X_BSPC) SS_TAP(X_BSPC) "jon.bosque@optimitive.com");
-          return false;
-        }
+
+    // Prior to recent key update to not match against
+    switch (keycode) {
+        case HOME_MAGIC:
+            if (record->tap.count && record->event.pressed ) {
+                // from: https://www.reddit.com/r/olkb/comments/yodezj/qmk_macro_on_tap_modifier_on_hold/
+                // we implement the tap logic manually as ther HOME_MAGIC is not a basic  keycode
+                handle_magic_key();
+                return false;
+            }
+            break;
+    }
+
+    if (update_recent_keys(keycode, record)) {
+      // Other recent based commands
+      // Expand "@me" to my email address.
+      if (recent[RECENT_SIZE - 3] == KC_AT &&
+          recent[RECENT_SIZE - 2] == KC_M &&
+          recent[RECENT_SIZE - 1] == KC_E) {
+        SEND_STRING(SS_TAP(X_BSPC) SS_TAP(X_BSPC) "jon.bosque.hernando@gmail.com");
+        return false;
       }
-
-    // update_tri_layer(SYMB, MOUSL, SYMB_MODL);
-    // update_tri_layer(SYMB, MOUSR, SYMB_MODR);
-    if (!process_achordion(keycode, record)) {return false;}
-
+      // Expand "@job" to my job email address.
+      if (recent[RECENT_SIZE - 4] == KC_AT &&
+          recent[RECENT_SIZE - 3] == KC_J &&
+          recent[RECENT_SIZE - 2] == KC_O &&
+          recent[RECENT_SIZE - 1] == KC_B
+          ) {
+        SEND_STRING(SS_TAP(X_BSPC) SS_TAP(X_BSPC) SS_TAP(X_BSPC) "jon.bosque@optimitive.com");
+        return false;
+      }
+    }
 
     // Shift+Backspace= Delete, see https://getreuer.info/posts/keyboards/macros3/index.html#shift-backspace-delete
     switch (keycode) {
@@ -355,47 +416,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           }
         } return false;
     }
-    if (record->event.pressed) {
-
-//#ifdef REPEAT_KEY_ENABLE
-        int rep_count = get_repeat_key_count();
-        if (rep_count < -1) {
-            send_char('n');
-            return false;
-        }
-
-        switch (keycode) {
-            // Macros invoked through the MAGIC key.
-            case M_ION:     SEND_STRING(/*i*/"on"); break;
-            case M_NION:    SEND_STRING(/*n*/"ion"); break;
-            case M_MENT:    SEND_STRING(/*m*/"ent"); break;
-            case M_QUEN:    SEND_STRING(/*q*/"uen"); break;
-            case M_TMENT:   SEND_STRING(/*t*/"ment"); break;
-            case M_THE:     SEND_STRING(/* */"the"); break;
-            case M_UPDIR:   SEND_STRING(/*.*/"./"); break;
-            case M_EFORE:   SEND_STRING(/*b*/"efore"); break;
-            case M_SP_BUT:  SEND_STRING(/*,*/" but"); break;
-            case M_HICH:    SEND_STRING(/*w*/"hich"); break;
-            case M_UST:     SEND_STRING(/*j*/"ust"); break;
-            case M_PIPE_AMPR:
-                tap_code16(KC_BSPC);
-                tap_code16(KC_AMPR);
-                return false;
-            case M_QUOT:
-                tap_code16(KC_QUOT);
-                tap_code16(KC_LEFT);
-                break;
-            case M_DQUO:
-                tap_code16(KC_DQUO);
-                tap_code16(KC_LEFT);
-                break;
-        }
-//#endif
-    }
     switch (keycode) {
         case MOUSE_TRACK_SCROLL: set_scrolling = record->event.pressed; break;
         case SET_MSTURDY: layer_move(MSTURDY); break;
-        case SET_QWERTY: layer_move(QWERTY); break;
     }
     return true;
 }
@@ -405,27 +428,11 @@ void matrix_scan_user(void) {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case HOME_S: // left pinkie
-        case HOME_I: // right pinkie
-        case HOME_4:
-        case HOME_F4:
-        case HOME_9:
-        case HOME_F9:
-            return TAPPING_TERM + 50;
-        case HOME_T:
-        case HOME_A:
-        case HOME_3:
-        case HOME_F3:
-        case HOME_8:
-        case HOME_F8:
-            return TAPPING_TERM + 35;
-        case HOME_J:
-        case HOME_G:
-        case HOME_H:
-        case HOME_COMM:
-        case HOME_EQL:
-        case HOME_F11:
-        case HOME_F12:
+        case HOME_L:
+        case HOME_C:
+        case HOME_U:
+        case HOME_MAGIC:
+        case HOME_MINS:
             return TAPPING_TERM + 20;
         case HOME_R:
         case HOME_E:
@@ -470,55 +477,6 @@ void caps_word_set_user(bool active) {
 }
 //#endif
 
-//#ifdef REPEAT_KEY_ENABLE
-uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
-    if ((mods & ~MOD_MASK_SHIFT) == 0) {
-        switch (keycode) {
-            // Behavior for Magic Sturdy's "magic" key.
-            case KC_C:
-            case KC_P:
-            case HOME_D:
-            case KC_G: return KC_Y;
-            case KC_Y: return KC_P;
-            case HOME_R: return KC_L; // R -> L
-            case HOME_S: return KC_K; // S -> K
-            case KC_K: return KC_S; // K -> S
-            case KC_L:  return KC_K;
-            case HOME_E: return KC_U;
-            case HOME_A: return KC_O; // A -> O
-            case KC_O:  return KC_A;// O -> A
-            case KC_U:  return KC_E;// U -> E
-
-            case KC_1 ... KC_0: return KC_DOT;
-            case KC_SPC: return M_THE; // spc -> THE
-            case KC_DOT: return M_UPDIR; // . -> ./
-            case KC_COMM: return M_SP_BUT; // . -> ./
-            case HOME_I: return M_ION; // I -> ON
-            case KC_Q:  return M_QUEN;// Q -> UEN
-            case HOME_T: return M_TMENT; // T -> MENT
-            case KC_M:  return M_MENT;// M -> ENT
-            case HOME_N: return M_NION; // N -> ION
-            case KC_W: return M_HICH;
-            case KC_J: return M_UST;
-            case KC_B: return M_EFORE;
-            case KC_PIPE: return M_PIPE_AMPR;
-            case KC_QUOT: return M_QUOT;
-            case KC_DQUO: return M_DQUO;
-            case KC_MINS: return KC_EQL;
-            case KC_PLUS: return KC_EQL;
-        }
-        return KC_NO;
-    }
-    else if ((mods & MOD_MASK_CTRL)) {
-        switch (keycode) {
-            case KC_C:  // Ctrl+C -> Ctrl+V
-                return C(KC_V);
-        }
-    }
-
-    return M_THE;
-}
-//#endif
 
 //#ifdef COMBO_ENABLE
 enum combo_events {
