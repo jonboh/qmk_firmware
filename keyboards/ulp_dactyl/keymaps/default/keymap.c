@@ -59,33 +59,27 @@ const uint32_t unicode_map[] PROGMEM = {
     [N_tilde] = 0x00D1  // Ñ
 };
 
-#define MS_NORMAL_CPI 1000
-#define MS_SNIPE_CPI 600
+#define MS_NORMAL_CPI 1200
+#define MS_SNIPE_CPI 500
 
 layer_state_t default_layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state)) {
-        case MOUSE:
-        case NUM:
-        case SYMB:
-            pointing_device_set_cpi(MS_SNIPE_CPI);
-            break;
-        default:
-            pointing_device_set_cpi(MS_NORMAL_CPI);
-            break;
+    state = update_tri_layer_state(state, NAV, NUM, FUNC);
+    state = update_tri_layer_state(state, SYMB, NUM, MOUSE);
+    if (IS_LAYER_ON_STATE(state, MOUSE)){
+        pointing_device_set_cpi(MS_SNIPE_CPI);
+    } else {
+        pointing_device_set_cpi(MS_NORMAL_CPI);
     }
     return state;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state)) {
-        case MOUSE:
-        case NUM:
-        case SYMB:
-            pointing_device_set_cpi(MS_SNIPE_CPI);
-            break;
-        default:
-            pointing_device_set_cpi(MS_NORMAL_CPI);
-            break;
+    state = update_tri_layer_state(state, NAV, NUM, FUNC);
+    state = update_tri_layer_state(state, SYMB, NUM, MOUSE);
+    if (IS_LAYER_ON_STATE(state, MOUSE)){
+        pointing_device_set_cpi(MS_SNIPE_CPI);
+    } else {
+        pointing_device_set_cpi(MS_NORMAL_CPI);
     }
   return state;
 }
@@ -143,11 +137,6 @@ LAYOUT(
                           'L', 'L', 'L',     'R','R', 'R',
                           'L', 'L',                   'R',
                           'L',                        'R');
-
-
-// Keyboard Logic
-
-// #include "features/achordion.h"
 
 
 // Effects based on previously typed keys: https://getreuer.info/posts/keyboards/triggers/index.html#based-on-previously-typed-keys
@@ -301,11 +290,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONSOLE_ENABLE
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
 #endif
-    // if (!process_achordion(keycode, record)) { return false; }
-
-    update_tri_layer(NUM, NAV, FUNC);
-    update_tri_layer(NUM, SYMB, MOUSE);
-
     // Prior to recent key update to not match against
     switch (keycode) {
         case HOME_MAGIC:
@@ -376,9 +360,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
-// void matrix_scan_user(void) {
-//     achordion_task();
-// }
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
