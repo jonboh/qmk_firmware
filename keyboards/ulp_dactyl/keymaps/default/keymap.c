@@ -4,21 +4,16 @@
 #include QMK_KEYBOARD_H
 
 #define MSTURDY 0
-#define QWERTY 1
-#define NAV  2
-#define SYMB 3
-#define NUM  4
-#define FUNC 5
-#define MOUSL 6
-#define MOUSR 7
-// #define SYMB_MODL 8
-// #define SYMB_MODR 9
+#define NAV  1
+#define SYMB 2
+#define NUM  3
+#define FUNC 4
+#define MOUSE 5
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
     MOUSE_TRACK_SCROLL,
     SET_MSTURDY,
-    SET_QWERTY,
     M_MAGIC,
 };
 
@@ -69,86 +64,90 @@ const uint32_t unicode_map[] PROGMEM = {
 
 layer_state_t default_layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
-    case MOUSL:
-    case MOUSR:
-        pointing_device_set_cpi(MS_SNIPE_CPI);
-        break;
-    default:
-        pointing_device_set_cpi(MS_NORMAL_CPI);
-        break;
+        case MOUSE:
+        case NUM:
+        case SYMB:
+            pointing_device_set_cpi(MS_SNIPE_CPI);
+            break;
+        default:
+            pointing_device_set_cpi(MS_NORMAL_CPI);
+            break;
     }
     return state;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
-    case MOUSL:
-    case MOUSR:
-        pointing_device_set_cpi(MS_SNIPE_CPI);
-        break;
-    default:
-        pointing_device_set_cpi(MS_NORMAL_CPI);
-        break;
+        case MOUSE:
+        case NUM:
+        case SYMB:
+            pointing_device_set_cpi(MS_SNIPE_CPI);
+            break;
+        default:
+            pointing_device_set_cpi(MS_NORMAL_CPI);
+            break;
     }
   return state;
 }
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-	[MSTURDY] = LAYOUT(
-            KC_V, KC_M, HOME_L, HOME_C, KC_P,                           KC_B, HOME_MAGIC, HOME_U, KC_O, KC_Q,
-            KC_S, KC_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, KC_A, KC_I,
-            KC_X, KC_K, KC_J,   KC_G,   KC_W,                           KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
-            MO(MOUSL),          MO(NUM),  KC_DEL,                        KC_ESC, MO(NAV),               MO(MOUSR),
-                                MO(SYMB), KC_BSPC,                              KC_SPC,
-                                KC_TAB,                                         KC_ENT),
-	[NAV] = LAYOUT(
-	            ____, ____, KC_LGUI, KC_LALT, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
-	            ____, ____, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
-	            ____,       ____, KC_LGUI, KC_LALT, ____,                                           ____,  ____,____,____, ____,
-                        ____, MO(NUM),KC_DEL,                                             KC_ESC,KC_TRNS, ____,
-                        ____, KC_BSPC,                                                   KC_SPC,
-                        KC_TAB,                                                           KC_ENT),
-	[SYMB] = LAYOUT(
-	            KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, M_MAGIC, KC_PERC, KC_AMPR, CW_TOGG,
-	            KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_UNDS,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
-              ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,            KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
-              MO(MOUSL),            ____,    KC_DEL,                   KC_ESC, ____,                    MO(MOUSR),
-                                KC_TRNS, KC_BSPC,                              KC_SPC,
-                                KC_TAB,                                        KC_ENT),
-	[NUM] = LAYOUT(
-	            ____, ____, KC_LGUI, KC_LALT, ____,                          ____, HOME_MAGIC, HOME_MINS, KC_PLUS, KC_PERC,
-	            KC_9, KC_8, HOME_7, HOME_6, KC_5,              KC_0, HOME_1, HOME_2, KC_3, KC_4,
-	            ____, ____,  ____, ____, ____,                          KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
-              ____,             KC_TRNS,KC_DEL,                       KC_ESC,MO(NAV),       ____,
-                        ____, KC_BSPC,                                      KC_SPC,
-                                KC_TAB,                                      KC_ENT),
-	[FUNC] = LAYOUT(
-	            ____, ____, HOME_VOLD, HOME_VOLU, KC_MUTE,                  KC_MPRV, HOME_MPLY, HOME_MSTP, KC_MNXT, ____,
-	            KC_F9, KC_F8, HOME_F7, HOME_F6, KC_F5,              KC_F10, HOME_F1, HOME_F2, KC_F3, KC_F4,
-	            ____, ____, ____, KC_F11,____,                     ____, KC_F12, UP(n_tilde,N_tilde), ____, ____,
-                        ____, KC_TRNS,KC_DEL,                                            KC_ESC, KC_TRNS, ____,
-                        ____, KC_BSPC,                                                   KC_SPC,
-                        KC_TAB,                                                           KC_ENT),
-	[MOUSL] = LAYOUT(
-	            ____, MOUSE_TRACK_SCROLL, KC_MS_BTN2, KC_MS_BTN1, KC_MS_BTN3,  ____, ____, ____, ____, ____,
-	                ____, ____, ____, ____, ____,                               ____, KC_RSFT, KC_RCTL, KC_RALT, KC_RGUI,
-	               ____, ____, ____, ____, ____,                                ____, ____, ____, ____, ____,
-                        KC_TRNS,  ____,                                             ____, ____,
-                        MO(SYMB), KC_BSPC,                                                   KC_ESC,KC_SPC,
-                        KC_TAB,    KC_DEL,                                                       KC_ENT),
-	[MOUSR] = LAYOUT(
-	            ____, ____, ____, ____, ____,                                 KC_MS_BTN3, KC_MS_BTN1, KC_MS_BTN2, MOUSE_TRACK_SCROLL, ____,
-	            KC_RGUI, KC_RALT,KC_RCTL ,KC_RSFT, ____,                      ____, ____, ____, ____, ____,
-	               ____, ____, ____, ____, ____,                                ____, ____, ____, ____, ____,
-                       ____,  ____, KC_DEL,                                            KC_ESC,____, KC_TRNS,
-                        MO(SYMB), KC_BSPC,                                                   KC_SPC,
-                        KC_TAB,                                                           KC_ENT),
+    [MSTURDY] = LAYOUT(
+              KC_V, KC_M, HOME_L, HOME_C, KC_P,                           KC_B, HOME_MAGIC, HOME_U, KC_O, KC_Q,
+              KC_S, KC_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, KC_A, KC_I,
+              KC_X, KC_K, KC_J,   KC_G,   KC_W,                           KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
+              MO(MOUSE),          MO(NUM),  KC_DEL,                        KC_ESC, MO(NAV),               MO(MOUSE),
+                                  MO(SYMB), KC_BSPC,                              KC_SPC,
+                                  KC_TAB,                                         KC_ENT),
+    [NAV] = LAYOUT(
+                ____, ____, KC_LGUI, KC_LALT, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
+                ____, ____, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
+                ____,       ____, KC_LGUI, KC_LALT, ____,                                           ____,  ____,____,____, ____,
+                          ____, MO(NUM),KC_DEL,                                             KC_ESC,KC_TRNS, ____,
+                          ____, KC_BSPC,                                                   KC_SPC,
+                          KC_TAB,                                                           KC_ENT),
+    [SYMB] = LAYOUT(
+                KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, M_MAGIC, KC_PERC, KC_AMPR, CW_TOGG,
+                KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_UNDS,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
+                ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,            KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
+                MO(MOUSE),            MO(NUM),    KC_DEL,                   KC_ESC, ____,                    MO(MOUSE),
+                                  KC_TRNS, KC_BSPC,                              KC_SPC,
+                                  KC_TAB,                                        KC_ENT),
+    [NUM] = LAYOUT(
+                ____, ____, KC_LGUI, KC_LALT, ____,                          ____, HOME_MAGIC, HOME_MINS, KC_PLUS, KC_PERC,
+                KC_9, KC_8, HOME_7, HOME_6, KC_5,              KC_0, HOME_1, HOME_2, KC_3, KC_4,
+                ____, ____,  ____, ____, ____,                          KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
+                ____,             KC_TRNS,KC_DEL,                       KC_ESC,MO(NAV),       ____,
+                          MO(SYMB), KC_BSPC,                                      KC_SPC,
+                                  KC_TAB,                                      KC_ENT),
+    [FUNC] = LAYOUT(
+                ____, ____, HOME_VOLD, HOME_VOLU, KC_MUTE,                  KC_MPRV, HOME_MPLY, HOME_MSTP, KC_MNXT, ____,
+                KC_F9, KC_F8, HOME_F7, HOME_F6, KC_F5,              KC_F10, HOME_F1, HOME_F2, KC_F3, KC_F4,
+                ____, ____, ____, KC_F11,____,                     ____, KC_F12, UP(n_tilde,N_tilde), ____, ____,
+                          ____, KC_TRNS,KC_DEL,                                            KC_ESC, KC_TRNS, ____,
+                          ____, KC_BSPC,                                                   KC_SPC,
+                          KC_TAB,                                                           KC_ENT),
+    [MOUSE] = LAYOUT(
+                ____, ____, ____, ____, ____,                                 ____, MOUSE_TRACK_SCROLL, KC_MS_BTN3, ____, ____,
+                KC_RGUI, KC_RALT,KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, ____, ____,
+                   ____, ____, ____, ____, ____,                                ____, ____, ____, ____, ____,
+                         ____,  ____, KC_DEL,                                            KC_ESC,____, KC_TRNS,
+                          MO(SYMB), KC_BSPC,                                                   KC_SPC,
+                          KC_TAB,                                                           KC_ENT)
 };
+
+const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
+LAYOUT(
+                'L', 'L', 'L', 'L', 'L',     'R', 'R', 'R', 'R', 'R',
+                'L', 'L', 'L', 'L', 'L',     'R', 'R', 'R', 'R', 'R',
+                'L', 'L', 'L', 'L', 'L',     'R', 'R', 'R', 'R', 'R',
+                          'L', 'L', 'L',     'R','R', 'R',
+                          'L', 'L',                   'R',
+                          'L',                        'R');
 
 
 // Keyboard Logic
 
-#include "features/achordion.h"
+// #include "features/achordion.h"
 
 
 // Effects based on previously typed keys: https://getreuer.info/posts/keyboards/triggers/index.html#based-on-previously-typed-keys
@@ -224,10 +223,7 @@ int64_t scroll_accumulated_v = 0;
 
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    if (IS_LAYER_ON(SYMB)) { // for combinations with MOUSL/R to SYMB_MODL/R
-        set_scrolling = false;
-    }
-    if (!IS_LAYER_ON(MOUSL) && !IS_LAYER_ON(MOUSR)){
+    if (!IS_LAYER_ON(MOUSE)){
         set_scrolling = false;
     }
     if (set_scrolling) {
@@ -271,49 +267,6 @@ bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
 }
 
 void handle_magic_key(void) {
-    // if ((mods & ~MOD_MASK_SHIFT) == 0) {
-    //     switch (keycode) {
-    //         // Behavior for Magic Sturdy's "magic" key.
-    //         case KC_C:
-    //         case KC_P:
-    //         case HOME_D:
-    //         case KC_G: return KC_Y;
-    //         case KC_Y: return KC_P;
-    //         case HOME_R: return KC_L; // R -> L
-    //         case HOME_S: return KC_K; // S -> K
-    //         case KC_K: return KC_S; // K -> S
-    //         case KC_L:  return KC_K;
-    //         case HOME_E: return KC_U;
-    //         case KC_A: return KC_O; // A -> O
-    //         case KC_O:  return KC_A;// O -> A
-    //         case HOME_U:  return KC_E;// U -> E
-    //
-    //         case KC_1 ... KC_0: return KC_DOT;
-    //         case KC_SPC: return M_THE; // spc -> THE
-    //         case KC_DOT: return M_UPDIR; // . -> ./
-    //         case KC_COMM: return M_SP_BUT; // . -> ./
-    //         case KC_I: return M_ION; // I -> ON
-    //         case KC_Q:  return M_QUEN;// Q -> UEN
-    //         case HOME_T: return M_TMENT; // T -> MENT
-    //         case KC_M:  return M_MENT;// M -> ENT
-    //         case HOME_N: return M_NION; // N -> ION
-    //         case KC_W: return M_HICH;
-    //         case KC_J: return M_UST;
-    //         case KC_B: return M_EFORE;
-    //         case KC_PIPE: return M_PIPE_AMPR;
-    //         case KC_QUOT: return M_QUOT;
-    //         case KC_DQUO: return M_DQUO;
-    //         case KC_MINS: return KC_EQL;
-    //         case KC_PLUS: return KC_EQL;
-    //     }
-    //     return KC_NO;
-    // }
-    // else if ((mods & MOD_MASK_CTRL)) {
-    //     switch (keycode) {
-    //         case KC_C:  // Ctrl+C -> Ctrl+V
-    //             return C(KC_V);
-    //     }
-    // }
     switch (recent[RECENT_SIZE - 1]) {
         case KC_C:
         case KC_P:
@@ -348,9 +301,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONSOLE_ENABLE
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
 #endif
-    if (!process_achordion(keycode, record)) { return false; }
+    // if (!process_achordion(keycode, record)) { return false; }
 
     update_tri_layer(NUM, NAV, FUNC);
+    update_tri_layer(NUM, SYMB, MOUSE);
 
     // Prior to recent key update to not match against
     switch (keycode) {
@@ -422,9 +376,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
-void matrix_scan_user(void) {
-    achordion_task();
-}
+// void matrix_scan_user(void) {
+//     achordion_task();
+// }
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
