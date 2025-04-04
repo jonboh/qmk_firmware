@@ -271,7 +271,7 @@ void handle_magic_key(void) {
         case KC_R: SEND_STRING("l"); break;
         case KC_S: SEND_STRING("k"); break;
         case KC_K: SEND_STRING("s"); break;
-        case KC_L: SEND_STRING("l"); break;
+        case KC_L: SEND_STRING("k"); break;
         case KC_E: SEND_STRING("u"); break;
         case KC_A: SEND_STRING("o"); break;
         case KC_O: SEND_STRING("a"); break;
