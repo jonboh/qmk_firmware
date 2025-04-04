@@ -59,12 +59,15 @@ const uint32_t unicode_map[] PROGMEM = {
     [N_tilde] = 0x00D1  // Ñ
 };
 
-#define MS_NORMAL_CPI 1200
-#define MS_SNIPE_CPI 500
+#define MS_NORMAL_CPI 1000
+#define MS_SNIPE_CPI 550
 
 layer_state_t default_layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, NAV, NUM, FUNC);
-    state = update_tri_layer_state(state, SYMB, NUM, MOUSE);
+    if (!IS_LAYER_ON_STATE(state, MOUSE)){
+        // run tri layer only when mouse is not already active from MO(MOUSE)
+        state = update_tri_layer_state(state, SYMB, NUM, MOUSE);
+    }
     if (IS_LAYER_ON_STATE(state, MOUSE)){
         pointing_device_set_cpi(MS_SNIPE_CPI);
     } else {
@@ -75,7 +78,10 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, NAV, NUM, FUNC);
-    state = update_tri_layer_state(state, SYMB, NUM, MOUSE);
+    if (!IS_LAYER_ON_STATE(state, MOUSE)){
+        // run tri layer only when mouse is not already active from MO(MOUSE)
+        state = update_tri_layer_state(state, SYMB, NUM, MOUSE);
+    }
     if (IS_LAYER_ON_STATE(state, MOUSE)){
         pointing_device_set_cpi(MS_SNIPE_CPI);
     } else {
@@ -95,8 +101,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [NAV] = LAYOUT(
                 ____, ____, KC_LGUI, KC_LALT, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
                 ____, ____, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
-                ____,       ____, KC_LGUI, KC_LALT, ____,                                           ____,  ____,____,____, ____,
-                          ____, MO(NUM),KC_DEL,                                             KC_ESC,KC_TRNS, ____,
+                ____, ____, KC_LGUI, KC_LALT, ____,                                           ____,  ____,____,____, ____,
+                ____,                MO(NUM),KC_DEL,                                             KC_ESC,KC_TRNS, ____,
                           ____, KC_BSPC,                                                   KC_SPC,
                           KC_TAB,                                                           KC_ENT),
     [SYMB] = LAYOUT(
@@ -134,9 +140,9 @@ LAYOUT(
                 'L', 'L', 'L', 'L', 'L',     'R', 'R', 'R', 'R', 'R',
                 'L', 'L', 'L', 'L', 'L',     'R', 'R', 'R', 'R', 'R',
                 'L', 'L', 'L', 'L', 'L',     'R', 'R', 'R', 'R', 'R',
-                          'L', 'L', 'L',     'R','R', 'R',
-                          'L', 'L',                   'R',
-                          'L',                        'R');
+                'L',           'L', 'L',     'R','R',            'R',
+                               'L', 'L',         'R',
+                                    'L',         'R');
 
 
 // Effects based on previously typed keys: https://getreuer.info/posts/keyboards/triggers/index.html#based-on-previously-typed-keys
