@@ -9,6 +9,7 @@
 #define NUM  3
 #define FUNC 4
 #define MOUSE 5
+#define TRIMOUSE 6
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
@@ -64,11 +65,8 @@ const uint32_t unicode_map[] PROGMEM = {
 
 layer_state_t default_layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, NAV, NUM, FUNC);
-    if (!IS_LAYER_ON_STATE(state, MOUSE)){
-        // run tri layer only when mouse is not already active from MO(MOUSE)
-        state = update_tri_layer_state(state, SYMB, NUM, MOUSE);
-    }
-    if (IS_LAYER_ON_STATE(state, MOUSE)){
+    state = update_tri_layer_state(state, SYMB, NUM, TRIMOUSE);
+    if (IS_LAYER_ON_STATE(state, MOUSE) || IS_LAYER_ON_STATE(state, TRIMOUSE)){
         pointing_device_set_cpi(MS_SNIPE_CPI);
     } else {
         pointing_device_set_cpi(MS_NORMAL_CPI);
@@ -78,11 +76,8 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, NAV, NUM, FUNC);
-    if (!IS_LAYER_ON_STATE(state, MOUSE)){
-        // run tri layer only when mouse is not already active from MO(MOUSE)
-        state = update_tri_layer_state(state, SYMB, NUM, MOUSE);
-    }
-    if (IS_LAYER_ON_STATE(state, MOUSE)){
+    state = update_tri_layer_state(state, SYMB, NUM, TRIMOUSE);
+    if (IS_LAYER_ON_STATE(state, MOUSE) || IS_LAYER_ON_STATE(state, TRIMOUSE)){
         pointing_device_set_cpi(MS_SNIPE_CPI);
     } else {
         pointing_device_set_cpi(MS_NORMAL_CPI);
@@ -127,6 +122,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                           ____, KC_BSPC,                                                   KC_SPC,
                           KC_TAB,                                                           KC_ENT),
     [MOUSE] = LAYOUT(
+                ____, ____, ____, ____, ____,                                 ____, MOUSE_TRACK_SCROLL, KC_MS_BTN3, ____, ____,
+                KC_RGUI, KC_RALT,KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, ____, ____,
+                   ____, ____, ____, ____, ____,                                ____, ____, ____, ____, ____,
+                         ____,  ____, KC_DEL,                                            KC_ESC,____, KC_TRNS,
+                          MO(SYMB), KC_BSPC,                                                   KC_SPC,
+                          KC_TAB,                                                           KC_ENT),
+    [TRIMOUSE] = LAYOUT(
                 ____, ____, ____, ____, ____,                                 ____, MOUSE_TRACK_SCROLL, KC_MS_BTN3, ____, ____,
                 KC_RGUI, KC_RALT,KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, ____, ____,
                    ____, ____, ____, ____, ____,                                ____, ____, ____, ____, ____,
@@ -218,7 +220,7 @@ int64_t scroll_accumulated_v = 0;
 
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    if (!IS_LAYER_ON(MOUSE)){
+    if (!IS_LAYER_ON(MOUSE) && !IS_LAYER_ON(TRIMOUSE)){
         set_scrolling = false;
     }
     if (set_scrolling) {
