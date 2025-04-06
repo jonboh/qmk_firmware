@@ -4,12 +4,11 @@
 #include QMK_KEYBOARD_H
 
 #define MSTURDY 0
-#define NAV  1
-#define SYMB 2
-#define NUM  3
-#define FUNC 4
-#define MOUSE 5
-#define TRIMOUSE 6
+#define MOUSE 1
+#define NAV  2
+#define SYMB 3
+#define NUM  4
+#define FUNC 5
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
@@ -64,20 +63,18 @@ const uint32_t unicode_map[] PROGMEM = {
 #define MS_SNIPE_CPI 550
 
 layer_state_t default_layer_state_set_user(layer_state_t state) {
-    state = update_tri_layer_state(state, NAV, NUM, FUNC);
-    state = update_tri_layer_state(state, SYMB, NUM, TRIMOUSE);
-    if (IS_LAYER_ON_STATE(state, MOUSE) || IS_LAYER_ON_STATE(state, TRIMOUSE)){
-        pointing_device_set_cpi(MS_SNIPE_CPI);
-    } else {
-        pointing_device_set_cpi(MS_NORMAL_CPI);
-    }
-    return state;
+    return layer_state_set_user(state);
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, NAV, NUM, FUNC);
-    state = update_tri_layer_state(state, SYMB, NUM, TRIMOUSE);
-    if (IS_LAYER_ON_STATE(state, MOUSE) || IS_LAYER_ON_STATE(state, TRIMOUSE)){
+    if (!IS_LAYER_ON_STATE(state, MOUSE)){
+        state = update_tri_layer_state(state, SYMB, NUM, MOUSE);
+        if (IS_LAYER_ON_STATE(state, MOUSE)) {
+            layer_move(MOUSE);
+        }
+    }
+    if (IS_LAYER_ON_STATE(state, MOUSE)){
         pointing_device_set_cpi(MS_SNIPE_CPI);
     } else {
         pointing_device_set_cpi(MS_NORMAL_CPI);
@@ -90,9 +87,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
               KC_V, KC_M, HOME_L, HOME_C, KC_P,                           KC_B, HOME_MAGIC, HOME_U, KC_O, KC_Q,
               KC_S, KC_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, KC_A, KC_I,
               KC_X, KC_K, KC_J,   KC_G,   KC_W,                           KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
-              MO(MOUSE),          MO(NUM),  KC_DEL,                        KC_ESC, MO(NAV),               MO(MOUSE),
+              ____,          MO(NUM),  KC_DEL,                        KC_ESC, MO(NAV),               TO(MOUSE),
                                   MO(SYMB), KC_BSPC,                              KC_SPC,
                                   KC_TAB,                                         KC_ENT),
+    [MOUSE] = LAYOUT(
+                ____, ____, KC_RGUI, KC_RALT, ____,                      ____, MOUSE_TRACK_SCROLL, KC_MS_BTN3, ____, ____,
+                ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, ____, ____,
+                ____, ____, ____, ____, ____,                            ____, ____, ____, ____, ____,
+                ____,             MO(NUM), KC_DEL,                              TO(MSTURDY),MO(NAV),                  KC_TRNS,
+                                  MO(SYMB), KC_BSPC,                                        KC_SPC,
+                                  KC_TAB,                                               KC_ENT),
     [NAV] = LAYOUT(
                 ____, ____, KC_LGUI, KC_LALT, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
                 ____, ____, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
@@ -104,37 +108,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, M_MAGIC, KC_PERC, KC_AMPR, CW_TOGG,
                 KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_UNDS,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
                 ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,            KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
-                MO(MOUSE),            MO(NUM),    KC_DEL,                   KC_ESC, ____,                    MO(MOUSE),
+                ____,            MO(NUM),    KC_DEL,                   KC_ESC, ____,                    ____,
                                   KC_TRNS, KC_BSPC,                              KC_SPC,
                                   KC_TAB,                                        KC_ENT),
     [NUM] = LAYOUT(
-                ____, ____, KC_LGUI, KC_LALT, ____,                          ____, HOME_MAGIC, HOME_MINS, KC_PLUS, KC_PERC,
-                KC_9, KC_8, HOME_7, HOME_6, KC_5,              KC_0, HOME_1, HOME_2, KC_3, KC_4,
-                ____, ____,  ____, ____, ____,                          KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
+                ____, ____, KC_LGUI, KC_LALT, ____,                   ____, HOME_MAGIC, HOME_MINS, KC_PLUS, KC_PERC,
+                KC_9, KC_8, HOME_7, HOME_6, KC_5,                     KC_0, HOME_1, HOME_2, KC_3, KC_4,
+                ____, ____,  ____, ____, ____,                        KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
                 ____,             KC_TRNS,KC_DEL,                       KC_ESC,MO(NAV),       ____,
-                          MO(SYMB), KC_BSPC,                                      KC_SPC,
+                                  MO(SYMB), KC_BSPC,                           KC_SPC,
                                   KC_TAB,                                      KC_ENT),
     [FUNC] = LAYOUT(
-                ____, ____, HOME_VOLD, HOME_VOLU, KC_MUTE,                  KC_MPRV, HOME_MPLY, HOME_MSTP, KC_MNXT, ____,
-                KC_F9, KC_F8, HOME_F7, HOME_F6, KC_F5,              KC_F10, HOME_F1, HOME_F2, KC_F3, KC_F4,
+                ____, ____, HOME_VOLD, HOME_VOLU, KC_MUTE,         KC_MPRV, HOME_MPLY, HOME_MSTP, KC_MNXT, ____,
+                KC_F9, KC_F8, HOME_F7, HOME_F6, KC_F5,             KC_F10, HOME_F1, HOME_F2, KC_F3, KC_F4,
                 ____, ____, ____, KC_F11,____,                     ____, KC_F12, UP(n_tilde,N_tilde), ____, ____,
-                          ____, KC_TRNS,KC_DEL,                                            KC_ESC, KC_TRNS, ____,
-                          ____, KC_BSPC,                                                   KC_SPC,
-                          KC_TAB,                                                           KC_ENT),
-    [MOUSE] = LAYOUT(
-                ____, ____, ____, ____, ____,                                 ____, MOUSE_TRACK_SCROLL, KC_MS_BTN3, ____, ____,
-                KC_RGUI, KC_RALT,KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, ____, ____,
-                   ____, ____, ____, ____, ____,                                ____, ____, ____, ____, ____,
-                         ____,  ____, KC_DEL,                                            KC_ESC,____, KC_TRNS,
-                          MO(SYMB), KC_BSPC,                                                   KC_SPC,
-                          KC_TAB,                                                           KC_ENT),
-    [TRIMOUSE] = LAYOUT(
-                ____, ____, ____, ____, ____,                                 ____, MOUSE_TRACK_SCROLL, KC_MS_BTN3, ____, ____,
-                KC_RGUI, KC_RALT,KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, ____, ____,
-                   ____, ____, ____, ____, ____,                                ____, ____, ____, ____, ____,
-                         ____,  ____, KC_DEL,                                            KC_ESC,____, KC_TRNS,
-                          MO(SYMB), KC_BSPC,                                                   KC_SPC,
-                          KC_TAB,                                                           KC_ENT)
+                          ____, KC_TRNS,KC_DEL,                    KC_ESC, KC_TRNS,                         ____,
+                          ____, KC_BSPC,                                   KC_SPC,
+                          KC_TAB,                                          KC_ENT)
 };
 
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
@@ -220,7 +210,7 @@ int64_t scroll_accumulated_v = 0;
 
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    if (!IS_LAYER_ON(MOUSE) && !IS_LAYER_ON(TRIMOUSE)){
+    if (!IS_LAYER_ON(MOUSE)){
         set_scrolling = false;
     }
     if (set_scrolling) {
