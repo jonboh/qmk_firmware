@@ -14,6 +14,7 @@ COMMAND_ENABLE = no 		# Disables LShift+RShift activating command
 DYNAMIC_TAPPING_TERM_ENABLE = yes
 UNICODEMAP_ENABLE = yes
 COMBO_ENABLE = yes			# inside parenthesis positioning
+RAW_ENABLE = yes
 
 # Trackball
 POINTING_DEVICE_ENABLE = yes

@@ -1,6 +1,8 @@
 #include "print.h"
+#include <stdint.h>
 #include <string.h>
 #include "keycodes.h"
+#include "raw_hid.h"
 #include QMK_KEYBOARD_H
 
 #define MSTURDY 0
@@ -62,8 +64,46 @@ const uint32_t unicode_map[] PROGMEM = {
 #define MS_NORMAL_CPI 1000
 #define MS_SNIPE_CPI 550
 
+bool set_scrolling = false;
+// Variables to store accumulated scroll values
+int64_t scroll_accumulated_h = 0;
+int64_t scroll_accumulated_v = 0;
+#define TRACK_RESOLUTION  64
+
 layer_state_t default_layer_state_set_user(layer_state_t state) {
     return layer_state_set_user(state);
+}
+
+void send_mouse_active(void) {
+    uint8_t length = 32;
+    uint8_t response[length];
+    memset(response, 0, length);
+    response[0] = 'M';
+    raw_hid_send(response, length);
+}
+
+void send_mouse_active_scrolling(void) {
+    uint8_t length = 32;
+    uint8_t response[length];
+    memset(response, 0, length);
+    response[0] = 'S';
+    raw_hid_send(response, length);
+}
+
+void send_mouse_inactive(void) {
+    uint8_t length = 32;
+    uint8_t response[length];
+    memset(response, 0, length);
+    response[0] = 'K';
+    raw_hid_send(response, length);
+}
+
+void raw_hid_receive(uint8_t *data, uint8_t length) {
+    if (IS_LAYER_ON(MOUSE)) {
+        send_mouse_active();
+    } else {
+        send_mouse_inactive();
+    }
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -73,12 +113,24 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         if (IS_LAYER_ON_STATE(state, MOUSE)) {
             layer_move(MOUSE);
         }
+    } else {
+        // reset on reenter of mouse layer
+        if (IS_LAYER_ON_STATE(state, SYMB) && IS_LAYER_ON_STATE(state, NUM)) {
+            set_scrolling = false;
+        }
     }
     if (IS_LAYER_ON_STATE(state, MOUSE)){
+        if (set_scrolling){
+            send_mouse_active_scrolling();
+        } else {
+            send_mouse_active();
+        }
         pointing_device_set_cpi(MS_SNIPE_CPI);
     } else {
+        send_mouse_inactive();
         pointing_device_set_cpi(MS_NORMAL_CPI);
     }
+
   return state;
 }
 
@@ -91,8 +143,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   MO(SYMB), KC_BSPC,                              KC_SPC,
                                   KC_TAB,                                         KC_ENT),
     [MOUSE] = LAYOUT(
-                ____, ____, KC_RGUI, KC_RALT, ____,                      ____, MOUSE_TRACK_SCROLL, KC_MS_BTN3, ____, ____,
-                ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, ____, ____,
+                ____, ____, KC_RGUI, HOME_C, ____,                      ____, RALT_T(MOUSE_TRACK_SCROLL), RGUI_T(KC_MS_BTN3), ____, ____,
+                ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, RCTL_T(KC_MS_BTN2), ____, ____,
                 ____, ____, ____, ____, ____,                            ____, ____, ____, ____, ____,
                 ____,             MO(NUM), KC_DEL,                              TO(MSTURDY),MO(NAV),                  KC_TRNS,
                                   MO(SYMB), KC_BSPC,                                        KC_SPC,
@@ -202,11 +254,6 @@ void housekeeping_task_user(void) {
 /*     set_auto_mouse_enable(true);         // always required before the auto mouse feature will work */
 /* } */
 
-bool set_scrolling = false;
-// Variables to store accumulated scroll values
-int64_t scroll_accumulated_h = 0;
-int64_t scroll_accumulated_v = 0;
-#define TRACK_RESOLUTION  64
 
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
@@ -242,16 +289,6 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     return mouse_report;
 }
 
-
-bool is_mouse_record_user(uint16_t keycode, keyrecord_t* record) {
-    switch(keycode) {
-        case MOUSE_TRACK_SCROLL:
-            return true;
-        default:
-            return false;
-    }
-    return false;
-}
 
 void handle_magic_key(void) {
     switch (recent[RECENT_SIZE - 1]) {
@@ -353,7 +390,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } return false;
     }
     switch (keycode) {
-        case MOUSE_TRACK_SCROLL: set_scrolling = record->event.pressed; break;
+        case RALT_T(MOUSE_TRACK_SCROLL):
+            if (record->tap.count && record->event.pressed ) {
+                set_scrolling = !set_scrolling;
+                if (set_scrolling) {
+                    send_mouse_active_scrolling();
+                } else {
+                    send_mouse_active();
+                }
+                return false;
+            }
+            break;
         case SET_MSTURDY: layer_move(MSTURDY); break;
     }
     return true;
