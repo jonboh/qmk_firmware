@@ -50,6 +50,9 @@ enum custom_keycodes {
 #define HOME_VOLD LGUI_T(KC_VOLD)
 #define HOME_VOLU LALT_T(KC_VOLU)
 
+#define MOUSE_V RCTL(RSFT(KC_V))
+#define MOUSE_C RCTL(RSFT(KC_C))
+
 
 enum unicode_names {
     n_tilde,
@@ -147,19 +150,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   MO(SYMB), KC_BSPC,                              KC_SPC,
                                   KC_TAB,                                         KC_ENT),
     [MOUSE] = LAYOUT(
-                KC_TRNS, KC_TRNS, HOME_L, HOME_C, KC_TRNS,                KC_TRNS, RALT_T(MOUSE_TRACK_SCROLL), RGUI_T(KC_MS_BTN3), KC_TRNS, KC_TRNS,
-                KC_TRNS, KC_TRNS, HOME_R, HOME_D, KC_TRNS,                KC_TRNS, KC_MS_BTN1, RCTL_T(KC_MS_BTN2), KC_TRNS, KC_TRNS,
-                KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,              KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-                ____,             MO(NUM), KC_DEL,                        TO(MSTURDY),MO(NAV),                  KC_TRNS,
-                                  MO(SYMB), KC_BSPC,                                  KC_SPC,
-                                  KC_TAB,                                             KC_ENT),
+                MOUSE_V, KC_TRNS, KC_TRNS, MOUSE_C, KC_TRNS,            KC_TRNS, RALT_T(MOUSE_TRACK_SCROLL), RGUI_T(KC_MS_BTN3), KC_TRNS, KC_TRNS,
+                KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,            KC_TRNS, KC_MS_BTN1, KC_MS_BTN2, KC_TRNS, KC_TRNS,
+                KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                ____,             MO(NUM), KC_DEL,                      TO(MSTURDY), MO(NAV),                  KC_TRNS,
+                                  MO(SYMB), KC_BSPC,                                 KC_SPC,
+                                  KC_TAB,                                            KC_ENT),
     [NAV] = LAYOUT(
-                ____, ____, KC_LGUI, KC_LALT, ____,                                           KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
-                ____, ____, KC_LCTL, KC_LSFT, KC_ENT,                             KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, ____,
-                ____, ____, KC_LGUI, KC_LALT, ____,                                           ____,  ____,____,____, ____,
-                ____,                MO(NUM),KC_DEL,                                             KC_ESC,KC_TRNS, ____,
-                          ____, KC_BSPC,                                                   KC_SPC,
-                          KC_TAB,                                                           KC_ENT),
+                ____, ____, KC_LGUI, KC_LALT, ____,                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
+                ____, ____, KC_LCTL, KC_LSFT, ____,                     KC_LEFT, KC_DOWN, KC_UP, KC_RGHT,  ____,
+                ____, ____,    ____,    ____, ____,                     ____,    ____,    ____,  ____,     ____,
+                ____,                MO(NUM),KC_DEL,                    KC_ESC,KC_TRNS, ____,
+                          ____, KC_BSPC,                                       KC_SPC,
+                          KC_TAB,                                              KC_ENT),
     [SYMB] = LAYOUT(
                 KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, M_MAGIC, KC_PERC, KC_AMPR, CW_TOGG,
                 KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_UNDS,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
@@ -325,8 +328,6 @@ void handle_magic_key(void) {
     }
 }
 
-static uint16_t ctrl_ms_timer;
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONSOLE_ENABLE
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
@@ -396,6 +397,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } return false;
     }
     switch (keycode) {
+        static bool ms_b2_pressed;
+        case KC_MS_BTN2:
+            ms_b2_pressed = record->event.pressed;
+            return true;
+        case MOUSE_C:
+            static uint16_t mouse_c_ms_timer;
+            if (!ms_b2_pressed) {
+                if (record->event.pressed) {
+                    // When keycode MOUSE_C is pressed
+                    mouse_c_ms_timer = timer_read();
+                    register_mods(MOD_LALT);
+                } else {
+                    // When keycode MOUSE_C is released
+                    if (timer_elapsed(mouse_c_ms_timer) < TAPPING_TERM) {
+                        // This was a tap, unregister alt and handle normally
+                        unregister_mods(MOD_LALT);
+                        return true; // handle normally
+                    } else {
+                        // This was a hold, simply unregister shift
+                        unregister_mods(MOD_LALT);
+                    }
+                }
+                return false;
+            } else {
+                layer_move(MSTURDY);
+                tap_code16(RCTL(KC_C));
+                return false;
+            }
         case RALT_T(MOUSE_TRACK_SCROLL):
             if (record->tap.count && record->event.pressed ) {
                 set_scrolling = !set_scrolling;
@@ -407,27 +436,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 return false;
             }
             break;
-        case KC_MS_BTN1:
-            if (get_mods() & MOD_BIT(KC_RCTL)) {
-                if (record->event.pressed) {
-                    // When keycode KC_MS_BTN1 is pressed with RCtrl
-                    ctrl_ms_timer = timer_read();
-                    register_mods(MOD_RSFT);
-                } else {
-                    // When keycode KC_MS_BTN1 is released
-                    if (timer_elapsed(ctrl_ms_timer) < TAPPING_TERM) {
-                        // This was a tap, unregister shift and send a mouse click instead
-                        unregister_mods(MOD_RSFT);
-                        tap_code(KC_MS_BTN1);
-                    } else {
-                        // This was a hold, simply unregister shift
-                        unregister_mods(MOD_RSFT);
-                    }
-                }
-                return false;
-            } else {
-                return true;
-            }
         case SET_MSTURDY: layer_move(MSTURDY); break;
     }
     return true;
