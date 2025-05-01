@@ -18,7 +18,7 @@ RAW_ENABLE = yes
 
 # Trackball
 POINTING_DEVICE_ENABLE = yes
-POINTING_DEVICE_DRIVER = pmw3389
+POINTING_DEVICE_DRIVER = cirque_pinnacle_spi
 #MOUSE_SHARED_EP = no # see https://qmk.github.io/qmk_mkdocs/master/en/config_options/#usb-endpoint-limitations
 
 # SRC += features/achordion.c
