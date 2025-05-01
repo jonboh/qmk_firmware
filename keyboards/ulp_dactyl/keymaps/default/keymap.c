@@ -150,12 +150,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   MO(SYMB), KC_BSPC,                              KC_SPC,
                                   KC_TAB,                                         KC_ENT),
     [MOUSE] = LAYOUT(
-                MOUSE_V, KC_TRNS, KC_TRNS, MOUSE_C, KC_TRNS,            KC_TRNS, RALT_T(MOUSE_TRACK_SCROLL), RGUI_T(KC_MS_BTN3), KC_TRNS, KC_TRNS,
-                KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,            KC_TRNS, KC_MS_BTN1, KC_MS_BTN2, KC_TRNS, KC_TRNS,
-                KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,            KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-                ____,             MO(NUM), KC_DEL,                      TO(MSTURDY), MO(NAV),                  KC_TRNS,
-                                  MO(SYMB), KC_BSPC,                                 KC_SPC,
-                                  KC_TAB,                                            KC_ENT),
+                ____, ____, KC_LGUI, KC_LALT, ____,                        ____, RALT_T(MOUSE_TRACK_SCROLL), RGUI_T(KC_MS_BTN3), ____, ____,
+                ____, ____, KC_LCTL, KC_LSFT, ____,                        ____, KC_MS_BTN1, KC_MS_BTN2, ____, ____,
+                ____, ____, ____, ____, ____,                              ____, ____, ____, ____, ____,
+                ____,             MO(NUM), KC_DEL,                         TO(MSTURDY), MO(NAV),                  KC_TRNS,
+                                  MO(SYMB), KC_BSPC,                                    KC_SPC,
+                                  KC_TAB,                                               KC_ENT),
     [NAV] = LAYOUT(
                 ____, ____, KC_LGUI, KC_LALT, ____,                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
                 ____, ____, KC_LCTL, KC_LSFT, ____,                     KC_LEFT, KC_DOWN, KC_UP, KC_RGHT,  ____,
