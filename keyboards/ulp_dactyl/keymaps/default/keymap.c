@@ -284,14 +284,17 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
         mouse_report.x = 0;
         mouse_report.y = 0;
     } else {
-        mouse_report.x = 0.75*mouse_report.x;
+        mouse_report.x = 0.5*mouse_report.x;
         mouse_report.y = 0.5*mouse_report.y;
+        mouse_report.v = -mouse_report.v;
     }
     if (IS_LAYER_ON(SYMB)) {
         if (mouse_report.buttons & 0x01) {       // Check if the first bit is 1
             mouse_report.buttons &= ~0x01;       // Set the first bit to 0
             mouse_report.buttons |= 0x02;        // Set the second bit to 1 (shift the original first bit right)
         }
+        mouse_report.h = -mouse_report.v;
+        mouse_report.v = 0;
         // mouse_report.buttons = pointintg_device_handle_buttons(mouse_report.buttons, false, POINTING_DEVICE_BUTTON2)
     }
     return mouse_report;
