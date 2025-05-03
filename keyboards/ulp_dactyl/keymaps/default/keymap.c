@@ -284,14 +284,15 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
         mouse_report.x = 0;
         mouse_report.y = 0;
     } else {
-        // mouse_report.x = 1.15*mouse_report.x - 0.57*mouse_report.y;
-        // mouse_report.y = 2*mouse_report.y - 1.73*mouse_report.x;
-        // int64_t x = mouse_report.x;
-        // int64_t y = mouse_report.y;
-        // mouse_report.x = 3*(x + 0.3*y);
-        // mouse_report.y = 1.5*y;
-        // mouse_report.x = 1.5 * mouse_report.x;
-
+        mouse_report.x = 0.75*mouse_report.x;
+        mouse_report.y = 0.5*mouse_report.y;
+    }
+    if (IS_LAYER_ON(SYMB)) {
+        if (mouse_report.buttons & 0x01) {       // Check if the first bit is 1
+            mouse_report.buttons &= ~0x01;       // Set the first bit to 0
+            mouse_report.buttons |= 0x02;        // Set the second bit to 1 (shift the original first bit right)
+        }
+        // mouse_report.buttons = pointintg_device_handle_buttons(mouse_report.buttons, false, POINTING_DEVICE_BUTTON2)
     }
     return mouse_report;
 }
@@ -327,6 +328,7 @@ void handle_magic_key(void) {
         case KC_DQUO: tap_code16(KC_DQUO); tap_code16(KC_LEFT); break;
     }
 }
+
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONSOLE_ENABLE
