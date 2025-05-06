@@ -14,7 +14,7 @@
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
-    MOUSE_TRACK_SCROLL,
+    MS_TRK_SCRLL,
     SET_MSTURDY,
     M_MAGIC,
 };
@@ -52,6 +52,7 @@ enum custom_keycodes {
 
 #define MOUSE_V RCTL(RSFT(KC_V))
 #define MOUSE_C RCTL(RSFT(KC_C))
+#define MT_B_TRK_SCRLL LT(0, KC_B)
 
 
 enum unicode_names {
@@ -64,8 +65,8 @@ const uint32_t unicode_map[] PROGMEM = {
     [N_tilde] = 0x00D1  // Ñ
 };
 
-#define MS_NORMAL_CPI 1000
-#define MS_SNIPE_CPI 550
+#define MS_NORMAL_CPI 650
+#define MS_SNIPE_CPI 350
 
 bool set_scrolling = false;
 // Variables to store accumulated scroll values
@@ -143,19 +144,19 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MSTURDY] = LAYOUT(
-              KC_V, KC_M, HOME_L, HOME_C, KC_P,                           KC_B, HOME_MAGIC, HOME_U, KC_O, KC_Q,
+              KC_V, KC_M, HOME_L, HOME_C, KC_P,                           MT_B_TRK_SCRLL, HOME_MAGIC, HOME_U, KC_O, KC_Q,
               KC_S, KC_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, KC_A, KC_I,
               KC_X, KC_K, KC_J,   KC_G,   KC_W,                           KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
-              ____,          MO(NUM),  KC_DEL,                        KC_ESC, MO(NAV),               TO(MOUSE),
+              ____,          MO(NUM),  KC_MS_BTN1,                        KC_ESC, MO(NAV),               MO(MOUSE),
                                   MO(SYMB), KC_BSPC,                              KC_SPC,
                                   KC_TAB,                                         KC_ENT),
     [MOUSE] = LAYOUT(
-                ____, ____, KC_LGUI, KC_LALT, ____,                        ____, RALT_T(MOUSE_TRACK_SCROLL), RGUI_T(KC_MS_BTN3), ____, ____,
-                ____, ____, KC_LCTL, KC_LSFT, ____,                        ____, KC_MS_BTN1, KC_MS_BTN2, ____, ____,
-                ____, ____, ____, ____, ____,                              ____, ____, ____, ____, ____,
-                ____,             MO(NUM), KC_DEL,                         TO(MSTURDY), MO(NAV),                  KC_TRNS,
-                                  MO(SYMB), KC_BSPC,                                    KC_SPC,
-                                  KC_TAB,                                               KC_ENT),
+                ____, ____, KC_RGUI, KC_RALT, ____,                      MS_TRK_SCRLL, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
+                ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, ____, ____, ____, ____,
+                ____, ____, ____, ____, ____,                                ____, ____, ____, ____, ____,
+                ____,            ____, KC_MS_BTN1,                                            TO(MSTURDY),____, KC_TRNS,
+                              MO(SYMB), KC_BSPC,                                                   KC_SPC,
+                              KC_TAB,                                                           KC_ENT),
     [NAV] = LAYOUT(
                 ____, ____, KC_LGUI, KC_LALT, ____,                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
                 ____, ____, KC_LCTL, KC_LSFT, ____,                     KC_LEFT, KC_DOWN, KC_UP, KC_RGHT,  ____,
@@ -167,23 +168,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, M_MAGIC, KC_PERC, KC_AMPR, CW_TOGG,
                 KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_UNDS,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
                 ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,            KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
-                ____,            MO(NUM),    KC_DEL,                   KC_ESC, ____,                    ____,
+                ____,            MO(NUM),    ____,                   KC_ESC, ____,                    ____,
                                   KC_TRNS, KC_BSPC,                              KC_SPC,
                                   KC_TAB,                                        KC_ENT),
     [NUM] = LAYOUT(
-                ____, ____, KC_LGUI, KC_LALT, ____,                   ____, HOME_MAGIC, HOME_MINS, KC_PLUS, KC_PERC,
+                ____, ____, KC_LGUI, KC_LALT, KC_MS_BTN3,             MS_TRK_SCRLL, HOME_MAGIC, HOME_MINS, KC_PLUS, KC_PERC,
                 KC_9, KC_8, HOME_7, HOME_6, KC_5,                     KC_0, HOME_1, HOME_2, KC_3, KC_4,
                 ____, ____,  ____, ____, ____,                        KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
-                ____,             KC_TRNS,KC_DEL,                       KC_ESC,MO(NAV),       ____,
+                ____,             KC_TRNS, KC_MS_BTN2,                       KC_ESC,MO(NAV),       ____,
                                   MO(SYMB), KC_BSPC,                           KC_SPC,
                                   KC_TAB,                                      KC_ENT),
     [FUNC] = LAYOUT(
                 ____, ____, HOME_VOLD, HOME_VOLU, KC_MUTE,         KC_MPRV, HOME_MPLY, HOME_MSTP, KC_MNXT, ____,
                 KC_F9, KC_F8, HOME_F7, HOME_F6, KC_F5,             KC_F10, HOME_F1, HOME_F2, KC_F3, KC_F4,
                 ____, ____, ____, KC_F11,____,                     ____, KC_F12, UP(n_tilde,N_tilde), ____, ____,
-                          ____, KC_TRNS,KC_DEL,                    KC_ESC, KC_TRNS,                         ____,
-                          ____, KC_BSPC,                                   KC_SPC,
-                          KC_TAB,                                          KC_ENT)
+                ____,             KC_TRNS,____,                    KC_ESC, KC_TRNS,                         ____,
+                                  ____, KC_BSPC,                           KC_SPC,
+                                  KC_TAB,                                  KC_ENT)
 };
 
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
@@ -264,9 +265,9 @@ void housekeeping_task_user(void) {
 
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    if (!IS_LAYER_ON(MOUSE)){
-        set_scrolling = false;
-    }
+    // if (!IS_LAYER_ON(MOUSE) && !IS_LAYER_ON(NUM)){
+    //     set_scrolling = false;
+    // }
     if (set_scrolling) {
         // Calculate and accumulate scroll values based on mouse movement and divisors
         scroll_accumulated_h += mouse_report.x * TRACK_RESOLUTION / TRACK_DIVISOR;
@@ -425,16 +426,37 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code16(RCTL(KC_C));
                 return false;
             }
-        case RALT_T(MOUSE_TRACK_SCROLL):
-            if (record->tap.count && record->event.pressed ) {
-                set_scrolling = !set_scrolling;
+        case MT_B_TRK_SCRLL:
+            if (record->tap.count && record->event.pressed) {
+                tap_code16(KC_B); // Intercept tap function to send KC_B
+            } else if (record->event.pressed) {
+                set_scrolling = record->event.pressed;
                 if (set_scrolling) {
                     send_mouse_active_scrolling();
                 } else {
-                    send_mouse_active();
+                    if (IS_LAYER_ON(MOUSE)){
+                        send_mouse_active();
+                    } else {
+                        send_mouse_inactive();
+                    }
                 }
-                return false;
+            } else {
+                set_scrolling = false;
+                send_mouse_inactive();
             }
+            return false;
+        case MS_TRK_SCRLL:
+            set_scrolling = record->event.pressed;
+            if (set_scrolling) {
+                send_mouse_active_scrolling();
+            } else {
+                if (IS_LAYER_ON(MOUSE)){
+                    send_mouse_active();
+                } else {
+                    send_mouse_inactive();
+                }
+            }
+            return false;
             break;
         case SET_MSTURDY: layer_move(MSTURDY); break;
     }
@@ -443,6 +465,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case MT_B_TRK_SCRLL:
         case HOME_L:
         case HOME_C:
         case HOME_U:
