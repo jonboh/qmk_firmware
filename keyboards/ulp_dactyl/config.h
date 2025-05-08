@@ -17,7 +17,8 @@
 #define ROTATIONAL_TRANSFORM_ANGLE 110
 #define POINTING_DEVICE_INVERT_X
 #define PMW33XX_CPI 600
-#define PMW33XX_LIFTOFF_DISTANCE 0x02
+#define PMW33XX_LIFTOFF_DISTANCE 0x02 // workstation keyboard
+// #define PMW33XX_LIFTOFF_DISTANCE 0x03 // lab keyboard
 // Mouse Wheel Keys
 #define TRACK_DIVISOR 8
 #define MOUSE_EXTENDED_REPORT
