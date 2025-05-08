@@ -17,7 +17,7 @@
 #define ROTATIONAL_TRANSFORM_ANGLE 110
 #define POINTING_DEVICE_INVERT_X
 #define PMW33XX_CPI 600
-#define PMW33XX_LIFTOFF_DISTANCE 0x01
+#define PMW33XX_LIFTOFF_DISTANCE 0x02
 // Mouse Wheel Keys
 #define TRACK_DIVISOR 8
 #define MOUSE_EXTENDED_REPORT
@@ -29,6 +29,7 @@
 #define TAPPING_TERM 125
 #define TAPPING_TERM_PER_KEY
 #define TAPPING_TERM_INCREMENT 5
+#define FLOW_TAP_TERM 100
 
 // Enable rapid switch from tap to hold, disables double tap hold auto-repeat.
 #define QUICK_TAP_TERM 0
