@@ -147,42 +147,42 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
               KC_V, KC_M, HOME_L, HOME_C, KC_P,                           MT_B_TRK_SCRLL, HOME_MAGIC, HOME_U, KC_O, KC_Q,
               KC_S, KC_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, KC_A, KC_I,
               KC_X, KC_K, KC_J,   KC_G,   KC_W,                           KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
-              ____,          MO(NUM),  KC_MS_BTN1,                        KC_ESC, MO(NAV),               MO(MOUSE),
+              ____,          MO(NUM),  KC_MS_BTN1, KC_MS_BTN2,                        KC_ESC, MO(NAV),               MO(MOUSE),
                                   MO(SYMB), KC_BSPC,                              KC_SPC,
                                   KC_TAB,                                         KC_ENT),
     [MOUSE] = LAYOUT(
                 ____, ____, KC_RGUI, KC_RALT, ____,                      MS_TRK_SCRLL, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
                 ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, ____, ____, ____, ____,
                 ____, ____, ____, ____, ____,                                ____, ____, ____, ____, ____,
-                ____,            ____, KC_MS_BTN1,                                            TO(MSTURDY),____, KC_TRNS,
+                ____,            ____, KC_MS_BTN1, KC_MS_BTN2,                                            TO(MSTURDY),____, KC_TRNS,
                               MO(SYMB), KC_BSPC,                                                   KC_SPC,
                               KC_TAB,                                                           KC_ENT),
     [NAV] = LAYOUT(
                 ____, ____, KC_LGUI, KC_LALT, ____,                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
                 ____, ____, KC_LCTL, KC_LSFT, ____,                     KC_LEFT, KC_DOWN, KC_UP, KC_RGHT,  ____,
                 ____, ____,    ____,    ____, ____,                     ____,    ____,    ____,  ____,     ____,
-                ____,                MO(NUM),KC_DEL,                    KC_ESC,KC_TRNS, ____,
+                ____,                MO(NUM),____, ____,                    KC_ESC,KC_TRNS, ____,
                           ____, KC_BSPC,                                       KC_SPC,
                           KC_TAB,                                              KC_ENT),
     [SYMB] = LAYOUT(
                 KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, M_MAGIC, KC_PERC, KC_AMPR, CW_TOGG,
                 KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_UNDS,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
                 ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,            KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
-                ____,            MO(NUM),    ____,                   KC_ESC, ____,                    ____,
+                ____,            MO(NUM),    ____, ____,                   KC_ESC, ____,                    ____,
                                   KC_TRNS, KC_BSPC,                              KC_SPC,
                                   KC_TAB,                                        KC_ENT),
     [NUM] = LAYOUT(
-                ____, ____, KC_LGUI, KC_LALT, KC_MS_BTN3,             MS_TRK_SCRLL, HOME_MAGIC, HOME_MINS, KC_PLUS, KC_PERC,
+                ____, ____, KC_LGUI, KC_LALT, ____,             MS_TRK_SCRLL, HOME_MAGIC, HOME_MINS, KC_PLUS, KC_PERC,
                 KC_9, KC_8, HOME_7, HOME_6, KC_5,                     KC_0, HOME_1, HOME_2, KC_3, KC_4,
                 ____, ____,  ____, ____, ____,                        KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
-                ____,             KC_TRNS, KC_MS_BTN2,                       KC_ESC,MO(NAV),       ____,
+                ____,             KC_TRNS, KC_MS_BTN3, ____,                       KC_ESC,MO(NAV),       ____,
                                   MO(SYMB), KC_BSPC,                           KC_SPC,
                                   KC_TAB,                                      KC_ENT),
     [FUNC] = LAYOUT(
                 ____, ____, HOME_VOLD, HOME_VOLU, KC_MUTE,         KC_MPRV, HOME_MPLY, HOME_MSTP, KC_MNXT, ____,
                 KC_F9, KC_F8, HOME_F7, HOME_F6, KC_F5,             KC_F10, HOME_F1, HOME_F2, KC_F3, KC_F4,
                 ____, ____, ____, KC_F11,____,                     ____, KC_F12, UP(n_tilde,N_tilde), ____, ____,
-                ____,             KC_TRNS,____,                    KC_ESC, KC_TRNS,                         ____,
+                ____,             KC_TRNS,____,____,                    KC_ESC, KC_TRNS,                         ____,
                                   ____, KC_BSPC,                           KC_SPC,
                                   KC_TAB,                                  KC_ENT)
 };
@@ -192,7 +192,7 @@ LAYOUT(
                 'L', 'L', 'L', 'L', 'L',     'R', 'R', 'R', 'R', 'R',
                 'L', 'L', 'L', 'L', 'L',     'R', 'R', 'R', 'R', 'R',
                 'L', 'L', 'L', 'L', 'L',     'R', 'R', 'R', 'R', 'R',
-                'L',           'L', 'L',     'R','R',            'R',
+                'L',           'L', 'L','L', 'R','R',            'R',
                                'L', 'L',         'R',
                                     'L',         'R');
 
