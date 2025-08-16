@@ -116,17 +116,15 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, NAV, NUM, FUNC);
+    // use MO(NUM) + MO(SYM) as TO(MOUSE)+Scroll
     if (!IS_LAYER_ON_STATE(state, MOUSE)){
+        set_scrolling = false;
         state = update_tri_layer_state(state, SYMB, NUM, MOUSE);
         if (IS_LAYER_ON_STATE(state, MOUSE)) {
-            layer_move(MOUSE);
-        }
-    } else {
-        // reset on reenter of mouse layer
-        if (IS_LAYER_ON_STATE(state, SYMB) && IS_LAYER_ON_STATE(state, NUM)) {
-            set_scrolling = false;
+            set_scrolling = true;
         }
     }
+
     if (IS_LAYER_ON_STATE(state, MOUSE)){
         if (set_scrolling){
             send_mouse_active_scrolling();
@@ -154,7 +152,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 ____, ____, KC_RGUI, KC_RALT, ____,                      MS_TRK_SCRLL, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
                 ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, ____, ____, ____, ____,
                 ____, ____, ____, ____, ____,                                ____, ____, ____, ____, ____,
-                ____,            ____, KC_MS_BTN1, KC_MS_BTN2,                                            TO(MSTURDY),____, KC_TRNS,
+                ____,         MO(NUM), KC_MS_BTN1, KC_MS_BTN2,                                            TO(MSTURDY),____, KC_TRNS,
                               MO(SYMB), KC_BSPC,                                                   KC_SPC,
                               KC_TAB,                                                           KC_ENT),
     [NAV] = LAYOUT(
