@@ -15,6 +15,7 @@
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
     MS_TRK_SCRLL,
+    MS_TO_SCRLL, // Toggle Scrolling
     SET_MSTURDY,
     M_MAGIC,
 };
@@ -140,7 +141,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MSTURDY] = LAYOUT(
-              KC_V, KC_M, HOME_L, HOME_C, KC_P,                           MT_B_TRK_SCRLL, HOME_MAGIC, HOME_U, KC_O, KC_Q,
+              KC_V, KC_M, HOME_L, HOME_C, KC_P,                           KC_B, HOME_MAGIC, HOME_U, KC_O, KC_Q,
               KC_S, KC_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, KC_A, KC_I,
               KC_X, KC_K, KC_J,   KC_G,   KC_W,                           KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
               ____,          MO(NUM),  KC_MS_BTN1, KC_MS_BTN2,                        KC_ESC, MO(NAV),               MO(MOUSE),
@@ -149,14 +150,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MOUSE] = LAYOUT(
                 ____, ____, KC_RGUI, KC_RALT, ____,                      MS_TRK_SCRLL, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
                 ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, ____, ____, ____, ____,
-                ____, ____, ____, ____, ____,                                ____, ____, ____, ____, ____,
+                ____, ____, ____, ____, ____,                            ____, MS_TO_SCRLL, ____, ____, ____,
                 ____,         MO(NUM), KC_MS_BTN1, KC_MS_BTN2,                                            TO(MSTURDY),____, KC_TRNS,
                               MO(SYMB), KC_BSPC,                                                   KC_SPC,
                               KC_TAB,                                                           KC_ENT),
     [NAV] = LAYOUT(
                 ____, ____, KC_LGUI, KC_LALT, ____,                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
                 ____, ____, KC_LCTL, KC_LSFT, ____,                     KC_LEFT, KC_DOWN, KC_UP, KC_RGHT,  ____,
-                ____, ____,    ____,    ____, ____,                     ____,    ____,    ____,  ____,     ____,
+                ____, ____,    ____,    ____, ____,                     ____,    MS_TO_SCRLL,    ____,  ____,     ____,
                 ____,                MO(NUM),____, ____,                    KC_ESC,KC_TRNS, ____,
                           ____, KC_BSPC,                                       KC_SPC,
                           KC_TAB,                                              KC_ENT),
@@ -425,7 +426,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
-            break;
+        case MS_TO_SCRLL: // toggle mouse scrolling
+            if (record->event.pressed) {
+                set_scrolling = !set_scrolling;
+                layer_move(MOUSE);
+                if (set_scrolling) {
+                    send_mouse_active_scrolling();
+                } else {
+                    if (IS_LAYER_ON(MOUSE)){
+                        send_mouse_active();
+                    } else {
+                        send_mouse_inactive();
+                    }
+                }
+                // refactor reporting after state update
+            }
+            return false;
         case SET_MSTURDY: layer_move(MSTURDY); break;
     }
     return true;
