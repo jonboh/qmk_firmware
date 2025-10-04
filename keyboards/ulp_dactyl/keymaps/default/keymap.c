@@ -50,8 +50,6 @@ enum custom_keycodes {
 #define HOME_VOLD LGUI_T(KC_VOLD)
 #define HOME_VOLU LALT_T(KC_VOLU)
 
-#define MOUSE_V RCTL(RSFT(KC_V))
-#define MOUSE_C RCTL(RSFT(KC_C))
 #define MT_B_TRK_SCRLL LT(0, KC_B)
 
 
@@ -396,34 +394,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } return false;
     }
     switch (keycode) {
-        static bool ms_b2_pressed;
-        case KC_MS_BTN2:
-            ms_b2_pressed = record->event.pressed;
-            return true;
-        case MOUSE_C:
-            static uint16_t mouse_c_ms_timer;
-            if (!ms_b2_pressed) {
-                if (record->event.pressed) {
-                    // When keycode MOUSE_C is pressed
-                    mouse_c_ms_timer = timer_read();
-                    register_mods(MOD_LALT);
-                } else {
-                    // When keycode MOUSE_C is released
-                    if (timer_elapsed(mouse_c_ms_timer) < TAPPING_TERM) {
-                        // This was a tap, unregister alt and handle normally
-                        unregister_mods(MOD_LALT);
-                        return true; // handle normally
-                    } else {
-                        // This was a hold, simply unregister shift
-                        unregister_mods(MOD_LALT);
-                    }
-                }
-                return false;
-            } else {
-                layer_move(MSTURDY);
-                tap_code16(RCTL(KC_C));
-                return false;
-            }
         case MT_B_TRK_SCRLL:
             if (record->tap.count && record->event.pressed) {
                 tap_code16(KC_B); // Intercept tap function to send KC_B
