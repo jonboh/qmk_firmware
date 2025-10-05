@@ -148,8 +148,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   MO(SYMB), KC_BSPC,                              KC_SPC,
                                   KC_TAB,                                         KC_ENT),
     [MOUSE] = LAYOUT(
-                ____, ____, KC_RGUI, KC_RALT, ____,                      MS_TRK_SCRLL, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
-                ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, ____, ____, ____, ____,
+                ____, ____, KC_RGUI, KC_RALT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
+                ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
                 ____, ____, ____, ____, ____,                            ____, MS_TO_SCRLL, ____, ____, ____,
                 ____,         MO(NUM), KC_MS_BTN1, KC_MS_BTN2,                                            TO(MSTURDY),____, KC_TRNS,
                               MO(SYMB), KC_BSPC,                                                   KC_SPC,
