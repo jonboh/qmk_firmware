@@ -11,6 +11,7 @@
 #define SYMB 3
 #define NUM  4
 #define FUNC 5
+#define MEDI 6
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
@@ -34,22 +35,24 @@ enum custom_keycodes {
 
 #define HOME_1 RSFT_T(KC_1)
 #define HOME_2 RCTL_T(KC_2)
+#define HOME_3 LALT_T(KC_3)
+#define HOME_4 LGUI_T(KC_4)
+
 
 #define HOME_6 RSFT_T(KC_6)
 #define HOME_7 RCTL_T(KC_7)
+#define HOME_8 LALT_T(KC_8)
+#define HOME_9 LGUI_T(KC_9)
 
 #define HOME_F1 RSFT_T(KC_F1)
 #define HOME_F2 RCTL_T(KC_F2)
+#define HOME_F3 LALT_T(KC_F3)
+#define HOME_F4 LGUI_T(KC_F4)
 
 #define HOME_F6 LSFT_T(KC_F6)
 #define HOME_F7 LCTL_T(KC_F7)
-
-#define HOME_F11 LALT_T(KC_F11)
-#define HOME_F12 RALT_T(KC_F12)
-#define HOME_MPLY RALT_T(KC_MPLY)
-#define HOME_MSTP RGUI_T(KC_MSTP)
-#define HOME_VOLD LGUI_T(KC_VOLD)
-#define HOME_VOLU LALT_T(KC_VOLU)
+#define HOME_F8 LALT_T(KC_F8)
+#define HOME_F9 LGUI_T(KC_F9)
 
 #define MT_B_TRK_SCRLL LT(0, KC_B)
 
@@ -115,6 +118,7 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, NAV, NUM, FUNC);
+    state = update_tri_layer_state(state, NAV, SYMB, MEDI);
     // use MO(NUM) + MO(SYM) as TO(MOUSE)+Scroll
     if (!IS_LAYER_ON_STATE(state, MOUSE)){
         set_scrolling = false;
@@ -159,26 +163,33 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 ____, ____, KC_LCTL, KC_LSFT, ____,                     KC_LEFT, KC_DOWN, KC_UP, KC_RGHT,  ____,
                 ____, ____,    ____,    ____, ____,                     ____,    MS_TO_SCRLL,    ____,  ____,     ____,
                 ____,                MO(NUM),____, ____,                    KC_ESC,KC_TRNS, ____,
-                          ____, KC_BSPC,                                       KC_SPC,
+                          MO(SYMB), KC_BSPC,                                       KC_SPC,
                           KC_TAB,                                              KC_ENT),
     [SYMB] = LAYOUT(
                 KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, M_MAGIC, KC_PERC, KC_AMPR, CW_TOGG,
-                KC_GRV, KC_LPRN, KC_RPRN, KC_PIPE, KC_UNDS,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
+                KC_GRV, KC_LPRN, KC_RPRN, KC_UNDS, KC_PIPE,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
                 ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,            KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
-                ____,            MO(NUM),    ____, ____,                   KC_ESC, ____,                    ____,
+                ____,            MO(NUM),    ____, ____,                   KC_ESC, MO(NAV),                    ____,
                                   KC_TRNS, KC_BSPC,                              KC_SPC,
                                   KC_TAB,                                        KC_ENT),
     [NUM] = LAYOUT(
-                ____, ____, KC_LGUI, KC_LALT, ____,             MS_TRK_SCRLL, HOME_MAGIC, HOME_MINS, KC_PLUS, KC_PERC,
-                KC_9, KC_8, HOME_7, HOME_6, KC_5,                     KC_0, HOME_1, HOME_2, KC_3, KC_4,
+                ____, ____, HOME_9, HOME_8, ____,                     ____, HOME_3, HOME_4, KC_PLUS, KC_PERC,
+                ____, ____, HOME_7, HOME_6, KC_5,                     KC_0, HOME_1, HOME_2, KC_MINS, ____,
                 ____, ____,  ____, ____, ____,                        KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
                 ____,             KC_TRNS, KC_MS_BTN3, ____,                       KC_ESC,MO(NAV),       ____,
                                   MO(SYMB), KC_BSPC,                           KC_SPC,
                                   KC_TAB,                                      KC_ENT),
     [FUNC] = LAYOUT(
-                ____, ____, HOME_VOLD, HOME_VOLU, KC_MUTE,         KC_MPRV, HOME_MPLY, HOME_MSTP, KC_MNXT, ____,
-                KC_F9, KC_F8, HOME_F7, HOME_F6, KC_F5,             KC_F10, HOME_F1, HOME_F2, KC_F3, KC_F4,
-                ____, ____, ____, KC_F11,____,                     ____, KC_F12, UP(n_tilde,N_tilde), ____, ____,
+                ____, ____, HOME_F9, HOME_F8, ____,                ____,   HOME_F3, HOME_F4, ____, ____,
+                ____, KC_F12, HOME_F7, HOME_F6, KC_F5,             KC_F10, HOME_F1, HOME_F2, KC_F11, ____,
+                ____, ____, ____, ____,____,                       ____,   ____,    UP(n_tilde,N_tilde), ____, ____,
+                ____,             KC_TRNS,____,____,                    KC_ESC, KC_TRNS,                         ____,
+                                  ____, KC_BSPC,                           KC_SPC,
+                                  KC_TAB,                                  KC_ENT),
+    [MEDI] = LAYOUT(
+                ____, ____, ____, ____, ____,                     ____, ____, ____, ____, ____,
+                ____, ____, KC_VOLD, KC_VOLU, KC_MUTE,         KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, ____,
+                ____, ____, ____, ____,____,                     ____, ____, ____, ____, ____,
                 ____,             KC_TRNS,____,____,                    KC_ESC, KC_TRNS,                         ____,
                                   ____, KC_BSPC,                           KC_SPC,
                                   KC_TAB,                                  KC_ENT)
@@ -512,7 +523,7 @@ enum combo_events {
 const uint16_t PROGMEM combo_full_squarebracket[] = {KC_LBRC, KC_RBRC, COMBO_END};
 const uint16_t PROGMEM combo_full_parenthesis[] = {KC_LPRN, KC_RPRN, COMBO_END};
 const uint16_t PROGMEM combo_full_curlybracket[] = {KC_LCBR, KC_RCBR, COMBO_END};
-const uint16_t PROGMEM combo_full_ampersand[] = {KC_RPRN, KC_PIPE, COMBO_END};
+const uint16_t PROGMEM combo_full_ampersand[] = {KC_RPRN, KC_UNDS, COMBO_END};
 const uint16_t PROGMEM combo_full_lessthangreaterthan[] = {KC_LT, KC_GT, COMBO_END};
 combo_t key_combos[] = {
   [SQUARE_BRACKET] = COMBO_ACTION(combo_full_squarebracket),
