@@ -9,17 +9,18 @@
 #define MOUSE 1
 #define NAV  2
 #define SYMB 3
-#define NUM  4
-#define FUNC 5
-#define MEDI 6
+#define SYMB2 4
+#define NUM  5
+#define FUNC 6
+#define MEDI 7
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
-    MS_TRK_SCRLL,
     MS_TO_SCRLL, // Toggle Scrolling
-    SET_MSTURDY,
+    MS_TO_MOUSE, // Toggle mouse
     M_MAGIC,
 };
+// TODO: may be more confortable to use double tap to activate sniping
 
 // Home row mods for Magic Sturdy layer.
 #define HOME_R LCTL_T(KC_R)
@@ -54,8 +55,6 @@ enum custom_keycodes {
 #define HOME_F8 LALT_T(KC_F8)
 #define HOME_F9 LGUI_T(KC_F9)
 
-#define MT_B_TRK_SCRLL LT(0, KC_B)
-
 
 enum unicode_names {
     n_tilde,
@@ -71,6 +70,7 @@ const uint32_t unicode_map[] PROGMEM = {
 #define MS_SNIPE_CPI 350
 
 bool set_scrolling = false;
+bool set_sniping = false;
 // Variables to store accumulated scroll values
 int64_t scroll_accumulated_h = 0;
 int64_t scroll_accumulated_v = 0;
@@ -80,28 +80,34 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
     return layer_state_set_user(state);
 }
 
+
+void send_hid_msg(const char *msg) {
+    const uint8_t fixed_length = 32;
+    uint8_t response[fixed_length];
+    memset(response, 0, fixed_length);
+    // Copy at most (fixed_length - 1) bytes to leave space for null-terminator
+    strlcpy((char*)response, msg, fixed_length);
+    raw_hid_send(response, fixed_length);
+}
+
 void send_mouse_active(void) {
-    uint8_t length = 32;
-    uint8_t response[length];
-    memset(response, 0, length);
-    response[0] = 'M';
-    raw_hid_send(response, length);
+    const char *msg = "Mouse";
+    send_hid_msg(msg);
+}
+
+void send_mouse_active_sniping(void) {
+    const char *msg = "MouseSnipe";
+    send_hid_msg(msg);
 }
 
 void send_mouse_active_scrolling(void) {
-    uint8_t length = 32;
-    uint8_t response[length];
-    memset(response, 0, length);
-    response[0] = 'S';
-    raw_hid_send(response, length);
+    const char *msg = "MouseScroll";
+    send_hid_msg(msg);
 }
 
 void send_mouse_inactive(void) {
-    uint8_t length = 32;
-    uint8_t response[length];
-    memset(response, 0, length);
-    response[0] = 'K';
-    raw_hid_send(response, length);
+    const char *msg = "Keyboard";
+    send_hid_msg(msg);
 }
 
 void raw_hid_receive(uint8_t *data, uint8_t length) {
@@ -118,26 +124,23 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, NAV, NUM, FUNC);
-    state = update_tri_layer_state(state, NAV, SYMB, MEDI);
-    // use MO(NUM) + MO(SYM) as TO(MOUSE)+Scroll
-    if (!IS_LAYER_ON_STATE(state, MOUSE)){
-        set_scrolling = false;
-        state = update_tri_layer_state(state, SYMB, NUM, MOUSE);
-        if (IS_LAYER_ON_STATE(state, MOUSE)) {
-            set_scrolling = true;
-        }
-    }
-
+    state = update_tri_layer_state(state, NAV, SYMB, SYMB2);
+    state = update_tri_layer_state(state, NUM, SYMB, MEDI);
     if (IS_LAYER_ON_STATE(state, MOUSE)){
         if (set_scrolling){
             send_mouse_active_scrolling();
         } else {
-            send_mouse_active();
+            if (set_sniping){
+                send_mouse_active_sniping();
+            } else {
+                send_mouse_active();
+            }
         }
-        pointing_device_set_cpi(MS_SNIPE_CPI);
     } else {
-        send_mouse_inactive();
+        set_scrolling = false;
+        set_sniping = false;
         pointing_device_set_cpi(MS_NORMAL_CPI);
+        send_mouse_inactive();
     }
 
   return state;
@@ -154,33 +157,40 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MOUSE] = LAYOUT(
                 ____, ____, KC_RGUI, KC_RALT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
                 ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
-                ____, ____, ____, ____, ____,                            ____, MS_TO_SCRLL, ____, ____, ____,
-                ____,         MO(NUM), KC_MS_BTN1, KC_MS_BTN2,                                            TO(MSTURDY),____, KC_TRNS,
-                              MO(SYMB), KC_BSPC,                                                   KC_SPC,
-                              KC_TAB,                                                           KC_ENT),
+                ____, ____, ____, ____, ____,                            ____, MS_TO_SCRLL, MS_TO_MOUSE, ____, ____,
+                ____,         MO(NUM), KC_MS_BTN1, KC_MS_BTN2,           TO(MSTURDY),____,                      KC_TRNS,
+                              MO(SYMB), KC_BSPC,                                    KC_SPC,
+                              KC_TAB,                                               KC_ENT),
     [NAV] = LAYOUT(
                 ____, ____, KC_LGUI, KC_LALT, ____,                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
                 ____, ____, KC_LCTL, KC_LSFT, ____,                     KC_LEFT, KC_DOWN, KC_UP, KC_RGHT,  ____,
-                ____, ____,    ____,    ____, ____,                     ____,    MS_TO_SCRLL,    ____,  ____,     ____,
+                ____, ____,    ____,    ____, ____,                     ____,    MS_TO_SCRLL, MS_TO_MOUSE,  ____,     ____,
                 ____,                MO(NUM),____, ____,                    KC_ESC,KC_TRNS, ____,
                           MO(SYMB), KC_BSPC,                                       KC_SPC,
                           KC_TAB,                                              KC_ENT),
     [SYMB] = LAYOUT(
-                KC_CIRC,KC_LBRC, KC_RBRC, KC_DQUO, KC_AT,               KC_TILD, M_MAGIC, KC_PERC, KC_AMPR, CW_TOGG,
-                KC_GRV, KC_LPRN, KC_RPRN, KC_UNDS, KC_PIPE,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
-                ____,   KC_LCBR, KC_RCBR, KC_QUOT, KC_HASH,            KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
-                ____,            MO(NUM),    ____, ____,                   KC_ESC, MO(NAV),                    ____,
-                                  KC_TRNS, KC_BSPC,                              KC_SPC,
-                                  KC_TAB,                                        KC_ENT),
+                ____, ____, KC_QUOT, KC_DQUO, ____,               KC_TILD, M_MAGIC, KC_PERC, ____, ____,
+                ____, ____, KC_AMPR, KC_UNDS, KC_PIPE,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
+                ____, ____, ____, KC_AT, KC_HASH,                KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
+                ____,            MO(NUM),    ____, ____,          KC_ESC, MO(NAV),                   ____,
+                                  KC_TRNS, KC_BSPC,                       KC_SPC,
+                                  KC_TAB,                                 KC_ENT),
+    [SYMB2] = LAYOUT(
+                ____,____, KC_LBRC, KC_RBRC, ____,              ____, KC_CIRC, KC_GRV, ____, ____,
+                ____,____, KC_LPRN, KC_RPRN, ____,              CW_TOGG,  KC_SCLN, KC_DOT, ____, ____,
+                ____,____, KC_LCBR, KC_RCBR, ____,                 ____, ____, ____, ____, ____,
+                ____,            MO(NUM),    ____, ____,           KC_ESC, MO(NAV),        ____,
+                                  MO(SYMB), KC_BSPC,                        KC_SPC,
+                                  KC_TAB,                                  KC_ENT),
     [NUM] = LAYOUT(
-                ____, ____, HOME_9, HOME_8, ____,                     ____, HOME_3, HOME_4, KC_PLUS, KC_PERC,
+                ____, ____, HOME_9, HOME_8, ____,                     ____, HOME_3, HOME_4, KC_PLUS, ____,
                 ____, ____, HOME_7, HOME_6, KC_5,                     KC_0, HOME_1, HOME_2, KC_MINS, ____,
                 ____, ____,  ____, ____, ____,                        KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
                 ____,             KC_TRNS, KC_MS_BTN3, ____,                       KC_ESC,MO(NAV),       ____,
                                   MO(SYMB), KC_BSPC,                           KC_SPC,
                                   KC_TAB,                                      KC_ENT),
     [FUNC] = LAYOUT(
-                ____, ____, HOME_F9, HOME_F8, ____,                ____,   HOME_F3, HOME_F4, ____, ____,
+                ____, ____,   HOME_F9, HOME_F8, ____,                ____,   HOME_F3, HOME_F4, ____, ____,
                 ____, KC_F12, HOME_F7, HOME_F6, KC_F5,             KC_F10, HOME_F1, HOME_F2, KC_F11, ____,
                 ____, ____, ____, ____,____,                       ____,   ____,    UP(n_tilde,N_tilde), ____, ____,
                 ____,             KC_TRNS,____,____,                    KC_ESC, KC_TRNS,                         ____,
@@ -406,66 +416,45 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } return false;
     }
     switch (keycode) {
-        case MT_B_TRK_SCRLL:
-            if (record->tap.count && record->event.pressed) {
-                tap_code16(KC_B); // Intercept tap function to send KC_B
-            } else if (record->event.pressed) {
-                set_scrolling = record->event.pressed;
-                if (set_scrolling) {
-                    send_mouse_active_scrolling();
-                } else {
-                    if (IS_LAYER_ON(MOUSE)){
-                        send_mouse_active();
-                    } else {
-                        send_mouse_inactive();
-                    }
-                }
-            } else {
-                set_scrolling = false;
-                send_mouse_inactive();
-            }
-            return false;
-        case MS_TRK_SCRLL:
-            set_scrolling = record->event.pressed;
-            if (set_scrolling) {
-                send_mouse_active_scrolling();
-            } else {
-                if (IS_LAYER_ON(MOUSE)){
-                    send_mouse_active();
-                } else {
-                    send_mouse_inactive();
-                }
-            }
-            return false;
         case MS_TO_SCRLL: // toggle mouse scrolling
             if (record->event.pressed) {
                 set_scrolling = !set_scrolling;
                 layer_move(MOUSE);
-                if (set_scrolling) {
-                    send_mouse_active_scrolling();
-                } else {
-                    if (IS_LAYER_ON(MOUSE)){
-                        send_mouse_active();
-                    } else {
-                        send_mouse_inactive();
-                    }
-                }
-                // refactor reporting after state update
             }
             return false;
-        case SET_MSTURDY: layer_move(MSTURDY); break;
+        case MS_TO_MOUSE:
+            if (record->event.pressed) {
+                set_scrolling = false;
+                if (IS_LAYER_ON(MOUSE)){
+                    set_sniping = !set_sniping;
+                }
+                if (set_sniping){
+                    pointing_device_set_cpi(MS_SNIPE_CPI);
+                } else {
+                    pointing_device_set_cpi(MS_NORMAL_CPI);
+                }
+                layer_move(MOUSE);
+            }
+            return false;
     }
     return true;
 }
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case MT_B_TRK_SCRLL:
         case HOME_L:
         case HOME_C:
         case HOME_U:
         case HOME_MAGIC:
         case HOME_MINS:
+        case HOME_4:
+        case HOME_3:
+        case HOME_8:
+        case HOME_9:
+        case HOME_F9:
+        case HOME_F8:
+        case HOME_F3:
+        case HOME_F4:
             return TAPPING_TERM + 20;
         case HOME_R:
         case HOME_E:
