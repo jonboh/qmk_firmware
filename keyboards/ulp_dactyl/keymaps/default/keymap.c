@@ -176,7 +176,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   KC_TRNS, KC_BSPC,                       KC_SPC,
                                   KC_TAB,                                 KC_ENT),
     [SYMB2] = LAYOUT(
-                ____,____, KC_LBRC, KC_RBRC, ____,              ____, KC_CIRC, KC_GRV, ____, ____,
+                ____,____, KC_LBRC, KC_RBRC, ____,              ____, KC_GRV, KC_CIRC, ____, ____,
                 ____,____, KC_LPRN, KC_RPRN, ____,              CW_TOGG,  KC_SCLN, KC_DOT, ____, ____,
                 ____,____, KC_LCBR, KC_RCBR, ____,                 ____, ____, ____, ____, ____,
                 ____,            MO(NUM),    ____, ____,           KC_ESC, MO(NAV),        ____,
