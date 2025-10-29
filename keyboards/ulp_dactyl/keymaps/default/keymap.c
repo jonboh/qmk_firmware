@@ -18,9 +18,16 @@ enum custom_keycodes {
     UPDIR = SAFE_RANGE,
     MS_TO_SCRLL, // Toggle Scrolling
     MS_TO_MOUSE, // Toggle mouse
+    MS_TO_MOUSE_SNIPE, // Toggle mouse snipe
     M_MAGIC,
 };
-// TODO: may be more confortable to use double tap to activate sniping
+
+enum {
+    TD_MOUSE_SNIPE,
+    TD_SCRLL_MOUSE,
+};
+
+
 
 // Home row mods for Magic Sturdy layer.
 #define HOME_R LCTL_T(KC_R)
@@ -131,8 +138,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             send_mouse_active_scrolling();
         } else {
             if (set_sniping){
+                pointing_device_set_cpi(MS_SNIPE_CPI);
                 send_mouse_active_sniping();
             } else {
+                pointing_device_set_cpi(MS_NORMAL_CPI);
                 send_mouse_active();
             }
         }
@@ -157,14 +166,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MOUSE] = LAYOUT(
                 ____, ____, KC_RGUI, KC_RALT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
                 ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
-                ____, ____, ____, ____, ____,                            ____, MS_TO_SCRLL, MS_TO_MOUSE, ____, ____,
+                ____, ____, ____, ____, ____,                            ____, TD(TD_SCRLL_MOUSE), TD(TD_MOUSE_SNIPE), ____, ____,
                 ____,         MO(NUM), KC_MS_BTN1, KC_MS_BTN2,           TO(MSTURDY),____,                      KC_TRNS,
                               MO(SYMB), KC_BSPC,                                    KC_SPC,
                               KC_TAB,                                               KC_ENT),
     [NAV] = LAYOUT(
                 ____, ____, KC_LGUI, KC_LALT, ____,                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
                 ____, ____, KC_LCTL, KC_LSFT, ____,                     KC_LEFT, KC_DOWN, KC_UP, KC_RGHT,  ____,
-                ____, ____,    ____,    ____, ____,                     ____,    MS_TO_SCRLL, MS_TO_MOUSE,  ____,     ____,
+                ____, ____,    ____,    ____, ____,                     ____,    TD(TD_SCRLL_MOUSE), TD(TD_MOUSE_SNIPE),  ____,     ____,
                 ____,                MO(NUM),____, ____,                    KC_ESC,KC_TRNS, ____,
                           MO(SYMB), KC_BSPC,                                       KC_SPC,
                           KC_TAB,                                              KC_ENT),
@@ -347,6 +356,45 @@ void handle_magic_key(void) {
     }
 }
 
+
+void activate_scroll(void) {
+    set_scrolling = true;
+    layer_move(MOUSE);
+}
+
+void activate_mouse(void) {
+    set_scrolling = false;
+    set_sniping = false;
+    layer_move(MOUSE);
+}
+
+void activate_mouse_snipe(void) {
+    set_scrolling = false;
+    set_sniping = true;
+    layer_move(MOUSE);
+}
+
+void tap_dance_scroll_mouse(tap_dance_state_t *state, void *user_data) {
+    switch (state->count) {
+        case 1:
+            activate_scroll();
+            break;
+        case 2:
+            activate_mouse();
+            break;
+    }
+}
+
+void tap_dance_mouse_snipe(tap_dance_state_t *state, void *user_data) {
+    switch (state->count) {
+        case 1:
+            activate_mouse();
+            break;
+        case 2:
+            activate_mouse_snipe();
+            break;
+    }
+}
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONSOLE_ENABLE
     uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
@@ -418,30 +466,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MS_TO_SCRLL: // toggle mouse scrolling
             if (record->event.pressed) {
-                set_scrolling = !set_scrolling;
-                layer_move(MOUSE);
+                activate_scroll();
             }
             return false;
         case MS_TO_MOUSE:
             if (record->event.pressed) {
-                set_scrolling = false;
-                if (IS_LAYER_ON(MOUSE)){
-                    set_sniping = !set_sniping;
-                }
-                if (set_sniping){
-                    pointing_device_set_cpi(MS_SNIPE_CPI);
-                } else {
-                    pointing_device_set_cpi(MS_NORMAL_CPI);
-                }
-                layer_move(MOUSE);
+                    activate_mouse();
             }
             return false;
-    }
+        case MS_TO_MOUSE_SNIPE:
+            if (record->event.pressed) {
+                    activate_mouse_snipe();
+            }
+            return false;
+        }
     return true;
 }
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case TD(TD_SCRLL_MOUSE):
+            return 175;
+        case TD(TD_MOUSE_SNIPE):
+            return 175;
         case HOME_L:
         case HOME_C:
         case HOME_U:
@@ -549,6 +596,11 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
     }
 }
 //#endif /* ifdef COMBO_ENABLE */
+
+tap_dance_action_t tap_dance_actions[] = {
+    [TD_SCRLL_MOUSE] = ACTION_TAP_DANCE_FN(tap_dance_scroll_mouse),
+    [TD_MOUSE_SNIPE] = ACTION_TAP_DANCE_FN(tap_dance_mouse_snipe),
+};
 
 #ifdef CONSOLE_ENABLE
 void keyboard_post_init_user(void) {
