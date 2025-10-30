@@ -196,7 +196,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MSTURDY] = LAYOUT(
-              KC_V, KC_M, HOME_L, HOME_C, KC_P,                           KC_B, HOME_MAGIC, HOME_U, KC_O, KC_Q,
+              ____, KC_M, HOME_L, HOME_C, KC_P,                           KC_B, HOME_MAGIC, HOME_U, KC_O, KC_Q,
               KC_S, KC_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, KC_A, KC_I,
               KC_X, KC_K, KC_J,   KC_G,   KC_W,                           KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
               ____,          MO(NUM),  KC_MS_BTN1, KC_MS_BTN2,                        KC_ESC, MO(NAV),               MO(MOUSE),
@@ -593,6 +593,7 @@ enum combo_events {
   CURLY_BRACKETS,
   AMPERSAND,
   LESSTHAN_GREATERTHAN,
+  RDV,
 };
 
 const uint16_t PROGMEM combo_full_squarebracket[] = {KC_LBRC, KC_RBRC, COMBO_END};
@@ -600,12 +601,14 @@ const uint16_t PROGMEM combo_full_parenthesis[] = {KC_LPRN, KC_RPRN, COMBO_END};
 const uint16_t PROGMEM combo_full_curlybracket[] = {KC_LCBR, KC_RCBR, COMBO_END};
 const uint16_t PROGMEM combo_full_ampersand[] = {KC_RPRN, KC_UNDS, COMBO_END};
 const uint16_t PROGMEM combo_full_lessthangreaterthan[] = {KC_LT, KC_GT, COMBO_END};
+const uint16_t PROGMEM combo_full_rdv[] = {HOME_R, HOME_D, COMBO_END};
 combo_t key_combos[] = {
   [SQUARE_BRACKET] = COMBO_ACTION(combo_full_squarebracket),
   [PARENTHESIS] = COMBO_ACTION(combo_full_parenthesis),
   [CURLY_BRACKETS] = COMBO_ACTION(combo_full_curlybracket),
   [AMPERSAND] = COMBO_ACTION(combo_full_ampersand),
   [LESSTHAN_GREATERTHAN] = COMBO_ACTION(combo_full_lessthangreaterthan),
+  [RDV] = COMBO_ACTION(combo_full_rdv),
 };
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
@@ -626,6 +629,9 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
                 break;
             case AMPERSAND:
                 send_string("&");
+                break;
+            case RDV:
+                send_string("v");
                 break;
             case LESSTHAN_GREATERTHAN:
                 send_string("<>");
