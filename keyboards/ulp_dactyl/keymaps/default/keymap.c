@@ -8,9 +8,9 @@
 #define MSTURDY 0
 #define MOUSE 1
 #define NAV  2
-#define SYMB 3
-#define SYMB2 4
-#define NUM  5
+#define NUM  3
+#define SYMB 4
+#define SYMB2 5
 #define FUNC 6
 #define MEDI 7
 
@@ -112,27 +112,48 @@ void send_mouse_active_scrolling(void) {
     send_hid_msg(msg);
 }
 
-void send_mouse_inactive(void) {
-    const char *msg = "Keyboard";
+void send_msturdy_active(void) {
+    const char *msg = "MSTURDY";
+    send_hid_msg(msg);
+}
+
+void send_symb_active(void) {
+    const char *msg = "Symbols";
+    send_hid_msg(msg);
+}
+
+void send_nav_active(void) {
+    const char *msg = "Navigation";
+    send_hid_msg(msg);
+}
+
+void send_num_active(void) {
+    const char *msg = "Numbers";
+    send_hid_msg(msg);
+}
+
+void send_fun_active(void) {
+    const char *msg = "Functions";
+    send_hid_msg(msg);
+}
+
+void send_media_active(void) {
+    const char *msg = "Media";
+    send_hid_msg(msg);
+}
+
+void send_symb2_active(void) {
+    const char *msg = "SymbolsAlt";
     send_hid_msg(msg);
 }
 
 void raw_hid_receive(uint8_t *data, uint8_t length) {
-    if (IS_LAYER_ON(MOUSE)) {
-        if (set_scrolling) {
-            send_mouse_active_scrolling();
-        } else {
-            send_mouse_active();
-        }
-    } else {
-        send_mouse_inactive();
-    }
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, NAV, NUM, FUNC);
-    state = update_tri_layer_state(state, NAV, SYMB, SYMB2);
-    state = update_tri_layer_state(state, NUM, SYMB, MEDI);
+    state = update_tri_layer_state(state, NAV, SYMB, MEDI);
+    state = update_tri_layer_state(state, NUM, SYMB, SYMB2);
     if (IS_LAYER_ON_STATE(state, MOUSE)){
         if (set_scrolling){
             send_mouse_active_scrolling();
@@ -149,7 +170,25 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         set_scrolling = false;
         set_sniping = false;
         pointing_device_set_cpi(MS_NORMAL_CPI);
-        send_mouse_inactive();
+        send_msturdy_active();
+    }
+    if (IS_LAYER_ON_STATE(state, MSTURDY)) {
+        send_msturdy_active();
+    }
+    if (IS_LAYER_ON_STATE(state, NAV)) {
+        send_nav_active();
+    }
+    if (IS_LAYER_ON_STATE(state, SYMB)) {
+        send_symb_active();
+    }
+    if (IS_LAYER_ON_STATE(state, SYMB2)) {
+        send_symb2_active();
+    }
+    if (IS_LAYER_ON_STATE(state, MEDI)) {
+        send_media_active();
+    }
+    if (IS_LAYER_ON_STATE(state, FUNC)) {
+        send_fun_active();
     }
 
   return state;
@@ -177,12 +216,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 ____,                MO(NUM),____, ____,                    KC_ESC,KC_TRNS, ____,
                           MO(SYMB), KC_BSPC,                                       KC_SPC,
                           KC_TAB,                                              KC_ENT),
+    [NUM] = LAYOUT(
+                ____, ____, HOME_9, HOME_8, ____,                     ____, HOME_3, HOME_4, KC_PLUS, ____,
+                ____, ____, HOME_7, HOME_6, KC_5,                     KC_0, HOME_1, HOME_2, KC_MINS, ____,
+                ____, ____,  ____, ____, ____,                        KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
+                ____,             MO(NUM), KC_MS_BTN3, ____,                       KC_ESC,MO(NAV),       ____,
+                                  MO(SYMB), KC_BSPC,                           KC_SPC,
+                                  KC_TAB,                                      KC_ENT),
     [SYMB] = LAYOUT(
                 ____, ____, KC_QUOT, KC_DQUO, ____,               KC_TILD, M_MAGIC, KC_PERC, ____, ____,
                 ____, ____, KC_AMPR, KC_UNDS, KC_PIPE,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
                 ____, ____, ____, KC_AT, KC_HASH,                KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
                 ____,            MO(NUM),    ____, ____,          KC_ESC, MO(NAV),                   ____,
-                                  KC_TRNS, KC_BSPC,                       KC_SPC,
+                                  MO(SYMB), KC_BSPC,                       KC_SPC,
                                   KC_TAB,                                 KC_ENT),
     [SYMB2] = LAYOUT(
                 ____,____, KC_LBRC, KC_RBRC, ____,              ____, KC_GRV, KC_CIRC, ____, ____,
@@ -191,13 +237,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 ____,            MO(NUM),    ____, ____,           KC_ESC, MO(NAV),        ____,
                                   MO(SYMB), KC_BSPC,                        KC_SPC,
                                   KC_TAB,                                  KC_ENT),
-    [NUM] = LAYOUT(
-                ____, ____, HOME_9, HOME_8, ____,                     ____, HOME_3, HOME_4, KC_PLUS, ____,
-                ____, ____, HOME_7, HOME_6, KC_5,                     KC_0, HOME_1, HOME_2, KC_MINS, ____,
-                ____, ____,  ____, ____, ____,                        KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
-                ____,             KC_TRNS, KC_MS_BTN3, ____,                       KC_ESC,MO(NAV),       ____,
-                                  MO(SYMB), KC_BSPC,                           KC_SPC,
-                                  KC_TAB,                                      KC_ENT),
     [FUNC] = LAYOUT(
                 ____, ____,   HOME_F9, HOME_F8, ____,                ____,   HOME_F3, HOME_F4, ____, ____,
                 ____, KC_F12, HOME_F7, HOME_F6, KC_F5,             KC_F10, HOME_F1, HOME_F2, KC_F11, ____,
@@ -486,9 +525,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case TD(TD_SCRLL_MOUSE):
-            return 175;
+            return 200;
         case TD(TD_MOUSE_SNIPE):
-            return 175;
+            return 200;
         case HOME_L:
         case HOME_C:
         case HOME_U:
