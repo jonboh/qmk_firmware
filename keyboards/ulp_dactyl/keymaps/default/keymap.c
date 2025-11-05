@@ -153,7 +153,7 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
 layer_state_t layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, NAV, NUM, FUNC);
     state = update_tri_layer_state(state, NAV, SYMB, MEDI);
-    state = update_tri_layer_state(state, NUM, SYMB, SYMB2);
+    // state = update_tri_layer_state(state, NUM, SYMB, SYMB2);
     if (IS_LAYER_ON_STATE(state, MOUSE)){
         if (set_scrolling){
             send_mouse_active_scrolling();
@@ -200,7 +200,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
               KC_S, KC_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, KC_A, KC_I,
               KC_X, KC_K, KC_J,   KC_G,   KC_W,                           KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
               ____,          MO(NUM),  KC_MS_BTN1, KC_MS_BTN2,                        KC_ESC, MO(NAV),               MO(MOUSE),
-                                  MO(SYMB), KC_BSPC,                              KC_SPC,
+                                  MO(SYMB), LT(SYMB2, KC_BSPC),                              KC_SPC,
                                   KC_TAB,                                         KC_ENT),
     [MOUSE] = LAYOUT(
                 ____, ____, KC_RGUI, KC_RALT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
@@ -232,7 +232,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   KC_TAB,                                 KC_ENT),
     [SYMB2] = LAYOUT(
                 ____,____, KC_LBRC, KC_RBRC, ____,              ____, KC_GRV, KC_CIRC, ____, ____,
-                ____,____, KC_LPRN, KC_RPRN, ____,              CW_TOGG,  KC_SCLN, KC_DOT, ____, ____,
+                ____,____, KC_LPRN, KC_RPRN, ____,              KC_BSPC,  KC_SCLN, KC_DOT, CW_TOGG, ____,
                 ____,____, KC_LCBR, KC_RCBR, ____,                 ____, ____, ____, ____, ____,
                 ____,            MO(NUM),    ____, ____,           KC_ESC, MO(NAV),        ____,
                                   MO(SYMB), KC_BSPC,                        KC_SPC,
@@ -472,19 +472,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     // Shift+Backspace= Delete, see https://getreuer.info/posts/keyboards/macros3/index.html#shift-backspace-delete
     switch (keycode) {
-        case KC_BSPC: {
+        case LT(SYMB2, KC_BSPC): {
           static uint16_t registered_key = KC_NO;
-          if (record->event.pressed) {  // On key press.
+          if (record->tap.count && record->event.pressed) {
+            // On tap press: determine which key to send (BSPC/DEL)
             const uint8_t mods = get_mods();
 #ifndef NO_ACTION_ONESHOT
             uint8_t shift_mods = (mods | get_oneshot_mods()) & MOD_MASK_SHIFT;
 #else
             uint8_t shift_mods = mods & MOD_MASK_SHIFT;
 #endif  // NO_ACTION_ONESHOT
-            if (shift_mods) {  // At least one shift key is held.
+            if (shift_mods) {
               registered_key = KC_DEL;
-              // If one shift is held, clear it from the mods. But if both
-              // shifts are held, leave as is to send Shift + Del.
               if (shift_mods != MOD_MASK_SHIFT) {
 #ifndef NO_ACTION_ONESHOT
                 del_oneshot_mods(MOD_MASK_SHIFT);
@@ -494,11 +493,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             } else {
               registered_key = KC_BSPC;
             }
-
             register_code(registered_key);
             set_mods(mods);
-          } else {  // On key release.
+          } else if (record->tap.count && !record->event.pressed) {
+            // On tap release
             unregister_code(registered_key);
+          } else if (!record->tap.count && record->event.pressed) {
+            // On hold: activate layer, let QMK handle
+            return true;
+          } else if (!record->tap.count && !record->event.pressed) {
+            // On hold release: do nothing, let QMK handle
+            return true;
           }
         } return false;
     }
