@@ -224,9 +224,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   MO(SYMB), KC_BSPC,                           KC_SPC,
                                   KC_TAB,                                      KC_ENT),
     [SYMB] = LAYOUT(
-                ____, ____, KC_QUOT, KC_DQUO, ____,               KC_TILD, M_MAGIC, KC_PERC, ____, ____,
+                ____, ____, KC_QUOT, KC_DQUO, KC_AT,               KC_TILD, M_MAGIC, KC_PERC, ____, ____,
                 ____, ____, KC_AMPR, KC_UNDS, KC_PIPE,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
-                ____, ____, ____, KC_AT, KC_HASH,                KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
+                ____, ____, ____, ____, KC_HASH,                KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
                 ____,            MO(NUM),    ____, ____,          KC_ESC, MO(NAV),                   ____,
                                   MO(SYMB), KC_BSPC,                       KC_SPC,
                                   KC_TAB,                                 KC_ENT),
