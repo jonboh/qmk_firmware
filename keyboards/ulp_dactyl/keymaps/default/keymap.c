@@ -7,12 +7,13 @@
 
 #define MSTURDY 0
 #define MOUSE 1
-#define NAV  2
-#define NUM  3
-#define SYMB 4
-#define SYMB2 5
-#define FUNC 6
-#define MEDI 7
+#define AMOUSE 2
+#define NAV  3
+#define NUM  4
+#define SYMB 5
+#define SYMB2 6
+#define FUNC 7
+#define MEDI 8
 
 enum custom_keycodes {
     UPDIR = SAFE_RANGE,
@@ -203,11 +204,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                   MO(SYMB), LT(SYMB2, KC_BSPC),                              KC_SPC,
                                   KC_TAB,                                         KC_ENT),
     [MOUSE] = LAYOUT(
-                ____, ____, KC_RGUI, KC_RALT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
+                ____, ____, KC_RGUI, KC_RALT, ____,                      ____, KC_MS_BTN3, MS_TO_MOUSE_SNIPE, ____, ____,
                 ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
                 ____, ____, ____, ____, ____,                            ____, TD(TD_SCRLL_MOUSE), TD(TD_MOUSE_SNIPE), ____, ____,
-                ____,         MO(NUM), KC_MS_BTN1, KC_MS_BTN2,           TO(MSTURDY),____,                      KC_TRNS,
+                ____,         MO(AMOUSE), KC_MS_BTN1, KC_MS_BTN2,           TO(MSTURDY),____,                      KC_TRNS,
                               MO(SYMB), KC_BSPC,                                    KC_SPC,
+                              KC_TAB,                                               KC_ENT),
+    [AMOUSE] = LAYOUT(
+                ____, ____, KC_RGUI, KC_RALT, ____,                      ____, KC_MS_BTN3, MS_TO_MOUSE_SNIPE, ____, ____,
+                ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
+                ____, ____, ____, ____, ____,                            ____, TD(TD_SCRLL_MOUSE), TD(TD_MOUSE_SNIPE), ____, ____,
+                ____,         KC_TRNS, KC_MS_BTN3, ____,           TO(MSTURDY),____,                      KC_TRNS,
+                              ____, KC_BSPC,                                    KC_SPC,
                               KC_TAB,                                               KC_ENT),
     [NAV] = LAYOUT(
                 ____, ____, KC_LGUI, KC_LALT, ____,                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
@@ -250,7 +258,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 ____, ____, ____, ____,____,                     ____, ____, ____, ____, ____,
                 ____,             KC_TRNS,____,____,                    KC_ESC, KC_TRNS,                         ____,
                                   ____, KC_BSPC,                           KC_SPC,
-                                  KC_TAB,                                  KC_ENT)
+                                  KC_TAB,                                  KC_ENT),
 };
 
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
