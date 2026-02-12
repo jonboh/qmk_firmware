@@ -197,7 +197,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MSTURDY] = LAYOUT(
-              ____, KC_M, HOME_L, HOME_C, KC_P,                           KC_B, HOME_MAGIC, HOME_U, KC_O, KC_Q,
+              KC_V, KC_M, HOME_L, HOME_C, KC_P,                           KC_B, HOME_MAGIC, HOME_U, KC_O, KC_Q,
               KC_S, KC_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, KC_A, KC_I,
               KC_X, KC_K, KC_J,   KC_G,   KC_W,                           KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
               ____,          MO(NUM),  KC_MS_BTN1, KC_MS_BTN2,                        KC_ESC, MO(NAV),               MO(MOUSE),
