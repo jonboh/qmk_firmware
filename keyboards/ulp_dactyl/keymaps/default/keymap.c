@@ -42,6 +42,12 @@ enum {
 #define HOME_U RGUI_T(KC_U)
 #define HOME_MINS RGUI_T(KC_MINS)
 
+#define HOME_COMM RGUI_T(KC_COMM)
+#define HOME_H RALT_T(KC_H)
+#define HOME_EQL RALT_T(KC_EQL)
+#define HOME_G LALT_T(KC_G)
+#define HOME_J LGUI_T(KC_J)
+
 #define HOME_1 RSFT_T(KC_1)
 #define HOME_2 RCTL_T(KC_2)
 #define HOME_3 LALT_T(KC_3)
@@ -197,42 +203,42 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MSTURDY] = LAYOUT(
-              KC_V, KC_M, HOME_L, HOME_C, KC_P,                           KC_B, HOME_MAGIC, HOME_U, KC_O, KC_Q,
+              KC_V, KC_M, KC_L,     KC_C, KC_P,                           KC_B, HOME_MAGIC, KC_U, KC_O, KC_Q,
               KC_S, KC_T, HOME_R, HOME_D, KC_Y,                           KC_F, HOME_N, HOME_E, KC_A, KC_I,
-              KC_X, KC_K, KC_J,   KC_G,   KC_W,                           KC_Z, KC_H, KC_COMM, KC_DOT, KC_SCLN,
+              KC_X, KC_K, HOME_J, HOME_G, KC_W,                           KC_Z, HOME_H, HOME_COMM, KC_DOT, KC_SCLN,
               ____,          MO(NUM),  KC_MS_BTN1, KC_MS_BTN2,                        KC_ESC, MO(NAV),               MO(MOUSE),
                                   MO(SYMB), LT(SYMB2, KC_BSPC),                              KC_SPC,
                                   KC_TAB,                                         KC_ENT),
     [MOUSE] = LAYOUT(
-                ____, ____, KC_RGUI, KC_RALT, ____,                      ____, KC_MS_BTN3, MS_TO_MOUSE_SNIPE, ____, ____,
-                ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
-                ____, ____, ____, ____, ____,                            ____, TD(TD_SCRLL_MOUSE), TD(TD_MOUSE_SNIPE), ____, ____,
+                ____, ____,      ____, ____,  ____,                      ____, KC_MS_BTN3, MS_TO_MOUSE_SNIPE, ____, ____,
+                ____, ____, KC_LCTL ,KC_LSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
+                ____, ____, KC_LGUI, KC_LALT, ____,                      ____, TD(TD_SCRLL_MOUSE), TD(TD_MOUSE_SNIPE), ____, ____,
                 ____,         MO(AMOUSE), KC_MS_BTN1, KC_MS_BTN2,           TO(MSTURDY),____,                      KC_TRNS,
                               MO(SYMB), KC_BSPC,                                    KC_SPC,
                               KC_TAB,                                               KC_ENT),
     [AMOUSE] = LAYOUT(
-                ____, ____, KC_RGUI, KC_RALT, ____,                      ____, KC_MS_BTN3, MS_TO_MOUSE_SNIPE, ____, ____,
-                ____, ____, KC_RCTL ,KC_RSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
-                ____, ____, ____, ____, ____,                            ____, TD(TD_SCRLL_MOUSE), TD(TD_MOUSE_SNIPE), ____, ____,
+                ____, ____,  ____, ____,      ____,                      ____, KC_MS_BTN3, MS_TO_MOUSE_SNIPE, ____, ____,
+                ____, ____, KC_LCTL ,KC_LSFT, ____,                      ____, KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, ____,
+                ____, ____, KC_LGUI, KC_LALT, ____,                            ____, TD(TD_SCRLL_MOUSE), TD(TD_MOUSE_SNIPE), ____, ____,
                 ____,         KC_TRNS, KC_MS_BTN3, ____,           TO(MSTURDY),____,                      KC_TRNS,
                               ____, KC_BSPC,                                    KC_SPC,
                               KC_TAB,                                               KC_ENT),
     [NAV] = LAYOUT(
-                ____, ____, KC_LGUI, KC_LALT, ____,                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
+                ____, ____,    ____,    ____, ____,                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, ____,
                 ____, ____, KC_LCTL, KC_LSFT, ____,                     KC_LEFT, KC_DOWN, KC_UP, KC_RGHT,  ____,
-                ____, ____,    ____,    ____, ____,                     ____,    TD(TD_SCRLL_MOUSE), TD(TD_MOUSE_SNIPE),  ____,     ____,
+                ____, ____, KC_LGUI, KC_LALT, ____,                     ____,    TD(TD_SCRLL_MOUSE), TD(TD_MOUSE_SNIPE),  ____,     ____,
                 ____,                MO(NUM),____, ____,                    KC_ESC,KC_TRNS, ____,
                           MO(SYMB), KC_BSPC,                                       KC_SPC,
                           KC_TAB,                                              KC_ENT),
     [NUM] = LAYOUT(
-                ____, ____, HOME_9, HOME_8, ____,                     ____, HOME_3, HOME_4, KC_PLUS, ____,
-                ____, ____, HOME_7, HOME_6, KC_5,                     KC_0, HOME_1, HOME_2, KC_MINS, ____,
-                ____, ____,  ____, ____, ____,                        KC_ASTR, KC_EQL, KC_COMM, KC_DOT, KC_SCLN,
+                ____, ____, KC_9, KC_8, ____,                     ____, KC_3, KC_4, KC_PLUS, ____,
+                ____, ____, HOME_7, HOME_6, KC_5,                 KC_0, HOME_1, HOME_2, KC_MINS, ____,
+                ____, ____, KC_LGUI, KC_LALT, ____,               KC_ASTR, HOME_EQL, HOME_COMM, KC_DOT, KC_SCLN,
                 ____,             MO(NUM), KC_MS_BTN3, ____,                       KC_ESC,MO(NAV),       ____,
                                   MO(SYMB), KC_BSPC,                           KC_SPC,
                                   KC_TAB,                                      KC_ENT),
     [SYMB] = LAYOUT(
-                ____, ____, KC_QUOT, KC_DQUO, KC_AT,               KC_TILD, M_MAGIC, KC_PERC, ____, ____,
+                ____, ____, KC_QUOT, KC_DQUO, KC_AT,               KC_TILD, HOME_MAGIC, KC_PERC, ____, ____,
                 ____, ____, ____, KC_UNDS, KC_PIPE,             KC_DLR, KC_COLN, KC_SLSH, KC_BSLS, ____,
                 ____, ____, ____, KC_AMPR, KC_HASH,                KC_ASTR, KC_EQL, KC_QUES, KC_EXLM, ____,
                 ____,            MO(NUM),    ____, ____,          KC_ESC, MO(NAV),                   ____,
@@ -241,14 +247,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [SYMB2] = LAYOUT(
                 ____,____, KC_LBRC, KC_RBRC, ____,              ____, KC_GRV, KC_CIRC, ____, ____,
                 ____,____, KC_LPRN, KC_RPRN, ____,              KC_BSPC,  KC_SCLN, KC_DOT, CW_TOGG, ____,
-                ____,____, KC_LCBR, KC_RCBR, ____,                 ____, ____, ____, ____, ____,
+                ____,____, KC_LCBR, KC_RCBR, ____,                 ____, ____, UP(n_tilde,N_tilde), ____, ____,
                 ____,            MO(NUM),    ____, ____,           KC_ESC, MO(NAV),        ____,
                                   MO(SYMB), KC_BSPC,                        KC_SPC,
                                   KC_TAB,                                  KC_ENT),
     [FUNC] = LAYOUT(
-                ____, ____,   HOME_F9, HOME_F8, ____,                ____,   HOME_F3, HOME_F4, ____, ____,
-                ____, KC_F12, HOME_F7, HOME_F6, KC_F5,             KC_F10, HOME_F1, HOME_F2, KC_F11, ____,
-                ____, ____, ____, ____,____,                       ____,   ____,    UP(n_tilde,N_tilde), ____, ____,
+                ____, ____,   KC_F9, KC_F8, ____,                ____,   KC_F3, KC_F4, ____, ____,
+                ____, KC_F12, HOME_F7, HOME_F6, KC_F5,           KC_F10, HOME_F1, HOME_F2, KC_F11, ____,
+                ____, ____, KC_LGUI, KC_LALT,____,               ____,   KC_RALT, KC_RGUI, ____, ____,
                 ____,             KC_TRNS,____,____,                    KC_ESC, KC_TRNS,                         ____,
                                   ____, KC_BSPC,                           KC_SPC,
                                   KC_TAB,                                  KC_ENT),
@@ -614,7 +620,8 @@ const uint16_t PROGMEM combo_full_parenthesis[] = {KC_LPRN, KC_RPRN, COMBO_END};
 const uint16_t PROGMEM combo_full_curlybracket[] = {KC_LCBR, KC_RCBR, COMBO_END};
 const uint16_t PROGMEM combo_full_ampersand[] = {KC_RPRN, KC_UNDS, COMBO_END};
 const uint16_t PROGMEM combo_full_lessthangreaterthan[] = {KC_LT, KC_GT, COMBO_END};
-const uint16_t PROGMEM combo_full_rdv[] = {KC_H, KC_COMM, COMBO_END};
+// const uint16_t PROGMEM combo_full_rdv[] = {HOME_H, HOME_COMM, COMBO_END};
+const uint16_t PROGMEM combo_full_rdv[] = {KC_DOWN, KC_UP, COMBO_END};
 combo_t key_combos[] = {
   [SQUARE_BRACKET] = COMBO_ACTION(combo_full_squarebracket),
   [PARENTHESIS] = COMBO_ACTION(combo_full_parenthesis),
